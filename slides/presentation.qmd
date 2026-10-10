@@ -1,0 +1,35 @@
+---
+title: "My Tutorial"
+subtitle: "Workshop slides"
+author: "Your Name"
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    code-line-numbers: true
+    footer: "https://github.com/khizerzakir/tutorial-repo"
+---
+
+## What we will do
+
+- Set up the environment
+- Run the example code
+- Discuss the results
+
+## Setup
+
+```bash
+git clone https://github.com/khizerzakir/tutorial-repo.git
+pip install -r code/requirements.txt
+```
+
+## The code
+
+```{.python code-line-numbers="1-5|7-12"}
+{{< include ../code/analysis.py >}}
+```
+
+## Links
+
+- Tutorial: <https://khizerzakir.github.io/tutorial-repo>
+- Code: <https://github.com/khizerzakir/tutorial-repo>

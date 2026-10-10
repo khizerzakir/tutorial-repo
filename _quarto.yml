@@ -1,0 +1,37 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "My Tutorial"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - text: Tutorial
+        menu:
+          - tutorial/01-setup.qmd
+          - tutorial/02-run-code.qmd
+          - tutorial/03-zarr-cubes.qmd
+      - href: slides/presentation.qmd
+        text: Slides
+    right:
+      - icon: github
+        href: https://github.com/khizerzakir/tutorial-repo
+  sidebar:
+    - title: Tutorial
+      style: docked
+      contents:
+        - tutorial/01-setup.qmd
+        - tutorial/02-run-code.qmd
+        - tutorial/03-zarr-cubes.qmd
+  page-footer: "Built with Quarto"
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-copy: true
+
+execute:
+  freeze: auto

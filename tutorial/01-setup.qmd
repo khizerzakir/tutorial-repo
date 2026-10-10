@@ -1,0 +1,26 @@
+---
+title: "1. Setup"
+---
+
+## Get the code
+
+```bash
+git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git
+cd YOUR-REPO
+```
+
+## Create an environment
+
+```bash
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install -r code/requirements.txt
+```
+
+## Check it works
+
+```bash
+python code/analysis.py
+```
+
+You should see a plot saved to `code/output/example.png`.

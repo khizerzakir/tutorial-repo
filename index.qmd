@@ -1,0 +1,9 @@
+---
+title: "My Tutorial"
+---
+
+Welcome! This site contains the step-by-step tutorial and the slides.
+
+- 📖 **Tutorial**: start with [Setup](tutorial/01-setup.qmd)
+- 🎤 **Slides**: [open the presentation](slides/presentation.qmd)
+- 💻 **Code**: everything you need to run is in the [`code/`](https://github.com/khizerzakir/tutorial-repo/tree/main/code) folder
