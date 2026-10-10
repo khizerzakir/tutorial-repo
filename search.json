@@ -1,0 +1,97 @@
+[
+  {
+    "objectID": "tutorial/01-setup.html",
+    "href": "tutorial/01-setup.html",
+    "title": "1. Setup",
+    "section": "",
+    "text": "git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git\ncd YOUR-REPO",
+    "crumbs": [
+      "1. Setup"
+    ]
+  },
+  {
+    "objectID": "tutorial/01-setup.html#get-the-code",
+    "href": "tutorial/01-setup.html#get-the-code",
+    "title": "1. Setup",
+    "section": "",
+    "text": "git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git\ncd YOUR-REPO",
+    "crumbs": [
+      "1. Setup"
+    ]
+  },
+  {
+    "objectID": "tutorial/01-setup.html#create-an-environment",
+    "href": "tutorial/01-setup.html#create-an-environment",
+    "title": "1. Setup",
+    "section": "Create an environment",
+    "text": "Create an environment\npython -m venv .venv\nsource .venv/bin/activate        # Windows: .venv\\Scripts\\activate\npip install -r code/requirements.txt",
+    "crumbs": [
+      "1. Setup"
+    ]
+  },
+  {
+    "objectID": "tutorial/01-setup.html#check-it-works",
+    "href": "tutorial/01-setup.html#check-it-works",
+    "title": "1. Setup",
+    "section": "Check it works",
+    "text": "Check it works\npython code/analysis.py\nYou should see a plot saved to code/output/example.png.",
+    "crumbs": [
+      "1. Setup"
+    ]
+  },
+  {
+    "objectID": "slides/presentation.html#what-we-will-do",
+    "href": "slides/presentation.html#what-we-will-do",
+    "title": "My Tutorial",
+    "section": "What we will do",
+    "text": "What we will do\n\nSet up the environment\nRun the example code\nDiscuss the results"
+  },
+  {
+    "objectID": "slides/presentation.html#setup",
+    "href": "slides/presentation.html#setup",
+    "title": "My Tutorial",
+    "section": "Setup",
+    "text": "Setup\ngit clone https://github.com/khizerzakir/tutorial-repo.git\npip install -r code/requirements.txt"
+  },
+  {
+    "objectID": "slides/presentation.html#the-code",
+    "href": "slides/presentation.html#the-code",
+    "title": "My Tutorial",
+    "section": "The code",
+    "text": "The code\n\"\"\"Example script students run: python code/analysis.py\"\"\"\nfrom pathlib import Path\n\nimport matplotlib.pyplot as plt\nimport numpy as np\n\nrng = np.random.default_rng(42)\nx = np.arange(2000, 2024)\ny = 0.3 + 0.002 * (x - 2000) + rng.normal(0, 0.02, x.size)\n\nout = Path(__file__).parent / \"output\"\nout.mkdir(exist_ok=True)\n\nfig, ax = plt.subplots(figsize=(7, 4))\nax.plot(x, y, marker=\"o\")\nax.set(xlabel=\"Year\", ylabel=\"Value\", title=\"Example time series\")\nfig.savefig(out / \"example.png\", dpi=150, bbox_inches=\"tight\")\nprint(f\"Saved {out / 'example.png'}\")"
+  },
+  {
+    "objectID": "slides/presentation.html#links",
+    "href": "slides/presentation.html#links",
+    "title": "My Tutorial",
+    "section": "Links",
+    "text": "Links\n\nTutorial: https://khizerzakir.github.io/tutorial-repo\nCode: https://github.com/khizerzakir/tutorial-repo"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "My Tutorial",
+    "section": "",
+    "text": "Welcome! This site contains the step-by-step tutorial and the slides.\n\n📖 Tutorial: start with Setup\n🎤 Slides: open the presentation\n💻 Code: everything you need to run is in the code/ folder"
+  },
+  {
+    "objectID": "tutorial/02-run-code.html",
+    "href": "tutorial/02-run-code.html",
+    "title": "2. Run the code",
+    "section": "",
+    "text": "This is the exact script students run. It is pulled in directly from code/analysis.py, so the website never gets out of sync with the code.\nRun it:",
+    "crumbs": [
+      "2. Run the code"
+    ]
+  },
+  {
+    "objectID": "tutorial/02-run-code.html#exercises",
+    "href": "tutorial/02-run-code.html#exercises",
+    "title": "2. Run the code",
+    "section": "Exercises",
+    "text": "Exercises\n\nChange the random seed and rerun.\nAdd a second series to the plot.",
+    "crumbs": [
+      "2. Run the code"
+    ]
+  }
+]
