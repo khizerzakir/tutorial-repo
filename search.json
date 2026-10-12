@@ -2,116 +2,160 @@
   {
     "objectID": "tutorial/01-setup.html",
     "href": "tutorial/01-setup.html",
-    "title": "1. Setup",
+    "title": "A. Setup",
     "section": "",
-    "text": "git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git\ncd YOUR-REPO",
+    "text": "This setup guide will help you install the necessary tools and dependencies to run the Climate Data Cube workshop code on your local machine.\nBecause the workshop code is designed to run in a Linux environment, we will use Windows Subsystem for Linux (WSL2) on Windows. If you are using macOS or Linux or have WSL installed, you can skip the WSL installation and use your native/WSL terminal.",
     "crumbs": [
-      "1. Setup"
+      "A. Setup"
     ]
   },
   {
-    "objectID": "tutorial/01-setup.html#get-the-code",
-    "href": "tutorial/01-setup.html#get-the-code",
-    "title": "1. Setup",
-    "section": "",
-    "text": "git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git\ncd YOUR-REPO",
+    "objectID": "tutorial/01-setup.html#install-wsl2-and-ubuntu",
+    "href": "tutorial/01-setup.html#install-wsl2-and-ubuntu",
+    "title": "A. Setup",
+    "section": "1. Install WSL2 and Ubuntu",
+    "text": "1. Install WSL2 and Ubuntu\n\nOpen the Windows Start menu, search for PowerShell, and choose Run as administrator.\nRun the following command in Windows PowerShell:\n\nwsl --install -d Ubuntu\n\nRestart Windows if prompted.\nLaunch Ubuntu from the Start menu and wait for first-time initialization.\nCreate your Ubuntu username and password when prompted. Password characters are not displayed while typing.\n\nCheck installation in Windows PowerShell:\nwsl --list --verbose\nYou should see Ubuntu with VERSION equal to 2. If Ubuntu is version 1, use:\nwsl --set-version Ubuntu 2\nIf wsl --install displays help instead of installing, try wsl --list --online, then wsl --install -d Ubuntu. If installation is blocked by policy or virtualization, contact your IT administrator. Do not attempt to bypass institutional restrictions.\nOfficial guide: https://learn.microsoft.com/en-us/windows/wsl/install",
     "crumbs": [
-      "1. Setup"
+      "A. Setup"
     ]
   },
   {
-    "objectID": "tutorial/01-setup.html#create-an-environment",
-    "href": "tutorial/01-setup.html#create-an-environment",
-    "title": "1. Setup",
-    "section": "Create an environment",
-    "text": "Create an environment\npython -m venv .venv\nsource .venv/bin/activate        # Windows: .venv\\Scripts\\activate\npip install -r code/requirements.txt",
+    "objectID": "tutorial/01-setup.html#install-visual-studio-code",
+    "href": "tutorial/01-setup.html#install-visual-studio-code",
+    "title": "A. Setup",
+    "section": "2. Install Visual Studio Code",
+    "text": "2. Install Visual Studio Code\nIf you do not have VS Code installed, follow these steps:\n\nDownload VS Code for Windows: https://code.visualstudio.com/download.\nInstall VS Code on Windows (not inside Ubuntu).\nOpen VS Code → Extensions (Ctrl+Shift+X). Install:\n\nWSL (Microsoft)\nPython (Microsoft)\nJupyter (Microsoft)\n\n\nOfficial WSL + VS Code guide: https://code.visualstudio.com/docs/remote/wsl",
     "crumbs": [
-      "1. Setup"
+      "A. Setup"
     ]
   },
   {
-    "objectID": "tutorial/01-setup.html#check-it-works",
-    "href": "tutorial/01-setup.html#check-it-works",
-    "title": "1. Setup",
-    "section": "Check it works",
-    "text": "Check it works\npython code/analysis.py\nYou should see a plot saved to code/output/example.png.",
+    "objectID": "tutorial/01-setup.html#prepare-ubuntu-and-system-dependencies",
+    "href": "tutorial/01-setup.html#prepare-ubuntu-and-system-dependencies",
+    "title": "A. Setup",
+    "section": "3. Prepare Ubuntu and system dependencies",
+    "text": "3. Prepare Ubuntu and system dependencies\nOpen the Ubuntu terminal from the Windows Start menu and run:\nsudo apt update\nsudo apt upgrade -y\nsudo apt install -y \\\n  git wget curl ca-certificates \\\n  cdo python3 python3-venv python3-pip\nVerify:\ncdo -V\ngit --version\npython3 --version\nwget --version | head -n 1\n\nWhy CDO? CDO performs the controlled spatial processing in this workshop: clipping and remapping.",
     "crumbs": [
-      "1. Setup"
+      "A. Setup"
     ]
   },
   {
-    "objectID": "tutorial/03-zarr-cubes.html",
-    "href": "tutorial/03-zarr-cubes.html",
-    "title": "3. Build Zarr Cubes",
-    "section": "",
-    "text": "The code to build the cubes is in code/build_cubes.py. The code is pulled in directly from that file, so the website never gets out of sync with the code.\nRun it:",
+    "objectID": "tutorial/01-setup.html#install-uv-python-dependency-manager",
+    "href": "tutorial/01-setup.html#install-uv-python-dependency-manager",
+    "title": "A. Setup",
+    "section": "4. Install uv (Python dependency manager)",
+    "text": "4. Install uv (Python dependency manager)\nInside Ubuntu, install uv using the official installer:\ncurl -LsSf https://astral.sh/uv/install.sh | sh\nRestart the Ubuntu terminal or refresh the shell configuration (as instructed by the installer). Verify:\nuv --version\nDocumentation: https://docs.astral.sh/uv/getting-started/installation/",
     "crumbs": [
-      "3. Build Zarr Cubes"
+      "A. Setup"
     ]
   },
   {
-    "objectID": "tutorial/03-zarr-cubes.html#exercises",
-    "href": "tutorial/03-zarr-cubes.html#exercises",
-    "title": "3. Build Zarr Cubes",
-    "section": "Exercises",
-    "text": "Exercises\n\nBuild a cube with different variables and/or dimensions. You can use the --variables and --dimensions flags to specify which variables and dimensions to include in the cube.",
+    "objectID": "tutorial/01-setup.html#clone-the-repository",
+    "href": "tutorial/01-setup.html#clone-the-repository",
+    "title": "A. Setup",
+    "section": "5. Clone the Repository",
+    "text": "5. Clone the Repository\nKeep the repository inside the Linux home directory for better file performance (for example, ~/projects/), rather than under /mnt/c/.\nmkdir -p ~/projects\ncd ~/projects\n\ngit clone https://github.com/khizerzakir/tutorial-repo.git\ncd &lt;YOUR-REPOSITORY&gt; ## replace with the actual repository name\nOpen the Linux folder in VS Code:\ncode .\nThe first launch may install the VS Code Server in WSL. Check the lower-left corner of VS Code for WSL: Ubuntu. Open Terminal → New Terminal: it should be a Linux shell.",
     "crumbs": [
-      "3. Build Zarr Cubes"
+      "A. Setup"
     ]
+  },
+  {
+    "objectID": "tutorial/01-setup.html#install-the-projects-python-dependencies-choose-uv-or-pip",
+    "href": "tutorial/01-setup.html#install-the-projects-python-dependencies-choose-uv-or-pip",
+    "title": "A. Setup",
+    "section": "6. Install the project’s Python dependencies (choose uv or pip)",
+    "text": "6. Install the project’s Python dependencies (choose uv or pip)\n\nOption A — uv (recommended if installed)\nFrom the repository root in the VS Code WSL terminal:\nuv sync --locked\nFor notebooks, only if the project defines a notebook optional dependency group:\nuv sync --locked --extra notebook\nIf --extra notebook is not defined, follow the repository’s pyproject.toml instructions instead. uv.lock should be committed so students resolve the same dependency versions. Confirm the environment:\nuv run python -c \"import xarray, zarr; print('xarray and zarr: OK')\"\n\n\nOption B — pip with requirements.txt (no uv required)\nIf you do not have uv, use the system-provided Python and create an isolated virtual environment. Run these commands inside Ubuntu, from the GitLab repository root:\n# Install Python virtual-environment support if needed\nsudo apt update\nsudo apt install -y python3 python3-venv python3-pip\n\n# Create and activate a project-local environment\npython3 -m venv .venv\nsource .venv/bin/activate\n\n# Install the pinned project requirements\npython -m pip install --upgrade pip\npython -m pip install -r requirements.txt\n\n# Confirm that key libraries are available\npython -c \"import xarray, zarr; print('xarray and zarr: OK')\"\nFor notebooks, check whether requirements.txt includes ipykernel and jupyterlab. If not, install them in the activated environment:\npython -m pip install ipykernel jupyterlab\npython -m ipykernel install --user --name lsasaf-cube --display-name \"Python (LSA SAF Cube)\"\n\nImportant: Keep the virtual environment activated for subsequent terminal commands. When you open a new Ubuntu terminal, run source .venv/bin/activate again. Do not use sudo pip install. The requirements.txt must be committed to GitLab and kept consistent with the tested uv.lock; pip does not read uv.lock automatically.",
+    "crumbs": [
+      "A. Setup"
+    ]
+  },
+  {
+    "objectID": "tutorial/01-setup.html#set-up-lsa-saf-credentials",
+    "href": "tutorial/01-setup.html#set-up-lsa-saf-credentials",
+    "title": "A. Setup",
+    "section": "7. Set up LSA SAF credentials",
+    "text": "7. Set up LSA SAF credentials\nFollow the instructions in the repository’s README.md to obtain a username and password for the LSA SAF Data Service. You will need these credentials to download sample data.\nCreate a local credentials file (never commit it):\ncp .env.example .env\nOpen .env in VS Code and enter the account details obtained from the LSA SAF Data Service:\nUSERNAME=your_lsa_saf_username\nPASSWORD=your_lsa_saf_password\nRegister or access your account at https://datalsasaf.lsasvcs.ipma.pt/. Ensure .env is listed in .gitignore. Do not share .env in screenshots, commits, or submissions.",
+    "crumbs": [
+      "A. Setup"
+    ]
+  },
+  {
+    "objectID": "tutorial/01-setup.html#run-the-workflow",
+    "href": "tutorial/01-setup.html#run-the-workflow",
+    "title": "A. Setup",
+    "section": "8. Run the workflow",
+    "text": "8. Run the workflow\nTo be added..",
+    "crumbs": [
+      "A. Setup"
+    ]
+  },
+  {
+    "objectID": "tutorial/01-setup.html#inspect-results-in-vs-code",
+    "href": "tutorial/01-setup.html#inspect-results-in-vs-code",
+    "title": "A. Setup",
+    "section": "9. Inspect results in VS Code",
+    "text": "9. Inspect results in VS Code\nTo be added..",
+    "crumbs": [
+      "A. Setup"
+    ]
+  },
+  {
+    "objectID": "tutorial/01-setup.html#troubleshooting",
+    "href": "tutorial/01-setup.html#troubleshooting",
+    "title": "A. Setup",
+    "section": "10. Troubleshooting",
+    "text": "10. Troubleshooting\n\n\n\n\n\n\n\nProblem\nSuggested action\n\n\n\n\nwsl not recognized\nCheck Windows version and Windows updates; consult the official WSL guide.\n\n\nWSL installation blocked\nAsk university IT about virtualization and Windows feature permissions.\n\n\ncode: command not found\nInstall VS Code on Windows with the WSL extension; reopen Ubuntu and try code ..\n\n\ncdo: command not found\nRun sudo apt update && sudo apt install -y cdo inside Ubuntu.\n\n\nuv: command not found\nRestart Ubuntu terminal and follow the PATH instructions from the uv installer.\n\n\nPermission denied for .sh\nUse bash scripts/NAME.sh; ensure scripts use Unix LF line endings.\n\n\nconfig.txt or grid.txt missing\nCheck the preprocessing wrapper’s working directory and configuration paths.\n\n\nNo NetCDF files found\nConfirm the preceding stage completed and files are under data/raw/ or data/interim/ as expected.\n\n\nJupyter kernel not found\nIn VS Code, select the interpreter at .venv/bin/python and ensure notebook dependencies are installed.\n\n\nSlow processing under /mnt/c\nMove the repository into ~/projects/ in Ubuntu.",
+    "crumbs": [
+      "A. Setup"
+    ]
+  },
+  {
+    "objectID": "slides/presentation.html#welcome-to-the-climate-data-cube-workshop",
+    "href": "slides/presentation.html#welcome-to-the-climate-data-cube-workshop",
+    "title": "Climate Data Cube",
+    "section": "Welcome to the Climate Data Cube Workshop!",
+    "text": "Welcome to the Climate Data Cube Workshop!"
+  },
+  {
+    "objectID": "slides/presentation.html#overview",
+    "href": "slides/presentation.html#overview",
+    "title": "Climate Data Cube",
+    "section": "Overview",
+    "text": "Overview\nThis workshop will introduce you to the concepts and tools of climate data analysis.\n\nWhat is the Climate Data Cube?\nWhy is it important?\nHow can we use it for climate research?"
   },
   {
     "objectID": "slides/presentation.html#what-we-will-do",
     "href": "slides/presentation.html#what-we-will-do",
-    "title": "My Tutorial",
+    "title": "Climate Data Cube",
     "section": "What we will do",
     "text": "What we will do\n\nSet up the environment\nRun the example code\nDiscuss the results"
   },
   {
     "objectID": "slides/presentation.html#setup",
     "href": "slides/presentation.html#setup",
-    "title": "My Tutorial",
+    "title": "Climate Data Cube",
     "section": "Setup",
     "text": "Setup\ngit clone https://github.com/khizerzakir/tutorial-repo.git\npip install -r code/requirements.txt"
   },
   {
     "objectID": "slides/presentation.html#the-code",
     "href": "slides/presentation.html#the-code",
-    "title": "My Tutorial",
+    "title": "Climate Data Cube",
     "section": "The code",
-    "text": "The code\n\"\"\"Example script students run: python code/analysis.py\"\"\"\nfrom pathlib import Path\n\nimport matplotlib.pyplot as plt\nimport numpy as np\n\nrng = np.random.default_rng(42)\nx = np.arange(2000, 2024)\ny = 0.3 + 0.002 * (x - 2000) + rng.normal(0, 0.02, x.size)\n\nout = Path(__file__).parent / \"output\"\nout.mkdir(exist_ok=True)\n\nfig, ax = plt.subplots(figsize=(7, 4))\nax.plot(x, y, marker=\"o\")\nax.set(xlabel=\"Year\", ylabel=\"Value\", title=\"Example time series\")\nfig.savefig(out / \"example.png\", dpi=150, bbox_inches=\"tight\")\nprint(f\"Saved {out / 'example.png'}\")"
+    "text": "The code"
   },
   {
     "objectID": "slides/presentation.html#links",
     "href": "slides/presentation.html#links",
-    "title": "My Tutorial",
+    "title": "Climate Data Cube",
     "section": "Links",
     "text": "Links\n\nTutorial: https://khizerzakir.github.io/tutorial-repo\nCode: https://github.com/khizerzakir/tutorial-repo"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "My Tutorial",
+    "title": "Climate Data Cube Workshop - Tutorial",
     "section": "",
-    "text": "Welcome! This site contains the step-by-step tutorial and the slides.\n\n📖 Tutorial: start with Setup\n🎤 Slides: open the presentation\n💻 Code: everything you need to run is in the code/ folder"
-  },
-  {
-    "objectID": "tutorial/02-run-code.html",
-    "href": "tutorial/02-run-code.html",
-    "title": "2. Run the code",
-    "section": "",
-    "text": "This is the exact script students run. It is pulled in directly from code/analysis.py, so the website never gets out of sync with the code.\nRun it:",
-    "crumbs": [
-      "2. Run the code"
-    ]
-  },
-  {
-    "objectID": "tutorial/02-run-code.html#exercises",
-    "href": "tutorial/02-run-code.html#exercises",
-    "title": "2. Run the code",
-    "section": "Exercises",
-    "text": "Exercises\n\nChange the random seed and rerun.\nAdd a second series to the plot.",
-    "crumbs": [
-      "2. Run the code"
-    ]
+    "text": "Welcome! If you are here, you are likely participating in the Climate Data Cube Workshop as part of the IEEE Autumn School 2026 Training.\nThis is the hands-on tutorial is designed to introduce participants to the concepts and tools of climate data analysis, with a focus on using satellite-derived climate data from EUMETSAT LSA SAF. The tutorial will guide you through the process of setting up your environment, running example code, and analyzing the results.\n\nImportant links for this workshop\n\n\n📖 Tutorial: start with Setup\n🎤 Slides: open the presentation\n💻 Code: everything you need to run is in the code/ folder"
   }
 ]
