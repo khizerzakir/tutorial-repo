@@ -1,5 +1,25 @@
 [
   {
+    "objectID": "tutorial/02-run-code.html",
+    "href": "tutorial/02-run-code.html",
+    "title": "2. Run the code",
+    "section": "",
+    "text": "This is the exact script students run. It is pulled in directly from code/analysis.py, so the website never gets out of sync with the code.\nRun it:",
+    "crumbs": [
+      "2. Run the code"
+    ]
+  },
+  {
+    "objectID": "tutorial/02-run-code.html#exercises",
+    "href": "tutorial/02-run-code.html#exercises",
+    "title": "2. Run the code",
+    "section": "Exercises",
+    "text": "Exercises\n\nChange the random seed and rerun.\nAdd a second series to the plot.",
+    "crumbs": [
+      "2. Run the code"
+    ]
+  },
+  {
     "objectID": "tutorial/01-setup.html",
     "href": "tutorial/01-setup.html",
     "title": "1. Setup",
@@ -40,6 +60,13 @@
     ]
   },
   {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "My Tutorial",
+    "section": "",
+    "text": "Welcome! This site contains the step-by-step tutorial and the slides.\n\n📖 Tutorial: start with Setup\n🎤 Slides: open the presentation\n💻 Code: everything you need to run is in the code/ folder"
+  },
+  {
     "objectID": "slides/presentation.html#what-we-will-do",
     "href": "slides/presentation.html#what-we-will-do",
     "title": "My Tutorial",
@@ -68,30 +95,23 @@
     "text": "Links\n\nTutorial: https://khizerzakir.github.io/tutorial-repo\nCode: https://github.com/khizerzakir/tutorial-repo"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "My Tutorial",
+    "objectID": "tutorial/03-zarr-cubes.html",
+    "href": "tutorial/03-zarr-cubes.html",
+    "title": "3. Build Zarr Cubes",
     "section": "",
-    "text": "Welcome! This site contains the step-by-step tutorial and the slides.\n\n📖 Tutorial: start with Setup\n🎤 Slides: open the presentation\n💻 Code: everything you need to run is in the code/ folder"
-  },
-  {
-    "objectID": "tutorial/02-run-code.html",
-    "href": "tutorial/02-run-code.html",
-    "title": "2. Run the code",
-    "section": "",
-    "text": "This is the exact script students run. It is pulled in directly from code/analysis.py, so the website never gets out of sync with the code.\nRun it:",
+    "text": "The code to build the cubes is in code/build_cubes.py. The code is pulled in directly from that file, so the website never gets out of sync with the code.\nRun it:",
     "crumbs": [
-      "2. Run the code"
+      "3. Build Zarr Cubes"
     ]
   },
   {
-    "objectID": "tutorial/02-run-code.html#exercises",
-    "href": "tutorial/02-run-code.html#exercises",
-    "title": "2. Run the code",
+    "objectID": "tutorial/03-zarr-cubes.html#exercises",
+    "href": "tutorial/03-zarr-cubes.html#exercises",
+    "title": "3. Build Zarr Cubes",
     "section": "Exercises",
-    "text": "Exercises\n\nChange the random seed and rerun.\nAdd a second series to the plot.",
+    "text": "Exercises\n\nBuild a cube with different variables and/or dimensions. You can use the --variables and --dimensions flags to specify which variables and dimensions to include in the cube.",
     "crumbs": [
-      "2. Run the code"
+      "3. Build Zarr Cubes"
     ]
   }
 ]
