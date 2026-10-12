@@ -2,21 +2,4 @@
 title: "3. Build Zarr Cubes"
 ---
 
-The code to build the cubes is in `code/build_cubes.py`. The code is pulled in directly from that file, so the website never gets out of sync with the code.
-
-
-
-```{.python filename="code/build_cubes.py"}
-{{< include ../code/build_cubes.py >}}
-```
-
-Run it:
-
-```bash
-python code/build_cubes.py --output-dir data/cubes
-```
-
-## Exercises
-
-1. Build a cube with different variables and/or dimensions. You can use the `--variables` and `--dimensions` flags to specify which variables and dimensions to include in the cube.
 

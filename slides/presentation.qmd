@@ -1,14 +1,26 @@
 ---
-title: "My Tutorial"
+title: "Climate Data Cube"
 subtitle: "Workshop slides"
-author: "Your Name"
+author: "Khizer Zakir"
 format:
   revealjs:
-    theme: simple
+    logo: ..\slides\img\newlogo.png
+    alt: "company logo"
+    theme: league
     slide-number: true
     code-line-numbers: true
-    footer: "https://github.com/khizerzakir/tutorial-repo"
+    footer: "<a href=\"https://github.com/khizerzakir/tutorial-repo\">https://github.com/khizerzakir/tutorial-repo</a>"
 ---
+
+## Welcome to the Climate Data Cube Workshop!
+
+## Overview
+
+#### This workshop will introduce you to the concepts and tools of climate data analysis.
+
+- What is the Climate Data Cube?
+- Why is it important?
+- How can we use it for climate research?
 
 ## What we will do
 
@@ -25,9 +37,9 @@ pip install -r code/requirements.txt
 
 ## The code
 
-```{.python code-line-numbers="1-5|7-12"}
+<!-- ```{.python code-line-numbers="1-5|7-12"}
 {{< include ../code/analysis.py >}}
-```
+``` -->
 
 ## Links
 

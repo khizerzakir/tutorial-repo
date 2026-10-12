@@ -1,8 +1,12 @@
 ---
-title: "My Tutorial"
+title: "Climate Data Cube Workshop - Tutorial"
 ---
 
-Welcome! This site contains the step-by-step tutorial and the slides.
+**Welcome!** If you are here, you are likely participating in the Climate Data Cube Workshop as part of the [IEEE Autumn School 2026](https://it-u.at/en/events/earth-observation-and-geoai-for-climate-resilient-urban-systems-grss-school/) Training.
+
+ This is the hands-on tutorial is designed to introduce participants to the concepts and tools of climate data analysis, with a focus on using satellite-derived climate data from EUMETSAT LSA SAF. The tutorial will guide you through the process of setting up your environment, running example code, and analyzing the results.
+
+> **Important links for this workshop**
 
 - 📖 **Tutorial**: start with [Setup](tutorial/01-setup.qmd)
 - 🎤 **Slides**: [open the presentation](slides/presentation.qmd)

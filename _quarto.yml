@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "My Tutorial"
+  title: "Climate Data Cube Workshop"
   navbar:
     left:
       - href: index.qmd
@@ -20,7 +20,7 @@ website:
         href: https://github.com/khizerzakir/tutorial-repo
   sidebar:
     - title: Tutorial
-      style: docked
+      style: floating
       contents:
         - tutorial/01-setup.qmd
         - tutorial/02-run-code.qmd

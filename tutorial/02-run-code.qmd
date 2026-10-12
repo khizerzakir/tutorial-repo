@@ -1,21 +1,5 @@
 ---
-title: "2. Run the code"
+title: "B. Download and Preprocess Sample Data"
 ---
 
-This is the exact script students run. It is pulled in directly from
-`code/analysis.py`, so the website never gets out of sync with the code.
 
-```{.python filename="code/analysis.py"}
-{{< include ../code/analysis.py >}}
-```
-
-Run it:
-
-```bash
-python code/analysis.py
-```
-
-## Exercises
-
-1. Change the random seed and rerun.
-2. Add a second series to the plot.
