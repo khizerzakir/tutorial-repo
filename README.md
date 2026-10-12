@@ -15,7 +15,7 @@ In this session, participants will work with satellite-derived climate data from
 
 - **Portal Registration**
 
-![Data Portal Registration](imgs\portal_reg.png)
+![Data Portal Registration](..\imgs\portal_reg.png)
 
 > After you fill out the registration form and activate your account. Please follow the following steps.
 
@@ -38,7 +38,7 @@ PASSWORD="#########"
 ```
 - **Browse Data**
 
-![Browse the products](imgs\browse.png)
+![Browse the products](..\imgs\browse.png)
 
 ### **Choose Product**
 
