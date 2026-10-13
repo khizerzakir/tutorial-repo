@@ -6,3 +6,27 @@ code/output/
 __pycache__/
 
 **/*.quarto_ipynb
+# Secrets
+.env
+
+
+# Data outputs
+/data/
+/logs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+.python-version
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Zarr
+*.zarr/
+
+# OS
+.DS_Store

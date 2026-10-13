@@ -4,7 +4,10 @@ project:
 
 website:
   title: "Climate Data Cube Workshop"
+  page-navigation: true
   navbar:
+    background: primary
+    search: true
     left:
       - href: index.qmd
         text: Home
@@ -25,11 +28,13 @@ website:
         - tutorial/01-setup.qmd
         - tutorial/02-run-code.qmd
         - tutorial/03-zarr-cubes.qmd
-  page-footer: "Built with Quarto"
+  page-footer: "© 2026 Khizer Zakir. Prepared for the Climate Data Cube Workshop."
 
 format:
   html:
-    theme: cosmo
+    theme:
+      light: cosmo
+      dark: darkly
     toc: true
     code-copy: true
 

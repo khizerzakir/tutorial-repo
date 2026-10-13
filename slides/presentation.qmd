@@ -1,47 +1,121 @@
 ---
-title: "Climate Data Cube"
-subtitle: "Workshop slides"
+title: "Climate Data Cubes"
+subtitle: "From raw satellite data to analysis-ready insight"
 author: "Khizer Zakir"
+date: today
+title-slide-attributes:
+  data-background-image: none
+  data-background-size: 38%
+  data-background-position: 250% 50%
+  data-background-opacity: "0.9"
 format:
   revealjs:
-    logo: ..\slides\img\newlogo.png
-    alt: "company logo"
-    theme: league
+    theme: [default, theme.scss]
+    include-in-header: toggle.html
+    # --- effects ---
+    transition: fade          # none | fade | slide | convex | concave | zoom
+    background-transition: fade
+    transition-speed: default
+    # --- navigation ---
     slide-number: true
+    controls: true
+    controls-layout: bottom-right
+    controls-tutorial: true
+    progress: true
+    hash: true
+    preview-links: auto
+    footer: <a href="https://khizerzakir.github.io/tutorial-repo/">Tutorial</a> 
     code-line-numbers: true
-    footer: "<a href=\"https://github.com/khizerzakir/tutorial-repo\">https://github.com/khizerzakir/tutorial-repo</a>"
+    code-copy: true
+    width: 1280
+    height: 720
 ---
 
-## Welcome to the Climate Data Cube Workshop!
+# Part 1 {background-color="#06141f"}
 
-## Overview
+Why data cubes?
 
-#### This workshop will introduce you to the concepts and tools of climate data analysis.
+## The problem {auto-animate="true"}
 
-- What is the Climate Data Cube?
-- Why is it important?
-- How can we use it for climate research?
+::: card
+Climate data arrives in **many formats**, resolutions and projections.
+:::
 
-## What we will do
+## The problem {auto-animate="true"}
 
-- Set up the environment
-- Run the example code
-- Discuss the results
+::: card
+Climate data arrives in **many formats**, resolutions and projections.
+:::
 
-## Setup
+:::: {.fragment .fade-up}
+::: card
+A **data cube** gives one consistent grid: *time × latitude × longitude*.
+:::
+::::
 
-```bash
-git clone https://github.com/khizerzakir/tutorial-repo.git
-pip install -r code/requirements.txt
-```
+:::: {.fragment .fade-up}
+::: card
+However, not every EUMETSAT product or authenticated API supports efficient remote reading, so temporary downloads are the more reliable starting point.
+:::
+::::
+
+## Key numbers
+
+:::::: columns
+::: {.column .fragment .fade-up width="33%"}
+[40+]{.stat}
+
+years of data
+:::
+
+::: {.column .fragment .fade-up width="33%"}
+[1 km]{.stat}
+
+spatial resolution
+:::
+
+::: {.column .fragment .fade-up width="33%"}
+[3]{.stat}
+
+variables
+:::
+::::::
+
+## Picture + text
+
+::::: columns
+::: {.column width="45%"}
+![The data cube idea](img/cube.svg){fig-align="center" width="85%"}
+:::
+
+::: {.column width="55%"}
+- Replace `img/cube.svg` with your own figure
+- Fragments reveal one point at a time {.fragment}
+- Add alt text for accessibility {.fragment}
+:::
+:::::
+
+##  {background-image="img/cube.svg" background-size="40%" background-opacity="0.18" background-position="right"}
+
+### Full-slide background image
+
+Use `background-image="img/your-photo.jpg"` on any slide. Lower `background-opacity` so the text stays readable.
+
+# Part 2 {background-color="#06141f"}
+
+Running the code
 
 ## The code
 
-<!-- ```{.python code-line-numbers="1-5|7-12"}
+``` {.python code-line-numbers="1-5|7-12"}
 {{< include ../code/analysis.py >}}
-``` -->
+```
 
-## Links
+::: notes
+Walk through the imports first, then the plot.
+:::
 
-- Tutorial: <https://khizerzakir.github.io/tutorial-repo>
-- Code: <https://github.com/khizerzakir/tutorial-repo>
+## Thank you {.center}
+
+- Tutorial: <https://YOUR-USERNAME.github.io/YOUR-REPO/>
+- Code: <https://github.com/YOUR-USERNAME/YOUR-REPO>

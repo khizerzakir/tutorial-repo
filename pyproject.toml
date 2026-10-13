@@ -1,0 +1,32 @@
+[project]
+name = "lsasaf-zarr-cube"
+version = "0.1.0"
+description = "One-month sample pipeline: download LSA SAF METREF, preprocess with CDO, build a Zarr cube with xarray."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Your Name"}]
+
+dependencies = [
+  "xarray>=2024.1.0",
+  "zarr>=2.16",
+  "dask[array]>=2024.1.0",
+  "netcdf4>=1.6.5",
+  "h5netcdf>=1.3.0",
+  "h5py>=3.0",
+  "numpy>=1.24",
+  "pandas>=2.0",
+  "pyyaml>=6.0",
+  "psutil>=5.9",
+  "fsspec>=2024.1.0",
+  "ipykernel>=7.2.0",
+  "matplotlib>=3.10.8",
+]
+
+[project.optional-dependencies]
+notebook = [
+  "jupyterlab>=4.0",
+  "ipykernel>=6.0",
+  "matplotlib>=3.7",
+]
+

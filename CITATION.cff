@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+title: "LSA SAF dataset download, preprocessing and Zarr cube creation"
+message: "If you use this repository in your research, please cite it."
+type: software
+authors:
+  - family-names: Zakir
+    given-names: Khizer
+    affiliation: Paris Lodron University of Salzburg
+version: 1.0.0
+date-released: 2026-10-13
+repository-code: https://github.com/khizerzakir/tutorial-repo
+url: https://khizerzakir.github.io/tutorial-repo/
+license: MIT
+keywords:
+  - LSA SAF
+  - Zarr
+  - Xarray
+  - Climate Data
+  - Research Data Management
+abstract: >
+  A reproducible workflow demonstrating download, preprocessing, and Zarr
+  cube generation for LSA SAF satellite products provided by EUMETSAT.

@@ -1,0 +1,22 @@
+# CDO Preprocessing Configuration
+#
+# NOTE:
+# - code/02_preprocess_cdo.sh overrides IN/OUT automatically.
+# - These defaults are only here for direct configuration and compatibility.
+
+# Default Input/Output Paths (overridden by wrapper)
+IN=../data/raw
+OUT=../data/interim
+GRID=./grid.txt
+
+# Processing Parameters
+PARALLEL=4
+REMAP_METHOD=bilinear
+BUFFER=0.2
+RES=0.05
+
+# Sahel Region Bounding Box
+WEST=-17.0
+SOUTH=11.0
+EAST=-10.0
+NORTH=16.0

@@ -3,3 +3,4 @@ title: "B. Download and Preprocess Sample Data"
 ---
 
 
+Draw BBOX - https://onlinemapmaker.com/bounding-box-tool/

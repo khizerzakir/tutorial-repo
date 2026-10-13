@@ -1,50 +1,46 @@
 # **Climate Data Cube Workshop**
 
-This is part of the [IEEE Autumn School 2026](https://it-u.at/en/events/earth-observation-and-geoai-for-climate-resilient-urban-systems-grss-school/) Training. In this workshop student will mainly learn how to access climate data from EUMETSAT data portal and create Zarr cubes. 
-
-In this session, participants will work with satellite-derived climate data from EUMETSAT LSA SAF and make analysis-ready data cube using Zarr and Xarray. We will explore the principles of cloud-native geospatial data, including chunking, compression, and scalable data access, and demonstrate how to change raw climate data files to efficient, analysis-ready products. The concepts and workflows presented can be applied to a wide range of Earth observation datasets, including time series analysis, regional subsets, and climate resilience indicators.
-
-> **Important links for this workshop**
-
-- Tutorial Site: https://khizerzakir.github.io/tutorial-repo/
-- Slides: https://github.com/khizerzakir/tutorial-repo/slides/presentation.html
-- Code: https://github.com/khizerzakir/tutorial-repo/tree/main/code
+This is part of the [IEEE Autumn School 2026](https://it-u.at/en/events/earth-observation-and-geoai-for-climate-resilient-urban-systems-grss-school/) Training. In this workshop participants will mainly learn how to access climate data from EUMETSAT data portal and create Zarr cubes. We will explore the principles of cloud-native geospatial data, including chunking, compression, and scalable data access, and demonstrate how to change raw climate data files to efficient, analysis-ready products. The concepts and workflows presented can be applied to a wide range of Earth observation datasets, including time series analysis, regional subsets, and climate resilience indicators.
 
 
-## **How to get the data?**
+## Links
 
-- **Portal Registration**
+| | |
+|---|---|
+| 📖 Tutorial site | [khizerzakir.github.io/tutorial-repo](https://khizerzakir.github.io/tutorial-repo/) |
+| 🎤 Slides | [Open the slides](https://khizerzakir.github.io/tutorial-repo/slides/presentation.html) |
+| 💻 Code | [`code/`](code/) |
 
-![Data Portal Registration](/imgs/portal_reg.png)
+## Quick start
 
-> After you fill out the registration form and activate your account. Please follow the following steps.
+1. Register on the [LSA SAF data portal](https://datalsasaf.lsasvcs.ipma.pt/) and activate your account.
 
-- Create a `.env` file in your current folder and write your **"USERNAME"** and **"PASSWORD"** you just created. 
-```
-USERNAME="username"
-PASSWORD="#########"
-```
->After saving the file, to secure your credentials, add it to `.gitignore` to avoid pushing it to github. Also, follow the following commands to keep them secure. We will call these credential in our downloading scripts. 
+   ![Data portal registration](imgs/portal_reg.png)
 
+2. Add your credentials to a `.env` file in `code/`:
 
-```
-## Windows
-
+```bash
+   cp code/.env.example code/.env
 ```
 
 ```
-## Linux
-
+   LSASAF_USERNAME="username"
+   LSASAF_PASSWORD="password"
 ```
-- **Browse Data**
 
-![Browse the products](/imgs/browse.png)
+3. Choose the products for this tutorial:
+   - [METREF: Reference Evapotranspiration](https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/)
+   - [FVC: Fractional Vegetation Cover](https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/MDFVC/)
 
-### **Choose Product**
+   ![Browse the products](imgs/browse.png)
 
-For this tutorial, we are going to choose the following 2 products:
+> 📖 Full step-by-step instructions are in the [tutorial pages](https://khizerzakir.github.io/tutorial-repo/tutorial/01-setup.html).
 
-- **[METREF - Reference Evapotranspiration](https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/)**
-- **[FVC - Fractional Vegetation Cover](https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/MDFVC/)**
+## Security
 
-You can click on the above links to get a basic understand of the data. 
+- Never commit `.env` (it is in `.gitignore`).
+- Don't pass passwords on the command line.
+
+## Citation
+
+LSA SAF data are CC BY 4.0. Follow the LSA SAF attribution guidance when publishing. To cite this repository, see [`CITATION.cff`](CITATION.cff).

@@ -1,0 +1,22 @@
+# CDO Grid Configuration
+# Automatically generates grid.txt based on resolution
+
+# Domain boundaries (in degrees)
+domain:
+
+  lon_min: -17.180733
+  lon_max: 11.625335
+  lat_min: -10.944114
+  lat_max: 16.651981
+
+# Dataset resolutions (in degrees)
+# Change this value and run: python3 generate_grid.py --resolution <value>
+datasets:
+  metref:
+    resolution: 0.05
+  
+  sm:
+    resolution: 0.1
+  
+  custom:
+    resolution: 0.02
