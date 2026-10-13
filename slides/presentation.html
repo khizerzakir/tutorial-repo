@@ -6,11 +6,12 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b626d73c4c936ccc3cb08be7d45d1df6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.10.19">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Khizer Zakir">
-  <title>Climate Data Cube Workshop – Climate Data Cube</title>
+  <meta name="dcterms.date" content="2026-10-13">
+  <title>Climate Data Cube Workshop – Climate Data Cubes</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -101,7 +102,7 @@
     code span.vs { color: #abe338; } /* VerbatimString */
     code span.wa { color: #dcc6e0; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-93ccede46067f4a51f3c262900016e7d.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-0a027d4cc2b9a8855423821aae8f2c2b.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -193,14 +194,37 @@
       margin-right: 0; 
     }
   </style>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const root = document.documentElement;
+    const apply = (m) => {
+      root.classList.toggle("light", m === "light");
+      try { localStorage.setItem("slides-mode", m); } catch (e) {}
+    };
+    let saved = "dark";
+    try { saved = localStorage.getItem("slides-mode") || "dark"; } catch (e) {}
+    apply(saved);
+
+    const btn = document.createElement("button");
+    btn.id = "mode-toggle";
+    btn.textContent = "◐";
+    btn.title = "Toggle light/dark (T)";
+    btn.onclick = () => apply(root.classList.contains("light") ? "dark" : "light");
+    document.body.appendChild(btn);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "t" || e.key === "T") btn.click();
+    });
+  });
+  </script>
 </head>
 <body class="quarto-dark">
   <div class="reveal">
     <div class="slides">
 
-<section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Climate Data Cube</h1>
-  <p class="subtitle">Workshop slides</p>
+<section id="title-slide" data-background-image="none" data-background-opacity="0.9" data-background-position="250% 50%" data-background-size="38%" class="quarto-title-block center">
+  <h1 class="title">Climate Data Cubes</h1>
+  <p class="subtitle">From raw satellite data to analysis-ready insight</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -210,70 +234,209 @@ Khizer Zakir
 </div>
 </div>
 
+  <p class="date">2026-10-13</p>
 </section>
-<section id="welcome-to-the-climate-data-cube-workshop" class="slide level2">
-<h2>Welcome to the Climate Data Cube Workshop!</h2>
+<section>
+<section id="part-1" class="title-slide slide level1 center" data-background-color="#06141f">
+<h1>Part 1</h1>
+<p>Why data cubes?</p>
 </section>
-<section id="overview" class="slide level2">
-<h2>Overview</h2>
-<h4 id="this-workshop-will-introduce-you-to-the-concepts-and-tools-of-climate-data-analysis.">This workshop will introduce you to the concepts and tools of climate data analysis.</h4>
+<section id="the-problem" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">The problem</h2>
+<div class="card">
+<p>Climate data arrives in <strong>many formats</strong>, resolutions and projections.</p>
+</div>
+</section>
+<section id="the-problem-1" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">The problem</h2>
+<div class="card">
+<p>Climate data arrives in <strong>many formats</strong>, resolutions and projections.</p>
+</div>
+<div class="fragment fade-up">
+<div class="card">
+<p>A <strong>data cube</strong> gives one consistent grid: <em>time × latitude × longitude</em>.</p>
+</div>
+</div>
+<div class="fragment fade-up">
+<div class="card">
+<p>However, not every EUMETSAT product or authenticated API supports efficient remote reading, so temporary downloads are the more reliable starting point.</p>
+</div>
+</div>
+</section>
+<section id="key-numbers" class="slide level2">
+<h2>Key numbers</h2>
+<div class="columns">
+<div class="column fragment fade-up" style="width:33%;">
+<p><span class="stat">40+</span></p>
+<p>years of data</p>
+</div><div class="column fragment fade-up" style="width:33%;">
+<p><span class="stat">1 km</span></p>
+<p>spatial resolution</p>
+</div><div class="column fragment fade-up" style="width:33%;">
+<p><span class="stat">3</span></p>
+<p>variables</p>
+</div></div>
+</section>
+<section id="picture-text" class="slide level2">
+<h2>Picture + text</h2>
+<div class="columns">
+<div class="column" style="width:45%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/cube.svg" style="width:85.0%"></p>
+<figcaption>The data cube idea</figcaption>
+</figure>
+</div>
+</div><div class="column" style="width:55%;">
 <ul>
-<li>What is the Climate Data Cube?</li>
-<li>Why is it important?</li>
-<li>How can we use it for climate research?</li>
+<li>Replace <code>img/cube.svg</code> with your own figure</li>
+<li>Fragments reveal one point at a time {.fragment}</li>
+<li>Add alt text for accessibility {.fragment}</li>
 </ul>
+</div></div>
 </section>
-<section id="what-we-will-do" class="slide level2">
-<h2>What we will do</h2>
-<ul>
-<li>Set up the environment</li>
-<li>Run the example code</li>
-<li>Discuss the results</li>
-</ul>
-</section>
-<section id="setup" class="slide level2">
-<h2>Setup</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a aria-label="1"></a><span class="fu">git</span> clone https://github.com/khizerzakir/tutorial-repo.git</span>
-<span id="cb1-2"><a aria-label="2"></a><span class="ex">pip</span> install <span class="at">-r</span> code/requirements.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="section" class="slide level2" data-background-image="img/cube.svg" data-background-size="40%" data-background-opacity="0.18" data-background-position="right">
+<h2></h2>
+<h3 id="full-slide-background-image">Full-slide background image</h3>
+<p>Use <code>background-image="img/your-photo.jpg"</code> on any slide. Lower <code>background-opacity</code> so the text stays readable.</p>
+</section></section>
+<section>
+<section id="part-2" class="title-slide slide level1 center" data-background-color="#06141f">
+<h1>Part 2</h1>
+<p>Running the code</p>
 </section>
 <section id="the-code" class="slide level2">
 <h2>The code</h2>
-<!-- ```{.python code-line-numbers="1-5|7-12"}
-"""Example script students run: python code/analysis.py"""
-# from pathlib import Path
-
-# import matplotlib.pyplot as plt
-# import numpy as np
-
-# rng = np.random.default_rng(42)
-# x = np.arange(2000, 2024)
-# y = 0.3 + 0.002 * (x - 2000) + rng.normal(0, 0.02, x.size)
-
-# out = Path(__file__).parent / "output"
-# out.mkdir(exist_ok=True)
-
-# fig, ax = plt.subplots(figsize=(7, 4))
-# ax.plot(x, y, marker="o")
-# ax.set(xlabel="Year", ylabel="Value", title="Example time series")
-# fig.savefig(out / "example.png", dpi=150, bbox_inches="tight")
-# print(f"Saved {out / 'example.png'}")
-
-``` -->
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-code-line-numbers="1-5|7-12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a aria-label="1"></a><span class="co">#!/usr/bin/env python3</span></span>
+<span id="cb1-2"><a aria-label="2"></a><span class="co">"""Create a compressed, sharded Zarr v3 cube from interim NetCDF files."""</span></span>
+<span id="cb1-3"><a aria-label="3"></a></span>
+<span id="cb1-4"><a aria-label="4"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-5"><a aria-label="5"></a><span class="im">import</span> shutil</span>
+<span id="cb1-6"><a aria-label="6"></a></span>
+<span id="cb1-7"><a aria-label="7"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
+<span id="cb1-8"><a aria-label="8"></a><span class="im">import</span> zarr</span>
+<span id="cb1-9"><a aria-label="9"></a><span class="im">from</span> packaging.version <span class="im">import</span> Version</span>
+<span id="cb1-10"><a aria-label="10"></a></span>
+<span id="cb1-11"><a aria-label="11"></a></span>
+<span id="cb1-12"><a aria-label="12"></a><span class="cf">if</span> Version(zarr.__version__) <span class="op">&lt;</span> Version(<span class="st">"3.0"</span>):</span>
+<span id="cb1-13"><a aria-label="13"></a>    <span class="cf">raise</span> <span class="pp">RuntimeError</span>(</span>
+<span id="cb1-14"><a aria-label="14"></a>        <span class="ss">f"Zarr &gt;= 3.0 is required, but </span><span class="sc">{</span>zarr<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss"> is installed. "</span></span>
+<span id="cb1-15"><a aria-label="15"></a>        <span class="st">"Run this script with the project environment, for example: "</span></span>
+<span id="cb1-16"><a aria-label="16"></a>        <span class="st">"`uv run python code/build_zarr_cube.py`."</span></span>
+<span id="cb1-17"><a aria-label="17"></a>    )</span>
+<span id="cb1-18"><a aria-label="18"></a></span>
+<span id="cb1-19"><a aria-label="19"></a><span class="im">from</span> zarr.codecs <span class="im">import</span> BloscCodec</span>
+<span id="cb1-20"><a aria-label="20"></a></span>
+<span id="cb1-21"><a aria-label="21"></a></span>
+<span id="cb1-22"><a aria-label="22"></a>ROOT <span class="op">=</span> Path(<span class="va">__file__</span>).resolve().parents[<span class="dv">1</span>]</span>
+<span id="cb1-23"><a aria-label="23"></a>INTERIM <span class="op">=</span> ROOT <span class="op">/</span> <span class="st">"data"</span> <span class="op">/</span> <span class="st">"interim"</span></span>
+<span id="cb1-24"><a aria-label="24"></a>OUTPUT <span class="op">=</span> ROOT <span class="op">/</span> <span class="st">"data"</span> <span class="op">/</span> <span class="st">"zarr"</span> <span class="op">/</span> <span class="st">"metref_sample_1month.zarr"</span></span>
+<span id="cb1-25"><a aria-label="25"></a></span>
+<span id="cb1-26"><a aria-label="26"></a><span class="co"># Intended access: time slices / maps. Tune after benchmarking your real data.</span></span>
+<span id="cb1-27"><a aria-label="27"></a>INNER_CHUNKS <span class="op">=</span> {<span class="st">"time"</span>: <span class="dv">1</span>, <span class="st">"lat"</span>: <span class="dv">256</span>, <span class="st">"lon"</span>: <span class="dv">256</span>}</span>
+<span id="cb1-28"><a aria-label="28"></a>SHARD_CHUNKS <span class="op">=</span> {<span class="st">"time"</span>: <span class="dv">10</span>, <span class="st">"lat"</span>: <span class="dv">512</span>, <span class="st">"lon"</span>: <span class="dv">512</span>}</span>
+<span id="cb1-29"><a aria-label="29"></a>COMPRESSOR <span class="op">=</span> BloscCodec(cname<span class="op">=</span><span class="st">"zstd"</span>, clevel<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="st">"shuffle"</span>)</span>
+<span id="cb1-30"><a aria-label="30"></a></span>
+<span id="cb1-31"><a aria-label="31"></a></span>
+<span id="cb1-32"><a aria-label="32"></a><span class="kw">def</span> main() <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
+<span id="cb1-33"><a aria-label="33"></a>    files <span class="op">=</span> <span class="bu">sorted</span>(INTERIM.rglob(<span class="st">"*.nc"</span>))</span>
+<span id="cb1-34"><a aria-label="34"></a>    <span class="cf">if</span> <span class="kw">not</span> files:</span>
+<span id="cb1-35"><a aria-label="35"></a>        <span class="cf">raise</span> <span class="pp">FileNotFoundError</span>(<span class="ss">f"No NetCDF files found under </span><span class="sc">{</span>INTERIM<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-36"><a aria-label="36"></a></span>
+<span id="cb1-37"><a aria-label="37"></a>    <span class="bu">print</span>(<span class="ss">f"Opening </span><span class="sc">{</span><span class="bu">len</span>(files)<span class="sc">}</span><span class="ss"> NetCDF files"</span>)</span>
+<span id="cb1-38"><a aria-label="38"></a>    ds <span class="op">=</span> xr.open_mfdataset(</span>
+<span id="cb1-39"><a aria-label="39"></a>        files,</span>
+<span id="cb1-40"><a aria-label="40"></a>        combine<span class="op">=</span><span class="st">"by_coords"</span>,</span>
+<span id="cb1-41"><a aria-label="41"></a>        parallel<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-42"><a aria-label="42"></a>        chunks<span class="op">=</span><span class="st">"auto"</span>,</span>
+<span id="cb1-43"><a aria-label="43"></a>        engine<span class="op">=</span><span class="st">"h5netcdf"</span>,</span>
+<span id="cb1-44"><a aria-label="44"></a>        data_vars<span class="op">=</span><span class="st">"minimal"</span>,</span>
+<span id="cb1-45"><a aria-label="45"></a>        coords<span class="op">=</span><span class="st">"minimal"</span>,</span>
+<span id="cb1-46"><a aria-label="46"></a>        compat<span class="op">=</span><span class="st">"override"</span>,</span>
+<span id="cb1-47"><a aria-label="47"></a>    )</span>
+<span id="cb1-48"><a aria-label="48"></a></span>
+<span id="cb1-49"><a aria-label="49"></a>    <span class="co"># Use the input's actual dimension names; rename here if needed, e.g. y/x.</span></span>
+<span id="cb1-50"><a aria-label="50"></a>    missing <span class="op">=</span> (<span class="bu">set</span>(INNER_CHUNKS) <span class="op">|</span> <span class="bu">set</span>(SHARD_CHUNKS)) <span class="op">-</span> <span class="bu">set</span>(ds.dims)</span>
+<span id="cb1-51"><a aria-label="51"></a>    <span class="cf">if</span> missing:</span>
+<span id="cb1-52"><a aria-label="52"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(</span>
+<span id="cb1-53"><a aria-label="53"></a>            <span class="ss">f"Expected dimensions </span><span class="sc">{</span><span class="bu">sorted</span>(missing)<span class="sc">}</span><span class="ss"> are missing. "</span></span>
+<span id="cb1-54"><a aria-label="54"></a>            <span class="ss">f"Found </span><span class="sc">{</span><span class="bu">dict</span>(ds.sizes)<span class="sc">}</span><span class="ss">; update the chunk settings or rename dimensions."</span></span>
+<span id="cb1-55"><a aria-label="55"></a>        )</span>
+<span id="cb1-56"><a aria-label="56"></a>    <span class="cf">if</span> <span class="st">"time"</span> <span class="kw">in</span> ds.coords:</span>
+<span id="cb1-57"><a aria-label="57"></a>        ds <span class="op">=</span> ds.sortby(<span class="st">"time"</span>)</span>
+<span id="cb1-58"><a aria-label="58"></a></span>
+<span id="cb1-59"><a aria-label="59"></a>    <span class="co"># Dask writes one complete shard task at a time. Each shard holds multiple</span></span>
+<span id="cb1-60"><a aria-label="60"></a>    <span class="co"># independently compressed inner chunks, reducing object/file counts.</span></span>
+<span id="cb1-61"><a aria-label="61"></a>    ds <span class="op">=</span> ds.chunk(SHARD_CHUNKS)</span>
+<span id="cb1-62"><a aria-label="62"></a>    encoding <span class="op">=</span> {}</span>
+<span id="cb1-63"><a aria-label="63"></a>    <span class="cf">for</span> name, da <span class="kw">in</span> ds.data_vars.items():</span>
+<span id="cb1-64"><a aria-label="64"></a>        <span class="cf">if</span> da.dtype.kind <span class="kw">not</span> <span class="kw">in</span> <span class="st">"iufcb"</span>:  <span class="co"># leave strings/objects to xarray defaults</span></span>
+<span id="cb1-65"><a aria-label="65"></a>            <span class="cf">continue</span></span>
+<span id="cb1-66"><a aria-label="66"></a>        dims <span class="op">=</span> da.dims</span>
+<span id="cb1-67"><a aria-label="67"></a>        inner <span class="op">=</span> <span class="bu">tuple</span>(<span class="bu">min</span>(INNER_CHUNKS.get(dim, da.sizes[dim]), da.sizes[dim]) <span class="cf">for</span> dim <span class="kw">in</span> dims)</span>
+<span id="cb1-68"><a aria-label="68"></a>        shard <span class="op">=</span> <span class="bu">tuple</span>(<span class="bu">min</span>(SHARD_CHUNKS.get(dim, inner[i]), da.sizes[dim]) <span class="cf">for</span> i, dim <span class="kw">in</span> <span class="bu">enumerate</span>(dims))</span>
+<span id="cb1-69"><a aria-label="69"></a>        encoding[name] <span class="op">=</span> {</span>
+<span id="cb1-70"><a aria-label="70"></a>            <span class="st">"chunks"</span>: inner,</span>
+<span id="cb1-71"><a aria-label="71"></a>            <span class="st">"shards"</span>: shard,</span>
+<span id="cb1-72"><a aria-label="72"></a>            <span class="st">"compressors"</span>: [COMPRESSOR],</span>
+<span id="cb1-73"><a aria-label="73"></a>        }</span>
+<span id="cb1-74"><a aria-label="74"></a></span>
+<span id="cb1-75"><a aria-label="75"></a>    OUTPUT.parent.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-76"><a aria-label="76"></a>    <span class="cf">if</span> OUTPUT.exists():</span>
+<span id="cb1-77"><a aria-label="77"></a>        shutil.rmtree(OUTPUT)</span>
+<span id="cb1-78"><a aria-label="78"></a></span>
+<span id="cb1-79"><a aria-label="79"></a>    <span class="bu">print</span>(ds)</span>
+<span id="cb1-80"><a aria-label="80"></a>    ds.to_zarr(</span>
+<span id="cb1-81"><a aria-label="81"></a>        OUTPUT,</span>
+<span id="cb1-82"><a aria-label="82"></a>        mode<span class="op">=</span><span class="st">"w"</span>,</span>
+<span id="cb1-83"><a aria-label="83"></a>        zarr_format<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb1-84"><a aria-label="84"></a>        consolidated<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-85"><a aria-label="85"></a>        encoding<span class="op">=</span>encoding,</span>
+<span id="cb1-86"><a aria-label="86"></a>        align_chunks<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-87"><a aria-label="87"></a>    )</span>
+<span id="cb1-88"><a aria-label="88"></a>    <span class="bu">print</span>(<span class="ss">f"Wrote Zarr v3 cube: </span><span class="sc">{</span>OUTPUT<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-89"><a aria-label="89"></a></span>
+<span id="cb1-90"><a aria-label="90"></a>    <span class="co"># Validate metadata and compute only a tiny sample, not the full cube.</span></span>
+<span id="cb1-91"><a aria-label="91"></a>    check <span class="op">=</span> xr.open_zarr(OUTPUT, consolidated<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-92"><a aria-label="92"></a>    var <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(check.data_vars))</span>
+<span id="cb1-93"><a aria-label="93"></a>    sample <span class="op">=</span> check[var]</span>
+<span id="cb1-94"><a aria-label="94"></a>    indexers <span class="op">=</span> {dim: <span class="bu">slice</span>(<span class="dv">0</span>, <span class="dv">1</span> <span class="cf">if</span> dim <span class="op">==</span> <span class="st">"time"</span> <span class="cf">else</span> <span class="dv">64</span>) <span class="cf">for</span> dim <span class="kw">in</span> sample.dims}</span>
+<span id="cb1-95"><a aria-label="95"></a>    value <span class="op">=</span> sample.isel(indexers).mean().compute().item()</span>
+<span id="cb1-96"><a aria-label="96"></a>    <span class="bu">print</span>(<span class="ss">f"Validation OK: </span><span class="sc">{</span>var<span class="sc">}</span><span class="ss"> sample mean = </span><span class="sc">{</span>value<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-97"><a aria-label="97"></a>    ds.close()</span>
+<span id="cb1-98"><a aria-label="98"></a>    check.close()</span>
+<span id="cb1-99"><a aria-label="99"></a>    <span class="cf">return</span> <span class="dv">0</span></span>
+<span id="cb1-100"><a aria-label="100"></a></span>
+<span id="cb1-101"><a aria-label="101"></a></span>
+<span id="cb1-102"><a aria-label="102"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb1-103"><a aria-label="103"></a>    <span class="cf">raise</span> <span class="pp">SystemExit</span>(main())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<aside class="notes">
+<p>Walk through the imports first, then the plot.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="links" class="slide level2">
-<h2>Links</h2>
+<section id="thank-you" class="slide level2 center">
+<h2>Thank you</h2>
 <ul>
-<li>Tutorial: <a href="https://khizerzakir.github.io/tutorial-repo" class="uri">https://khizerzakir.github.io/tutorial-repo</a></li>
-<li>Code: <a href="https://github.com/khizerzakir/tutorial-repo" class="uri">https://github.com/khizerzakir/tutorial-repo</a></li>
+<li>Tutorial: <a href="https://YOUR-USERNAME.github.io/YOUR-REPO/" class="uri">https://YOUR-USERNAME.github.io/YOUR-REPO/</a></li>
+<li>Code: <a href="https://github.com/YOUR-USERNAME/YOUR-REPO" class="uri">https://github.com/YOUR-USERNAME/YOUR-REPO</a></li>
 </ul>
 
 
-</section>
+</section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="..\slides\img\newlogo.png" class="slide-logo"></p>
 <div class="footer footer-default">
-<p><a href="https://github.com/khizerzakir/tutorial-repo">https://github.com/khizerzakir/tutorial-repo</a></p>
+<p><a href="https://khizerzakir.github.io/tutorial-repo/">Tutorial</a></p>
 </div>
 </div></div>
 
@@ -298,8 +461,8 @@ Khizer Zakir
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
-'controlsAuto': true,
-'previewLinksAuto': false,
+'controlsAuto': false,
+'previewLinksAuto': true,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -309,14 +472,14 @@ Khizer Zakir
 'smaller': false,
  
         // Display controls in the bottom right corner
-        controls: false,
+        controls: true,
 
         // Help the user learn the controls by providing hints, for example by
         // bouncing the down arrow when they first encounter a vertical slide
-        controlsTutorial: false,
+        controlsTutorial: true,
 
         // Determines where controls appear, "edges" or "bottom-right"
-        controlsLayout: 'edges',
+        controlsLayout: 'bottom-right',
 
         // Visibility rule for backwards navigation arrows; "faded", "hidden"
         // or "visible"
@@ -431,14 +594,14 @@ Khizer Zakir
         previewLinks: false,
 
         // Transition style (none/fade/slide/convex/concave/zoom)
-        transition: 'none',
+        transition: 'fade',
 
         // Transition speed (default/fast/slow)
         transitionSpeed: 'default',
 
         // Transition style for full page slide backgrounds
         // (none/fade/slide/convex/concave/zoom)
-        backgroundTransition: 'none',
+        backgroundTransition: 'fade',
 
         // Number of slides away from the current that are visible
         viewDistance: 3,
@@ -451,9 +614,9 @@ Khizer Zakir
         // The "normal" size of the presentation, aspect ratio will be preserved
         // when the presentation is scaled to fit different resolutions. Can be
         // specified using percentage units.
-        width: 1050,
+        width: 1280,
 
-        height: 700,
+        height: 720,
 
         // Factor of the display size that should remain empty around the content
         margin: 0.1,
