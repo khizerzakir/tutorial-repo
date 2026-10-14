@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>B. Download and Preprocess Sample Data – Climate Data Cube Workshop</title>
+<title>B. Download and preprocess a sample – Climate Data Cube Workshop</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,6 +25,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -263,7 +298,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -277,11 +312,11 @@ ul.task-list li input[type="checkbox"] {
   </li>  
         <li>
     <a class="dropdown-item" href="../tutorial/02-run-code.html">
- <span class="dropdown-text">B. Download and Preprocess Sample Data</span></a>
+ <span class="dropdown-text">B. Download and preprocess a sample</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../tutorial/03-zarr-cubes.html">
- <span class="dropdown-text">3. Build Zarr Cubes</span></a>
+ <span class="dropdown-text">C. Build and inspect a Zarr cube</span></a>
   </li>  
     </ul>
   </li>
@@ -308,7 +343,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorial/02-run-code.html">B. Download and Preprocess Sample Data</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorial/02-run-code.html">B. Download and preprocess a sample</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -322,6 +357,12 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on Practical Tutorial</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../tutorial/01-setup.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">A. Setup</span></a>
   </div>
@@ -329,13 +370,13 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorial/02-run-code.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">B. Download and Preprocess Sample Data</span></a>
+ <span class="menu-text">B. Download and preprocess a sample</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorial/03-zarr-cubes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">3. Build Zarr Cubes</span></a>
+ <span class="menu-text">C. Build and inspect a Zarr cube</span></a>
   </div>
 </li>
     </ul>
@@ -343,8 +384,21 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#check-the-product-and-study-area" id="toc-check-the-product-and-study-area" class="nav-link active" data-scroll-target="#check-the-product-and-study-area">1. Check the product and study area</a></li>
+  <li><a href="#set-credentials" id="toc-set-credentials" class="nav-link" data-scroll-target="#set-credentials">2. Set credentials</a></li>
+  <li><a href="#download-the-sample" id="toc-download-the-sample" class="nav-link" data-scroll-target="#download-the-sample">3. Download the sample</a></li>
+  <li><a href="#inspect-raw-netcdf-before-processing" id="toc-inspect-raw-netcdf-before-processing" class="nav-link" data-scroll-target="#inspect-raw-netcdf-before-processing">4. Inspect raw NetCDF before processing</a></li>
+  <li><a href="#crop-and-remap" id="toc-crop-and-remap" class="nav-link" data-scroll-target="#crop-and-remap">5. Crop and remap</a></li>
+  <li><a href="#check-for-missing-values" id="toc-check-for-missing-values" class="nav-link" data-scroll-target="#check-for-missing-values">6. Check for missing values</a></li>
+  <li><a href="#method-caveats" id="toc-method-caveats" class="nav-link" data-scroll-target="#method-caveats">7. Method caveats</a></li>
+  <li><a href="#next-page" id="toc-next-page" class="nav-link" data-scroll-target="#next-page">Next page</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -352,7 +406,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">B. Download and Preprocess Sample Data</h1>
+<h1 class="title">B. Download and preprocess a sample</h1>
 </div>
 
 
@@ -369,9 +423,92 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Draw BBOX - https://onlinemapmaker.com/bounding-box-tool/</p>
+<p>This page downloads one LSA SAF product sample, crops it to a configured study area, and remaps it to a target grid. Begin with one product and one short time period. Validate the result before extending the period or region.</p>
+<section id="check-the-product-and-study-area" class="level2">
+<h2 class="anchored" data-anchor-id="check-the-product-and-study-area">1. Check the product and study area</h2>
+<p>The example defaults to <strong>METREF</strong>. The repository also lists FVC/MDFVC as an example product. Select a product from the <a href="https://datalsasaf.lsasvcs.ipma.pt/">LSA SAF Data Service</a> and confirm its product URL, time coverage, variable names, units, coordinate system, no-data values and quality flags.</p>
+<p>The study area has two related settings:</p>
+<ul>
+<li>code/preprocess_utils/config.txt controls the crop bounds (WEST, SOUTH, EAST, NORTH).</li>
+<li>code/preprocess_utils/config_resolution.yaml defines the generated output-grid domain.</li>
+</ul>
+<p>Coordinates are longitude/latitude in degrees in this example. For a new AOI, record the bounds in this order: <strong>west, south, east, north</strong>. Include a suitable input buffer for the remapping method; verify edge coverage after processing.</p>
+</section>
+<section id="set-credentials" class="level2">
+<h2 class="anchored" data-anchor-id="set-credentials">2. Set credentials</h2>
+<p>From the repository root:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> code/.env.example code/.env</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Edit <code>code/.env</code> and enter your <code>LSA SAF</code> credentials - See the <a href="../tutorial/01-setup.html">setup guide</a> for details. The downloader expects:</p>
+<pre class="dotenv"><code>LSASAF_USERNAME=your_username
+LSASAF_PASSWORD=your_password
+SAMPLE_YEAR=2020
+SAMPLE_MONTH=06
+VARIABLE_NAME=METREF
+URL=https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF</code></pre>
+<p>Keep code/.env private and never commit it. The script reads this path by default when run from the repository root. If you use another path, set ENV_FILE=/path/to/.env.</p>
+</section>
+<section id="download-the-sample" class="level2">
+<h2 class="anchored" data-anchor-id="download-the-sample">3. Download the sample</h2>
+<p>Run from the repository root:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> code/01_download_sample.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You can override the year, month, product and product URL positionally:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> code/01_download_sample.sh 2020 06 METREF <span class="st">"https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The script checks the service listing and skips files already present. New files are first written as .part, then renamed after a successful download. The default raw-data layout is:</p>
+<pre class="text"><code>data/raw/METREF/2020/06/*.nc</code></pre>
+<p>Confirm that files exist and have plausible sizes. A completed download only confirms transfer success; it does not confirm that the data are scientifically valid.</p>
+</section>
+<section id="inspect-raw-netcdf-before-processing" class="level2">
+<h2 class="anchored" data-anchor-id="inspect-raw-netcdf-before-processing">4. Inspect raw NetCDF before processing</h2>
+<p>Use CDO to list metadata and summary information:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> sinfo data/raw/METREF/2020/06/example.nc</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> showname data/raw/METREF/2020/06/example.nc</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> showtimestamp data/raw/METREF/2020/06/example.nc</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> infon data/raw/METREF/2020/06/example.nc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You can also use <code>ncdump -h</code> to inspect the header. The jupyter notebook <code>code/inspect_raw.ipynb</code> provides a convenient way to explore the raw file interactively.</p>
+<p>Replace <code>example.nc</code> with a real downloaded filename. Review coordinate ranges, variable names, timestamps, units, missing values and product QA information. If the raw file itself has no valid values, diagnose the download/product selection before remapping.</p>
+</section>
+<section id="crop-and-remap" class="level2">
+<h2 class="anchored" data-anchor-id="crop-and-remap">5. Crop and remap</h2>
+<p>After aligning the configuration file, run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> code/02_preprocess_cdo.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Optional positional arguments are resolution, input folder and output folder:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The script uses <code>code/preprocess_utils/grid.txt</code>, clips each input with <code>sellonlatbox</code>, then remaps to that grid. <code>REMAP_METHOD</code> defaults to bilinear; set <code>REMAP_METHOD=nearest</code> for categorical fields and flags. Bilinear is for continuous variables and smooths values.</p>
+<p>PARALLEL controls the number of independent files processed concurrently; for example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="va">PARALLEL</span><span class="op">=</span>2 <span class="fu">bash</span> code/02_preprocess_cdo.sh 0.05</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Start conservatively. Increase parallelism only after checking RAM, disk throughput and temporary storage.</p>
+<p>Processed files are written beneath data/interim/. Check the cdo.log, then inspect an output:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> sinfo data/interim/METREF/2020/06/example_processed.nc</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> infon data/interim/METREF/2020/06/example_processed.nc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="check-for-missing-values" class="level2">
+<h2 class="anchored" data-anchor-id="check-for-missing-values">6. Check for missing values</h2>
+<p>Compare raw and processed summaries and map the output. An all-NaN or mostly missing result can be caused by:</p>
+<ul>
+<li>crop bounds and target-grid bounds not overlapping;</li>
+<li>wrong variable, coordinate names or coordinate direction;</li>
+<li>fill values not decoded as missing;</li>
+<li>a source mask or retrieval-quality exclusion;</li>
+<li>invalid or unsupported remapping setup.</li>
+</ul>
+<p>Some missing values are expected. Set an acceptable valid-coverage threshold for the application, and check coverage spatially as well as numerically. A file existing or opening is not enough to establish fitness for use.</p>
+</section>
+<section id="method-caveats" class="level2">
+<h2 class="anchored" data-anchor-id="method-caveats">7. Method caveats</h2>
+<ul>
+<li>Regridding does not add source detail. A finer target grid interpolates the source; it does not make the measurement higher resolution.</li>
+<li>Bilinear interpolation smooths continuous fields; nearest-neighbour preserves category labels but may look blocky.</li>
+<li>Degree-based cell size changes with latitude.</li>
+<li>Preserve product QA flags and document any masks, unit conversion and temporal aggregation.</li>
+<li>Record the input product/version, AOI bounds, output grid, resolution, remapping method and software version.</li>
+</ul>
+</section>
+<section id="next-page" class="level2">
+<h2 class="anchored" data-anchor-id="next-page">Next page</h2>
+<p>Continue to <a href="../tutorial/03-zarr-cubes.html">Build and inspect the Zarr cube</a>.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -794,8 +931,8 @@ ul.task-list li input[type="checkbox"] {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../tutorial/03-zarr-cubes.html" class="pagination-link" aria-label="3. Build Zarr Cubes">
-        <span class="nav-page-text">3. Build Zarr Cubes</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../tutorial/03-zarr-cubes.html" class="pagination-link" aria-label="C. Build and inspect a Zarr cube">
+        <span class="nav-page-text">C. Build and inspect a Zarr cube</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

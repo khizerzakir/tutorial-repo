@@ -4,8 +4,9 @@
     "href": "tutorial/01-setup.html",
     "title": "A. Setup",
     "section": "",
-    "text": "This setup guide will help you install the necessary tools and dependencies to run the Climate Data Cube workshop code on your local machine.\nBecause the workshop code is designed to run in a Linux environment, we will use Windows Subsystem for Linux (WSL2) on Windows. If you are using macOS or Linux or have WSL installed, you can skip the WSL installation and use your native/WSL terminal.",
+    "text": "This setup guide will help you install the necessary tools and dependencies to follow and run this workshop code on your local machine unless you are using a cloud-based environment. The workshop code is designed to run in a Linux environment, so if you are using Windows, we recommend installing Windows Subsystem for Linux (WSL2). If you are using macOS or Linux, you can skip the WSL installation and use your native terminal.",
     "crumbs": [
+      "Home",
       "A. Setup"
     ]
   },
@@ -16,6 +17,7 @@
     "section": "1. Install WSL2 and Ubuntu",
     "text": "1. Install WSL2 and Ubuntu\n\nOpen the Windows Start menu, search for PowerShell, and choose Run as administrator.\nRun the following command in Windows PowerShell:\n\nwsl --install -d Ubuntu\n\nRestart Windows if prompted.\nLaunch Ubuntu from the Start menu and wait for first-time initialization.\nCreate your Ubuntu username and password when prompted. Password characters are not displayed while typing.\n\nCheck installation in Windows PowerShell:\nwsl --list --verbose\nYou should see Ubuntu with VERSION equal to 2. If Ubuntu is version 1, use:\nwsl --set-version Ubuntu 2\nIf wsl --install displays help instead of installing, try wsl --list --online, then wsl --install -d Ubuntu. If installation is blocked by policy or virtualization, contact your IT administrator. Do not attempt to bypass institutional restrictions.\nOfficial guide: https://learn.microsoft.com/en-us/windows/wsl/install",
     "crumbs": [
+      "Home",
       "A. Setup"
     ]
   },
@@ -26,87 +28,162 @@
     "section": "2. Install Visual Studio Code",
     "text": "2. Install Visual Studio Code\nIf you do not have VS Code installed, follow these steps:\n\nDownload VS Code for Windows: https://code.visualstudio.com/download.\nInstall VS Code on Windows (not inside Ubuntu).\nOpen VS Code → Extensions (Ctrl+Shift+X). Install:\n\nWSL (Microsoft)\nPython (Microsoft)\nJupyter (Microsoft)\n\n\nOfficial WSL + VS Code guide: https://code.visualstudio.com/docs/remote/wsl",
     "crumbs": [
+      "Home",
       "A. Setup"
     ]
   },
   {
-    "objectID": "tutorial/01-setup.html#prepare-ubuntu-and-system-dependencies",
-    "href": "tutorial/01-setup.html#prepare-ubuntu-and-system-dependencies",
+    "objectID": "tutorial/01-setup.html#get-the-repository",
+    "href": "tutorial/01-setup.html#get-the-repository",
     "title": "A. Setup",
-    "section": "3. Prepare Ubuntu and system dependencies",
-    "text": "3. Prepare Ubuntu and system dependencies\nOpen the Ubuntu terminal from the Windows Start menu and run:\nsudo apt update\nsudo apt upgrade -y\nsudo apt install -y \\\n  git wget curl ca-certificates \\\n  cdo python3 python3-venv python3-pip\nVerify:\ncdo -V\ngit --version\npython3 --version\nwget --version | head -n 1\n\nWhy CDO? CDO performs the controlled spatial processing in this workshop: clipping and remapping.",
+    "section": "3. Get the repository",
+    "text": "3. Get the repository\nOn Windows, open WSL2, On Linux or macOS, use a terminal and install Git, wget, CDO and Python 3.11+ using your operating system’s package manager,\nThen run:\nsudo apt update\nsudo apt install -y git wget curl ca-certificates cdo python3 python3-venv python3-pip\nKeep the project inside the Linux filesystem on WSL | in your home directory (for Linux and macOS), for example:\nmkdir -p ~/projects\ncd ~/projects\ngit clone https://github.com/khizerzakir/tutorial-repo.git\ncd tutorial-repo\nOpen the repository from Ubuntu/terminal with the command code dot.\ncode .",
     "crumbs": [
+      "Home",
       "A. Setup"
     ]
   },
   {
-    "objectID": "tutorial/01-setup.html#install-uv-python-dependency-manager",
-    "href": "tutorial/01-setup.html#install-uv-python-dependency-manager",
+    "objectID": "tutorial/01-setup.html#check-your-tools",
+    "href": "tutorial/01-setup.html#check-your-tools",
     "title": "A. Setup",
-    "section": "4. Install uv (Python dependency manager)",
-    "text": "4. Install uv (Python dependency manager)\nInside Ubuntu, install uv using the official installer:\ncurl -LsSf https://astral.sh/uv/install.sh | sh\nRestart the Ubuntu terminal or refresh the shell configuration (as instructed by the installer). Verify:\nuv --version\nDocumentation: https://docs.astral.sh/uv/getting-started/installation/",
+    "section": "4. Check your tools",
+    "text": "4. Check your tools\ncdo -V\ngit --version\npython3 --version\nwget --version | head -n 1\nIf you use uv, also run uv –version. If CDO is missing, install it through your OS package manager or a conda-forge environment; CDO is not installed by uv or pip.",
     "crumbs": [
+      "Home",
       "A. Setup"
     ]
   },
   {
-    "objectID": "tutorial/01-setup.html#clone-the-repository",
-    "href": "tutorial/01-setup.html#clone-the-repository",
+    "objectID": "tutorial/01-setup.html#install-python-dependencies",
+    "href": "tutorial/01-setup.html#install-python-dependencies",
     "title": "A. Setup",
-    "section": "5. Clone the Repository",
-    "text": "5. Clone the Repository\nKeep the repository inside the Linux home directory for better file performance (for example, ~/projects/), rather than under /mnt/c/.\nmkdir -p ~/projects\ncd ~/projects\n\ngit clone https://github.com/khizerzakir/tutorial-repo.git\ncd &lt;YOUR-REPOSITORY&gt; ## replace with the actual repository name\nOpen the Linux folder in VS Code:\ncode .\nThe first launch may install the VS Code Server in WSL. Check the lower-left corner of VS Code for WSL: Ubuntu. Open Terminal → New Terminal: it should be a Linux shell.",
+    "section": "5. Install Python dependencies",
+    "text": "5. Install Python dependencies\nThe Zarr builder in this repository requires Zarr 3; use Python 3.11 or newer.\n\nOption A: uv\nInstall uv using the official instructions, then from the repository root run:\nuv sync --locked\nCheck the core packages and Zarr major version:\nuv run python -c \"import xarray, zarr; print(xarray.__version__, zarr.__version__)\"\n\n\nOption B: pip\npython3 -m venv .venv\nsource .venv/bin/activate\npython -m pip install --upgrade pip\npython -m pip install -r requirements.txt\npython -c \"import xarray, zarr; print(xarray.__version__, zarr.__version__)\"\nConfirm that the printed Zarr version is 3 or newer before running the cube builder. If the environment resolves Zarr 2, use Python 3.11+ and reinstall the project dependencies.\n\nImportant: Keep the virtual environment activated for subsequent terminal commands. When you open a new Ubuntu terminal, run source .venv/bin/activate again. Do not use sudo pip install. The requirements.txt must be committed to github and kept consistent with the tested uv.lock; pip does not read uv.lock automatically.",
     "crumbs": [
+      "Home",
       "A. Setup"
     ]
   },
   {
-    "objectID": "tutorial/01-setup.html#install-the-projects-python-dependencies-choose-uv-or-pip",
-    "href": "tutorial/01-setup.html#install-the-projects-python-dependencies-choose-uv-or-pip",
+    "objectID": "tutorial/01-setup.html#configure-lsa-saf-access",
+    "href": "tutorial/01-setup.html#configure-lsa-saf-access",
     "title": "A. Setup",
-    "section": "6. Install the project’s Python dependencies (choose uv or pip)",
-    "text": "6. Install the project’s Python dependencies (choose uv or pip)\n\nOption A — uv (recommended if installed)\nFrom the repository root in the VS Code WSL terminal:\nuv sync --locked\nFor notebooks, only if the project defines a notebook optional dependency group:\nuv sync --locked --extra notebook\nIf --extra notebook is not defined, follow the repository’s pyproject.toml instructions instead. uv.lock should be committed so students resolve the same dependency versions. Confirm the environment:\nuv run python -c \"import xarray, zarr; print('xarray and zarr: OK')\"\n\n\nOption B — pip with requirements.txt (no uv required)\nIf you do not have uv, use the system-provided Python and create an isolated virtual environment. Run these commands inside Ubuntu, from the GitLab repository root:\n# Install Python virtual-environment support if needed\nsudo apt update\nsudo apt install -y python3 python3-venv python3-pip\n\n# Create and activate a project-local environment\npython3 -m venv .venv\nsource .venv/bin/activate\n\n# Install the pinned project requirements\npython -m pip install --upgrade pip\npython -m pip install -r requirements.txt\n\n# Confirm that key libraries are available\npython -c \"import xarray, zarr; print('xarray and zarr: OK')\"\nFor notebooks, check whether requirements.txt includes ipykernel and jupyterlab. If not, install them in the activated environment:\npython -m pip install ipykernel jupyterlab\npython -m ipykernel install --user --name lsasaf-cube --display-name \"Python (LSA SAF Cube)\"\n\nImportant: Keep the virtual environment activated for subsequent terminal commands. When you open a new Ubuntu terminal, run source .venv/bin/activate again. Do not use sudo pip install. The requirements.txt must be committed to GitLab and kept consistent with the tested uv.lock; pip does not read uv.lock automatically.",
+    "section": "6. Configure LSA SAF access",
+    "text": "6. Configure LSA SAF access\n\nRegister on the LSA SAF data portal and activate your account.\n\n\n\nData portal registration\n\n\nAdd your credentials to a .env file in code/:\n\nEdit code/.env with your account credentials. The downloader expects the names LSASAF_USERNAME and LSASAF_PASSWORD. Do not commit this file or include it in screenshots.\n   cp code/.env.example code/.env\n   LSASAF_USERNAME=\"username\"\n   LSASAF_PASSWORD=\"password\"\n\nChoose the products for this tutorial:\n\nMETREF: Reference Evapotranspiration\nFVC: Fractional Vegetation Cover\n\n\n\n\nBrowse the products",
     "crumbs": [
+      "Home",
       "A. Setup"
     ]
   },
   {
-    "objectID": "tutorial/01-setup.html#set-up-lsa-saf-credentials",
-    "href": "tutorial/01-setup.html#set-up-lsa-saf-credentials",
+    "objectID": "tutorial/01-setup.html#continue",
+    "href": "tutorial/01-setup.html#continue",
     "title": "A. Setup",
-    "section": "7. Set up LSA SAF credentials",
-    "text": "7. Set up LSA SAF credentials\nFollow the instructions in the repository’s README.md to obtain a username and password for the LSA SAF Data Service. You will need these credentials to download sample data.\nCreate a local credentials file (never commit it):\ncp .env.example .env\nOpen .env in VS Code and enter the account details obtained from the LSA SAF Data Service:\nUSERNAME=your_lsa_saf_username\nPASSWORD=your_lsa_saf_password\nRegister or access your account at https://datalsasaf.lsasvcs.ipma.pt/. Ensure .env is listed in .gitignore. Do not share .env in screenshots, commits, or submissions.",
+    "section": "7. Continue",
+    "text": "7. Continue\nGo to Download and preprocess a sample. Run all project commands from the repository root unless the command says otherwise.",
     "crumbs": [
+      "Home",
       "A. Setup"
     ]
   },
   {
-    "objectID": "tutorial/01-setup.html#run-the-workflow",
-    "href": "tutorial/01-setup.html#run-the-workflow",
-    "title": "A. Setup",
-    "section": "8. Run the workflow",
-    "text": "8. Run the workflow\nTo be added..",
+    "objectID": "tutorial/03-zarr-cubes.html",
+    "href": "tutorial/03-zarr-cubes.html",
+    "title": "C. Build and inspect a Zarr cube",
+    "section": "",
+    "text": "This page turns the remapped interim NetCDF files into a compressed, chunked and sharded Zarr v3 store, then opens a small selection for inspection.",
     "crumbs": [
-      "A. Setup"
+      "Home",
+      "C. Build and inspect a Zarr cube"
     ]
   },
   {
-    "objectID": "tutorial/01-setup.html#inspect-results-in-vs-code",
-    "href": "tutorial/01-setup.html#inspect-results-in-vs-code",
-    "title": "A. Setup",
-    "section": "9. Inspect results in VS Code",
-    "text": "9. Inspect results in VS Code\nTo be added..",
+    "objectID": "tutorial/03-zarr-cubes.html#check-the-interim-files",
+    "href": "tutorial/03-zarr-cubes.html#check-the-interim-files",
+    "title": "C. Build and inspect a Zarr cube",
+    "section": "1. Check the interim files",
+    "text": "1. Check the interim files\nThe builder expects NetCDF files under data/interim/ and dimensions named time, lat and lon.\nfind data/interim -name '*_processed.nc' -type f\ncdo -s sinfo data/interim/METREF/2020/06/example_processed.nc\nReplace the example filename with one of your actual outputs. Confirm time and coordinate dimensions and inspect valid values before building the cube. If your files use x and y, update the dimension names and chunk configuration in code/build_zarr_cube.py.",
     "crumbs": [
-      "A. Setup"
+      "Home",
+      "C. Build and inspect a Zarr cube"
     ]
   },
   {
-    "objectID": "tutorial/01-setup.html#troubleshooting",
-    "href": "tutorial/01-setup.html#troubleshooting",
-    "title": "A. Setup",
-    "section": "10. Troubleshooting",
-    "text": "10. Troubleshooting\n\n\n\n\n\n\n\nProblem\nSuggested action\n\n\n\n\nwsl not recognized\nCheck Windows version and Windows updates; consult the official WSL guide.\n\n\nWSL installation blocked\nAsk university IT about virtualization and Windows feature permissions.\n\n\ncode: command not found\nInstall VS Code on Windows with the WSL extension; reopen Ubuntu and try code ..\n\n\ncdo: command not found\nRun sudo apt update && sudo apt install -y cdo inside Ubuntu.\n\n\nuv: command not found\nRestart Ubuntu terminal and follow the PATH instructions from the uv installer.\n\n\nPermission denied for .sh\nUse bash scripts/NAME.sh; ensure scripts use Unix LF line endings.\n\n\nconfig.txt or grid.txt missing\nCheck the preprocessing wrapper’s working directory and configuration paths.\n\n\nNo NetCDF files found\nConfirm the preceding stage completed and files are under data/raw/ or data/interim/ as expected.\n\n\nJupyter kernel not found\nIn VS Code, select the interpreter at .venv/bin/python and ensure notebook dependencies are installed.\n\n\nSlow processing under /mnt/c\nMove the repository into ~/projects/ in Ubuntu.",
+    "objectID": "tutorial/03-zarr-cubes.html#build-the-cube",
+    "href": "tutorial/03-zarr-cubes.html#build-the-cube",
+    "title": "C. Build and inspect a Zarr cube",
+    "section": "2. Build the cube",
+    "text": "2. Build the cube\nFrom the repository root:\nuv run python code/build_zarr_cube.py\nThe script uses xarray to open multiple files by coordinates and Dask for lazy/chunked processing. It writes to:\ndata/zarr/example.zarr/\nThe current builder requires Zarr 3. Use a Python environment that resolves Zarr 3 as required by the script. The script removes an existing output store before rebuilding; copy or rename any output you need to keep first.",
     "crumbs": [
-      "A. Setup"
+      "Home",
+      "C. Build and inspect a Zarr cube"
+    ]
+  },
+  {
+    "objectID": "tutorial/03-zarr-cubes.html#understand-chunks-shards-and-compression",
+    "href": "tutorial/03-zarr-cubes.html#understand-chunks-shards-and-compression",
+    "title": "C. Build and inspect a Zarr cube",
+    "section": "3. Understand chunks, shards and compression",
+    "text": "3. Understand chunks, shards and compression\nThe script currently starts with:\nINNER_CHUNKS = {\"time\": 1, \"lat\": 256, \"lon\": 256}\nSHARD_CHUNKS = {\"time\": 10, \"lat\": 512, \"lon\": 512}\nCOMPRESSOR = BloscCodec(cname=\"zstd\", clevel=5, shuffle=\"shuffle\")\n\n\n\n\n\n\n\n\nSetting\nRole\nTrade-off\n\n\n\n\nInner chunks\nSmall independently readable blocks\nSmaller blocks help selective reads but add metadata/overhead\n\n\nShards\nGroup storage for multiple inner chunks\nLarger shards reduce object count but may make writes/updates coarser\n\n\nZstd compression\nReduces stored bytes\nHigher compression can use more CPU\n\n\n\nThese are initial values, not universal optima. Benchmark common access patterns: a map at one time, a point/area time series, and a small regional subset.",
+    "crumbs": [
+      "Home",
+      "C. Build and inspect a Zarr cube"
+    ]
+  },
+  {
+    "objectID": "tutorial/03-zarr-cubes.html#open-and-inspect",
+    "href": "tutorial/03-zarr-cubes.html#open-and-inspect",
+    "title": "C. Build and inspect a Zarr cube",
+    "section": "4. Open and inspect",
+    "text": "4. Open and inspect\nimport xarray as xr\n\nds = xr.open_zarr(\"data/zarr/metref_sample_1month.zarr\", consolidated=False)\nprint(ds)\nprint(list(ds.data_vars))\nSelect a time slice and a point time series:\nvariable = next(iter(ds.data_vars))\nmap_at_time = ds[variable].isel(time=0)\npoint_series = ds[variable].isel(lat=100, lon=100)\nThese indices are examples only. Check the coordinates at the selected indices, dimension ordering, variable units, and timestamp before interpreting a plot. The project plotting utilities are in code/plot_utils/; see their README for import and usage examples.",
+    "crumbs": [
+      "Home",
+      "C. Build and inspect a Zarr cube"
+    ]
+  },
+  {
+    "objectID": "tutorial/03-zarr-cubes.html#validation-after-writing",
+    "href": "tutorial/03-zarr-cubes.html#validation-after-writing",
+    "title": "C. Build and inspect a Zarr cube",
+    "section": "5. Validation after writing",
+    "text": "5. Validation after writing\nThe builder reopens the output store and computes a small sample statistic. Also check:\n\nexpected dimensions, coordinate ranges and time count;\ndata-variable names and attributes/units;\nvalid-value coverage in a few known maps and time slices;\nrepresentative values against the interim NetCDF source;\nwhether map/time-series reads perform acceptably for your use case.\n\nA successful Zarr write checks storage/readability, not the scientific correctness of source values or remapping.",
+    "crumbs": [
+      "Home",
+      "C. Build and inspect a Zarr cube"
+    ]
+  },
+  {
+    "objectID": "tutorial/03-zarr-cubes.html#scaling-beyond-the-sample",
+    "href": "tutorial/03-zarr-cubes.html#scaling-beyond-the-sample",
+    "title": "C. Build and inspect a Zarr cube",
+    "section": "6. Scaling beyond the sample",
+    "text": "6. Scaling beyond the sample\nFor a priority subset, measure runtime, peak memory, interim and Zarr sizes, valid coverage and read speed. Expand to a larger region or a 2,000 km corridor by processing grid-aligned spatial tiles and time batches. Add a remapping margin at tile boundaries, then remove duplicate edge cells from the final grid.\nParallelize independent NetCDF files or tiles up to the measured CPU, memory, storage and network limits of the available workstation/VM. Use isolated temporary stores or non-overlapping Zarr regions; avoid concurrent writes to the same chunk/shard. Keep a manifest and rerun only failed batches. Re-benchmark chunks and shards on the larger workload.",
+    "crumbs": [
+      "Home",
+      "C. Build and inspect a Zarr cube"
+    ]
+  },
+  {
+    "objectID": "tutorial/03-zarr-cubes.html#troubleshooting",
+    "href": "tutorial/03-zarr-cubes.html#troubleshooting",
+    "title": "C. Build and inspect a Zarr cube",
+    "section": "Troubleshooting",
+    "text": "Troubleshooting\n\n\n\n\n\n\n\nSymptom\nChecks\n\n\n\n\nNo interim files\nCheck downloader output, input path and CDO log\n\n\nMany NaNs after remapping\nCompare raw AOI, crop bounds and target-grid bounds; inspect fill values and source QA\n\n\nZarr dimension error\nPrint ds.sizes; rename coordinates or change chunk dimensions\n\n\nZarr version error\nCheck uv run python -c “import zarr; print(zarr.__version__)“; script needs version 3 or newer\n\n\nSlow writes or reads\nCheck RAM/disk I/O, chunk and shard sizes, and number of parallel tasks\n\n\nOutput already exists\nBuilder replaces its output; back up the store or change OUTPUT in the script",
+    "crumbs": [
+      "Home",
+      "C. Build and inspect a Zarr cube"
+    ]
+  },
+  {
+    "objectID": "tutorial/03-zarr-cubes.html#next-steps",
+    "href": "tutorial/03-zarr-cubes.html#next-steps",
+    "title": "C. Build and inspect a Zarr cube",
+    "section": "Next steps",
+    "text": "Next steps\nAfter the pilot is validated, add quality-aware masks, explicit coverage thresholds, provenance metadata, reproducible configuration records, and automated tests for representative source files.",
+    "crumbs": [
+      "Home",
+      "C. Build and inspect a Zarr cube"
     ]
   },
   {
@@ -124,60 +201,134 @@
     "text": "This notebook opens the Zarr store and runs a small computation to verify integrity.\n\nimport xarray as xr\nfrom pathlib import Path\n# Paths\nrepo_root = next(\n    parent for parent in [Path.cwd().resolve(), *Path.cwd().resolve().parents]\n    if (parent / \"pyproject.toml\").exists()\n)\nstore = repo_root / \"data\" / \"zarr\" / \"metref_sample_1month.zarr\"\n\nds = xr.open_zarr(store, consolidated=False)\nds\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n&lt;xarray.Dataset&gt; Size: 114MB\nDimensions:       (time: 30, lat: 552, lon: 576)\nCoordinates:\n  * time          (time) datetime64[ns] 240B 2020-06-01 ... 2020-06-30\n  * lat           (lat) float64 4kB -10.94 -10.89 -10.84 ... 16.51 16.56 16.61\n  * lon           (lon) float64 5kB -17.18 -17.13 -17.08 ... 11.47 11.52 11.57\nData variables:\n    METREF        (time, lat, lon) float32 38MB dask.array&lt;chunksize=(1, 256, 256), meta=np.ndarray&gt;\n    quality_flag  (time, lat, lon) float64 76MB dask.array&lt;chunksize=(1, 256, 256), meta=np.ndarray&gt;\nAttributes: (12/29)\n    CDI:                        Climate Data Interface version 2.4.0 (https:/...\n    Conventions:                CF-1.6\n    institution:                IM-PT\n    date_created:               2020-10-23T07:20:57Z\n    algorithm_version:          1.3.2\n    base_algorithm_version:     1.0.3\n    ...                         ...\n    westernmost_longitude:      80.0\n    spatial_resolution:          0.05x 0.05\n    geospatial_lat_units:       degrees_north\n    geospatial_lon_units:       degrees_east\n    netcdf_version_id:          netCDF4\n    CDO:                        Climate Data Operators version 2.4.0 (https:/...xarray.DatasetDimensions:time: 30lat: 552lon: 576Coordinates: (3)time(time)datetime64[ns]2020-06-01 ... 2020-06-30standard_name :timelong_name :timeaxis :Tarray(['2020-06-01T00:00:00.000000000', '2020-06-02T00:00:00.000000000',\n       '2020-06-03T00:00:00.000000000', '2020-06-04T00:00:00.000000000',\n       '2020-06-05T00:00:00.000000000', '2020-06-06T00:00:00.000000000',\n       '2020-06-07T00:00:00.000000000', '2020-06-08T00:00:00.000000000',\n       '2020-06-09T00:00:00.000000000', '2020-06-10T00:00:00.000000000',\n       '2020-06-11T00:00:00.000000000', '2020-06-12T00:00:00.000000000',\n       '2020-06-13T00:00:00.000000000', '2020-06-14T00:00:00.000000000',\n       '2020-06-15T00:00:00.000000000', '2020-06-16T00:00:00.000000000',\n       '2020-06-17T00:00:00.000000000', '2020-06-18T00:00:00.000000000',\n       '2020-06-19T00:00:00.000000000', '2020-06-20T00:00:00.000000000',\n       '2020-06-21T00:00:00.000000000', '2020-06-22T00:00:00.000000000',\n       '2020-06-23T00:00:00.000000000', '2020-06-24T00:00:00.000000000',\n       '2020-06-25T00:00:00.000000000', '2020-06-26T00:00:00.000000000',\n       '2020-06-27T00:00:00.000000000', '2020-06-28T00:00:00.000000000',\n       '2020-06-29T00:00:00.000000000', '2020-06-30T00:00:00.000000000'],\n      dtype='datetime64[ns]')lat(lat)float64-10.94 -10.89 ... 16.56 16.61standard_name :latitudelong_name :latitudeunits :degrees_northaxis :Yarray([-10.944114, -10.894114, -10.844114, ...,  16.505886,  16.555886,\n        16.605886], shape=(552,))lon(lon)float64-17.18 -17.13 ... 11.52 11.57standard_name :longitudelong_name :longitudeunits :degrees_eastaxis :Xarray([-17.180733, -17.130733, -17.080733, ...,  11.469267,  11.519267,\n        11.569267], shape=(576,))Data variables: (2)METREF(time, lat, lon)float32dask.array&lt;chunksize=(1, 256, 256), meta=np.ndarray&gt;long_name :METREFunits :mm/daydask.arrayquality_flag(time, lat, lon)float64dask.array&lt;chunksize=(1, 256, 256), meta=np.ndarray&gt;long_name :QFLAGSdask.arrayAttributes: (29)CDI :Climate Data Interface version 2.4.0 (https://mpimet.mpg.de/cdi)Conventions :CF-1.6institution :IM-PTdate_created :2020-10-23T07:20:57Zalgorithm_version :1.3.2base_algorithm_version :1.0.3processing_level :03platform :MSG4sensor :SEVIparent_product_name :METREF;QFLAGS;-;-time_coverage_start :2020-06-01T00:00:00Zimage_reference_time :2020-06-01T00:00:00Zname :METREFregion_name :MSG-Diskarchive_facility :IPMAlicense :Data is freely available for users registered at the LSA SAF website - lsa-saf.eumetsat.inthistory :Tue Oct 13 16:34:27 2026: cdo -L -f nc4 -O -remapbil,/mnt/c/Users/b1113715/Downloads/tutorial-repo/code/preprocess_utils/grid.txt /tmp/tmp.0DkzZpoEyI /mnt/c/Users/b1113715/Downloads/tutorial-repo/data/interim/2020/06/NETCDF4_LSASAF_MSG_METREF_MSG-Disk_202006010000_processed.nc\nTue Oct 13 16:34:27 2026: cdo -L -f nc4 -O -sellonlatbox,-17.3807,-10.7441,11.4253,16.852 /mnt/c/Users/b1113715/Downloads/tutorial-repo/data/raw/METREF/2020/06/NETCDF4_LSASAF_MSG_METREF_MSG-Disk_202006010000.nc /tmp/tmp.0DkzZpoEyI\n2020-10-23T07:20:57Z - NetCDF reprojected product ; 2020-06-02T00:00:24Z Original product file created: HDF5_LSASAF_MSG_METREF_MSG-Disk_202006010000geospatial_lat_resolution : 0.05geospatial_lon_resolution : 0.05northernmost_latitude :80.0southernmost_latitude :-80.0references :Data provided by the EUMETSAT Satellite Application Facility on Land Surface Analysis (LSA SAF; Trigo et al., 2011) http://lsa-saf.eumetsat.int Trigo, I. F., C. C. DaCamara, P. Viterbo, J.-L. Roujean, F. Olesen, C. Barroso, F. Camacho-de Coca, D. Carrer, S. C. Freitas, J. García-Haro, B. Geiger, F. Gellens-Meulenberghs, N. Ghilain, J. Meliá, L. Pessanha, N. Siljamo, and A. Arboleda, 2011: The Satellite Application Facility on Land Surface Analysis. Int. J. Remote Sens., 32, 2725-2744, doi: 10.1080/01431161003743199easternmost_longitude :-80.0westernmost_longitude :80.0spatial_resolution : 0.05x 0.05geospatial_lat_units :degrees_northgeospatial_lon_units :degrees_eastnetcdf_version_id :netCDF4CDO :Climate Data Operators version 2.4.0 (https://mpimet.mpg.de/cdo)\n\n\n\nds.METREF.values\n\narray([[[nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        ...,\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan]],\n\n       [[nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        ...,\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan]],\n\n       [[nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        ...,\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan]],\n\n       ...,\n\n       [[nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        ...,\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan]],\n\n       [[nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        ...,\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan]],\n\n       [[nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        ...,\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan]]],\n      shape=(30, 552, 576), dtype=float32)\n\n\n\n# Example quick check\n# (adjust variable name if needed)\nds.to_array().mean('time').compute()"
   },
   {
-    "objectID": "slides/presentation.html#the-problem",
-    "href": "slides/presentation.html#the-problem",
+    "objectID": "slides/presentation.html#why-are-we-here",
+    "href": "slides/presentation.html#why-are-we-here",
     "title": "Climate Data Cubes",
-    "section": "The problem",
-    "text": "The problem\n\nClimate data arrives in many formats, resolutions and projections."
+    "section": "Why are we here?",
+    "text": "Why are we here?\n\nClimate products are useful, but their files can arrive with different grids, time steps, metadata and quality information.\n\n\n\nToday we make one small, transparent processing path from EUMETSAT source files to a regional data cube."
   },
   {
-    "objectID": "slides/presentation.html#the-problem-1",
-    "href": "slides/presentation.html#the-problem-1",
+    "objectID": "slides/presentation.html#what-will-we-learn",
+    "href": "slides/presentation.html#what-will-we-learn",
     "title": "Climate Data Cubes",
-    "section": "The problem",
-    "text": "The problem\n\nClimate data arrives in many formats, resolutions and projections.\n\n\n\nA data cube gives one consistent grid: time × latitude × longitude.\n\n\n\n\nHowever, not every EUMETSAT product or authenticated API supports efficient remote reading, so temporary downloads are the more reliable starting point."
+    "section": "What will we learn?",
+    "text": "What will we learn?\n\nFind and download a selected LSA SAF product safely. {.fragment .fade-up}\nCrop and remap a sample to an explicitly defined regional grid. {.fragment .fade-up}\nBuild and inspect a chunked, compressed Zarr cube. {.fragment .fade-up}\nCheck missing data, understand trade-offs, and plan the next scale step. {.fragment .fade-up}"
   },
   {
-    "objectID": "slides/presentation.html#key-numbers",
-    "href": "slides/presentation.html#key-numbers",
+    "objectID": "slides/presentation.html#what-is-a-climate-data-cube",
+    "href": "slides/presentation.html#what-is-a-climate-data-cube",
     "title": "Climate Data Cubes",
-    "section": "Key numbers",
-    "text": "Key numbers\n\n\n40+\nyears of data\n\n1 km\nspatial resolution\n\n3\nvariables"
+    "section": "What is a climate data cube?",
+    "text": "What is a climate data cube?\n\n\nA data cube is a multidimensional way to organize data. A climate data cube applies this idea to climate or Earth observation variables, commonly indexed by:\ntime × space × variable\n\nGeneric cube: the same structure can store many domains and measurements.\nClimate cube: gives climate/EO data meaningful variables, units, calendars, grids, quality flags, provenance and uncertainty.\nIt is a domain-focused data organization, not a separate file format. Here, NetCDF is the input and Zarr is the output.\n\n\n\n\n\nA cube as a multidimensional data structure"
   },
   {
-    "objectID": "slides/presentation.html#picture-text",
-    "href": "slides/presentation.html#picture-text",
+    "objectID": "slides/presentation.html#data-used-in-this-workshop",
+    "href": "slides/presentation.html#data-used-in-this-workshop",
     "title": "Climate Data Cubes",
-    "section": "Picture + text",
-    "text": "Picture + text\n\n\n\n\n\nThe data cube idea\n\n\n\n\nReplace img/cube.svg with your own figure\nFragments reveal one point at a time {.fragment}\nAdd alt text for accessibility {.fragment}"
+    "section": "Data used in this workshop",
+    "text": "Data used in this workshop\n\n\n\n\n\n\n\n\nProduct\nWhat it represents\nIn this tutorial\n\n\n\n\nMETREF\nReference evapotranspiration\nDefault configured download sample\n\n\nFVC / MDFVC\nFractional vegetation cover\nAdditional product example; configure its own URL and metadata\n\n\n\nData are accessed from the authenticated LSA SAF Data Service. Availability, product versions, units, coverage and quality information depend on the selected product; check its product page before analysis."
   },
   {
-    "objectID": "slides/presentation.html#section",
-    "href": "slides/presentation.html#section",
+    "objectID": "slides/presentation.html#from-source-file-to-cube",
+    "href": "slides/presentation.html#from-source-file-to-cube",
     "title": "Climate Data Cubes",
-    "section": "",
-    "text": "Full-slide background image\nUse background-image=\"img/your-photo.jpg\" on any slide. Lower background-opacity so the text stays readable."
+    "section": "From source file to cube",
+    "text": "From source file to cube\n~{mermaid} flowchart LR A[“LSA SAF productNetCDF + credentials”] –&gt; B[“Download sampledata/raw”] B –&gt; C[“Inspect metadatavalid values + QA”] C –&gt; D[“Crop to AOIconfigured bounds”] D –&gt; E[“Remap to target gridCDO”] E –&gt; F[“Validate outputscoverage + statistics”] F –&gt; G[“Build Zarr cubexarray + Dask”] G –&gt; H[“Maps + time seriesregional analysis”] ~\n\nEach step leaves a checkable output. If a stage fails, diagnose that stage before moving on."
   },
   {
-    "objectID": "slides/presentation.html#the-code",
-    "href": "slides/presentation.html#the-code",
+    "objectID": "slides/presentation.html#step-1-download-a-small-sample",
+    "href": "slides/presentation.html#step-1-download-a-small-sample",
     "title": "Climate Data Cubes",
-    "section": "The code",
-    "text": "The code\n#!/usr/bin/env python3\n\"\"\"Create a compressed, sharded Zarr v3 cube from interim NetCDF files.\"\"\"\n\nfrom pathlib import Path\nimport shutil\n\nimport xarray as xr\nimport zarr\nfrom packaging.version import Version\n\n\nif Version(zarr.__version__) &lt; Version(\"3.0\"):\n    raise RuntimeError(\n        f\"Zarr &gt;= 3.0 is required, but {zarr.__version__} is installed. \"\n        \"Run this script with the project environment, for example: \"\n        \"`uv run python code/build_zarr_cube.py`.\"\n    )\n\nfrom zarr.codecs import BloscCodec\n\n\nROOT = Path(__file__).resolve().parents[1]\nINTERIM = ROOT / \"data\" / \"interim\"\nOUTPUT = ROOT / \"data\" / \"zarr\" / \"metref_sample_1month.zarr\"\n\n# Intended access: time slices / maps. Tune after benchmarking your real data.\nINNER_CHUNKS = {\"time\": 1, \"lat\": 256, \"lon\": 256}\nSHARD_CHUNKS = {\"time\": 10, \"lat\": 512, \"lon\": 512}\nCOMPRESSOR = BloscCodec(cname=\"zstd\", clevel=5, shuffle=\"shuffle\")\n\n\ndef main() -&gt; int:\n    files = sorted(INTERIM.rglob(\"*.nc\"))\n    if not files:\n        raise FileNotFoundError(f\"No NetCDF files found under {INTERIM}\")\n\n    print(f\"Opening {len(files)} NetCDF files\")\n    ds = xr.open_mfdataset(\n        files,\n        combine=\"by_coords\",\n        parallel=False,\n        chunks=\"auto\",\n        engine=\"h5netcdf\",\n        data_vars=\"minimal\",\n        coords=\"minimal\",\n        compat=\"override\",\n    )\n\n    # Use the input's actual dimension names; rename here if needed, e.g. y/x.\n    missing = (set(INNER_CHUNKS) | set(SHARD_CHUNKS)) - set(ds.dims)\n    if missing:\n        raise ValueError(\n            f\"Expected dimensions {sorted(missing)} are missing. \"\n            f\"Found {dict(ds.sizes)}; update the chunk settings or rename dimensions.\"\n        )\n    if \"time\" in ds.coords:\n        ds = ds.sortby(\"time\")\n\n    # Dask writes one complete shard task at a time. Each shard holds multiple\n    # independently compressed inner chunks, reducing object/file counts.\n    ds = ds.chunk(SHARD_CHUNKS)\n    encoding = {}\n    for name, da in ds.data_vars.items():\n        if da.dtype.kind not in \"iufcb\":  # leave strings/objects to xarray defaults\n            continue\n        dims = da.dims\n        inner = tuple(min(INNER_CHUNKS.get(dim, da.sizes[dim]), da.sizes[dim]) for dim in dims)\n        shard = tuple(min(SHARD_CHUNKS.get(dim, inner[i]), da.sizes[dim]) for i, dim in enumerate(dims))\n        encoding[name] = {\n            \"chunks\": inner,\n            \"shards\": shard,\n            \"compressors\": [COMPRESSOR],\n        }\n\n    OUTPUT.parent.mkdir(parents=True, exist_ok=True)\n    if OUTPUT.exists():\n        shutil.rmtree(OUTPUT)\n\n    print(ds)\n    ds.to_zarr(\n        OUTPUT,\n        mode=\"w\",\n        zarr_format=3,\n        consolidated=False,\n        encoding=encoding,\n        align_chunks=True,\n    )\n    print(f\"Wrote Zarr v3 cube: {OUTPUT}\")\n\n    # Validate metadata and compute only a tiny sample, not the full cube.\n    check = xr.open_zarr(OUTPUT, consolidated=False)\n    var = next(iter(check.data_vars))\n    sample = check[var]\n    indexers = {dim: slice(0, 1 if dim == \"time\" else 64) for dim in sample.dims}\n    value = sample.isel(indexers).mean().compute().item()\n    print(f\"Validation OK: {var} sample mean = {value}\")\n    ds.close()\n    check.close()\n    return 0\n\n\nif __name__ == \"__main__\":\n    raise SystemExit(main())\n\nWalk through the imports first, then the plot."
+    "section": "Step 1 · Download a small sample",
+    "text": "Step 1 · Download a small sample\ncp code/.env.example code/.env   # add credentials; keep local\nbash code/01_download_sample.sh\n\nThe downloader reads a product URL, year and month from settings.\nRaw files go under data/raw//YYYY/MM/.\nIt downloads to a temporary .part file, then renames on success.\n\nStart with one month and one product. It makes troubleshooting and validation manageable."
   },
   {
-    "objectID": "slides/presentation.html#thank-you",
-    "href": "slides/presentation.html#thank-you",
+    "objectID": "slides/presentation.html#step-2-crop-and-remap",
+    "href": "slides/presentation.html#step-2-crop-and-remap",
     "title": "Climate Data Cubes",
-    "section": "Thank you",
-    "text": "Thank you\n\nTutorial: https://YOUR-USERNAME.github.io/YOUR-REPO/\nCode: https://github.com/YOUR-USERNAME/YOUR-REPO"
+    "section": "Step 2 · Crop and remap",
+    "text": "Step 2 · Crop and remap\nbash code/02_preprocess_cdo.sh 0.05\nThe script clips source files using bounds in code/preprocess_utils/config.txt, then remaps using the grid generated from config_resolution.yaml.\n\n\n\n\n\n\nWarning\n\n\nMake the clip bounds and target-grid extent describe the same area. In the current examples they differ; a target grid extending beyond the clipped source can create large missing-value regions."
+  },
+  {
+    "objectID": "slides/presentation.html#resampling-is-a-decision",
+    "href": "slides/presentation.html#resampling-is-a-decision",
+    "title": "Climate Data Cubes",
+    "section": "Resampling is a decision",
+    "text": "Resampling is a decision\n\n\n\n\n\n\n\n\nMethod\nTypical use\nMain trade-off\n\n\n\n\nBilinear\nContinuous fields such as many climate variables\nSmooths values; can modify extremes\n\n\nNearest neighbour\nCategories and QA flags\nPreserves classes; can look blocky\n\n\n\nNeither method creates finer source detail. For each product, choose a method that matches its values and intended use; retain and apply quality flags where available."
+  },
+  {
+    "objectID": "slides/presentation.html#step-3-store-for-analysis",
+    "href": "slides/presentation.html#step-3-store-for-analysis",
+    "title": "Climate Data Cubes",
+    "section": "Step 3 · Store for analysis",
+    "text": "Step 3 · Store for analysis\nINNER_CHUNKS = {\"time\": 1, \"lat\": 256, \"lon\": 256}\nSHARD_CHUNKS = {\"time\": 10, \"lat\": 512, \"lon\": 512}\nCOMPRESSOR = BloscCodec(cname=\"zstd\", clevel=5, shuffle=\"shuffle\")\n\nInner chunks are the read units, for example one date and a spatial window.\nShards group chunks to reduce the number of storage objects.\nThese settings are starting points; benchmark the actual map and time-series queries.\n\nRun the builder with uv run python code/build_zarr_cube.py. It expects interim dimensions named time, lat, and lon; it replaces its existing output store when rebuilding."
+  },
+  {
+    "objectID": "slides/presentation.html#inspect-a-cube",
+    "href": "slides/presentation.html#inspect-a-cube",
+    "title": "Climate Data Cubes",
+    "section": "Inspect a cube",
+    "text": "Inspect a cube\nimport xarray as xr\n\nds = xr.open_zarr(\"data/zarr/metref_sample_1month.zarr\")\nfield = next(iter(ds.data_vars))\nmap_for_date = ds[field].isel(time=0)\nseries_at_cell = ds[field].isel(lat=100, lon=100)\nThe cell indices are illustrative. Check coordinate names, coordinate direction, units and timestamps before interpreting values. Use the reusable functions in code/plot_utils/ for maps and temporal plots."
+  },
+  {
+    "objectID": "slides/presentation.html#qa-what-should-we-check",
+    "href": "slides/presentation.html#qa-what-should-we-check",
+    "title": "Climate Data Cubes",
+    "section": "QA · what should we check?",
+    "text": "QA · what should we check?\n\nCompare source and output coordinates, timestamps, units and variable names.\nCheck decoded fill values and valid-cell count/fraction.\nPlot the missing-data footprint; compare it with the source mask and QA flags.\nCompare a few known source/output values and summary statistics.\nReopen Zarr and compute a small selection before processing more data.\n\nA file that opens is not automatically fit for analysis. Non-zero valid values do not by themselves prove sufficient spatial coverage."
+  },
+  {
+    "objectID": "slides/presentation.html#what-can-the-cube-support",
+    "href": "slides/presentation.html#what-can-the-cube-support",
+    "title": "Climate Data Cubes",
+    "section": "What can the cube support?",
+    "text": "What can the cube support?\n\nRegional and seasonal climate maps.\nSpatial summaries and time series for locations or zones.\nEvapotranspiration and vegetation monitoring.\nInputs to climate-impact or resilience indicators after domain validation.\n\nThe cube makes data access more consistent; scientific interpretation still depends on product quality, aggregation choices and validation."
+  },
+  {
+    "objectID": "slides/presentation.html#caveats-and-uncertainty",
+    "href": "slides/presentation.html#caveats-and-uncertainty",
+    "title": "Climate Data Cubes",
+    "section": "Caveats and uncertainty",
+    "text": "Caveats and uncertainty\n\nMissing values may be real masks/quality exclusions or processing/configuration problems.\nA crop/grid mismatch, wrong variable, coordinate issue or fill-value handling can cause extensive NaNs.\nBilinear remapping smooths; nearest-neighbour can be blocky. Different choices can change statistics.\nDegree grids have latitude-dependent ground dimensions.\nProduct versions, temporal support, units and quality systems may differ.\nThe example is a regional teaching workflow, not a validated operational climate product."
+  },
+  {
+    "objectID": "slides/presentation.html#apis-cloud-platforms-and-this-workflow",
+    "href": "slides/presentation.html#apis-cloud-platforms-and-this-workflow",
+    "title": "Climate Data Cubes",
+    "section": "APIs, cloud platforms and this workflow",
+    "text": "APIs, cloud platforms and this workflow\nAPIs, Microsoft Planetary Computer and Google Earth Engine are useful for discovering, accessing and analyzing many datasets.\nThis tutorial demonstrates a local, explicit path for selected authenticated LSA SAF data when we need to document a regional crop, target grid and processing choices. The two approaches can complement each other; this workflow does not assume hosted platforms lack the required data."
+  },
+  {
+    "objectID": "slides/presentation.html#scale-the-pilot-carefully",
+    "href": "slides/presentation.html#scale-the-pilot-carefully",
+    "title": "Climate Data Cubes",
+    "section": "Scale the pilot carefully",
+    "text": "Scale the pilot carefully\nFor a large domain (for example, a 2,000 km corridor), first benchmark a representative priority subset:\n\nRecord runtime, peak memory, file size, valid coverage and output read speed.\nSplit work into grid-aligned spatial tiles and/or time batches.\nParallelize independent files within measured CPU, memory and I/O limits.\nAdd remapping margins at tile edges and trim duplicate target cells.\nWrite non-overlapping Zarr regions or isolated stores; track and retry failures.\n\nDo not scale only by multiplying worker count. Disk throughput, memory, output object counts and safe Zarr writes can become the bottleneck."
+  },
+  {
+    "objectID": "slides/presentation.html#possible-next-updates",
+    "href": "slides/presentation.html#possible-next-updates",
+    "title": "Climate Data Cubes",
+    "section": "Possible next updates",
+    "text": "Possible next updates\n\nHarmonize clip and target-grid bounds; add a coverage map and threshold.\nApply product-specific quality flags and test decoded no-data values.\nRecord provenance, product versions, units, grid and resampling settings.\nBenchmark chunk/shard sizes for intended queries and available compute/storage.\nAdd more products only after documenting their spatial and temporal semantics.\nAdd automated tests for sample input files and failed/partial outputs."
+  },
+  {
+    "objectID": "slides/presentation.html#what-we-learned",
+    "href": "slides/presentation.html#what-we-learned",
+    "title": "Climate Data Cubes",
+    "section": "What we learned",
+    "text": "What we learned\nA useful climate cube starts with consistent, documented choices and honest checks on missing data and resolution.\nTutorial: https://khizerzakir.github.io/tutorial-repo/\nCode: https://github.com/khizerzakir/tutorial-repo\n\n\n\n\n\n\n\n \n\n\nIEEE GRSS School on Earth Observation and GeoAI for Climate-Resilient Urban Systems"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Climate Data Cube Workshop - Tutorial",
+    "title": "Hands-on Practical Tutorial",
     "section": "",
-    "text": "Welcome! If you are here, you are likely participating in the Climate Data Cube Workshop as part of the IEEE Autumn School 2026 Training.\nThis is the hands-on tutorial is designed to introduce participants to the concepts and tools of climate data analysis, with a focus on using satellite-derived climate data from EUMETSAT LSA SAF. The tutorial will guide you through the process of setting up your environment, running example code, and analyzing the results.\n\nImportant links for this workshop\n\n\n📖 Tutorial: start with Setup\n🎤 Slides: open the presentation\n💻 Code: everything you need to run is in the code/ folder"
+    "text": "Welcome! If you are here, you are likely participating in the Climate Data Cube Workshop as part of the IEEE Autumn School 2026 Training.\nThis is the hands-on tutorial is designed to introduce participants to the concepts and tools of climate data analysis, with a focus on using satellite-derived climate data from EUMETSAT LSA SAF. The tutorial will guide you through the process of setting up your environment, running example code, and analyzing the results.\n\nImportant links for this workshop\n\n\n📖 Tutorial: start with Setup\n🎤 Slides: open the presentation\n💻 Code: everything you need to run is in the code/ folder",
+    "crumbs": [
+      "Home",
+      "Hands-on Practical Tutorial"
+    ]
   },
   {
     "objectID": "code/notebooks/test_outputs.html",
@@ -224,11 +375,100 @@
   {
     "objectID": "tutorial/02-run-code.html",
     "href": "tutorial/02-run-code.html",
-    "title": "B. Download and Preprocess Sample Data",
+    "title": "B. Download and preprocess a sample",
     "section": "",
-    "text": "Draw BBOX - https://onlinemapmaker.com/bounding-box-tool/",
+    "text": "This page downloads one LSA SAF product sample, crops it to a configured study area, and remaps it to a target grid. Begin with one product and one short time period. Validate the result before extending the period or region.",
     "crumbs": [
-      "B. Download and Preprocess Sample Data"
+      "Home",
+      "B. Download and preprocess a sample"
+    ]
+  },
+  {
+    "objectID": "tutorial/02-run-code.html#check-the-product-and-study-area",
+    "href": "tutorial/02-run-code.html#check-the-product-and-study-area",
+    "title": "B. Download and preprocess a sample",
+    "section": "1. Check the product and study area",
+    "text": "1. Check the product and study area\nThe example defaults to METREF. The repository also lists FVC/MDFVC as an example product. Select a product from the LSA SAF Data Service and confirm its product URL, time coverage, variable names, units, coordinate system, no-data values and quality flags.\nThe study area has two related settings:\n\ncode/preprocess_utils/config.txt controls the crop bounds (WEST, SOUTH, EAST, NORTH).\ncode/preprocess_utils/config_resolution.yaml defines the generated output-grid domain.\n\nCoordinates are longitude/latitude in degrees in this example. For a new AOI, record the bounds in this order: west, south, east, north. Include a suitable input buffer for the remapping method; verify edge coverage after processing.",
+    "crumbs": [
+      "Home",
+      "B. Download and preprocess a sample"
+    ]
+  },
+  {
+    "objectID": "tutorial/02-run-code.html#set-credentials",
+    "href": "tutorial/02-run-code.html#set-credentials",
+    "title": "B. Download and preprocess a sample",
+    "section": "2. Set credentials",
+    "text": "2. Set credentials\nFrom the repository root:\ncp code/.env.example code/.env\nEdit code/.env and enter your LSA SAF credentials - See the setup guide for details. The downloader expects:\nLSASAF_USERNAME=your_username\nLSASAF_PASSWORD=your_password\nSAMPLE_YEAR=2020\nSAMPLE_MONTH=06\nVARIABLE_NAME=METREF\nURL=https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF\nKeep code/.env private and never commit it. The script reads this path by default when run from the repository root. If you use another path, set ENV_FILE=/path/to/.env.",
+    "crumbs": [
+      "Home",
+      "B. Download and preprocess a sample"
+    ]
+  },
+  {
+    "objectID": "tutorial/02-run-code.html#download-the-sample",
+    "href": "tutorial/02-run-code.html#download-the-sample",
+    "title": "B. Download and preprocess a sample",
+    "section": "3. Download the sample",
+    "text": "3. Download the sample\nRun from the repository root:\nbash code/01_download_sample.sh\nYou can override the year, month, product and product URL positionally:\nbash code/01_download_sample.sh 2020 06 METREF \"https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF\"\nThe script checks the service listing and skips files already present. New files are first written as .part, then renamed after a successful download. The default raw-data layout is:\ndata/raw/METREF/2020/06/*.nc\nConfirm that files exist and have plausible sizes. A completed download only confirms transfer success; it does not confirm that the data are scientifically valid.",
+    "crumbs": [
+      "Home",
+      "B. Download and preprocess a sample"
+    ]
+  },
+  {
+    "objectID": "tutorial/02-run-code.html#inspect-raw-netcdf-before-processing",
+    "href": "tutorial/02-run-code.html#inspect-raw-netcdf-before-processing",
+    "title": "B. Download and preprocess a sample",
+    "section": "4. Inspect raw NetCDF before processing",
+    "text": "4. Inspect raw NetCDF before processing\nUse CDO to list metadata and summary information:\ncdo -s sinfo data/raw/METREF/2020/06/example.nc\ncdo -s showname data/raw/METREF/2020/06/example.nc\ncdo -s showtimestamp data/raw/METREF/2020/06/example.nc\ncdo -s infon data/raw/METREF/2020/06/example.nc\nYou can also use ncdump -h to inspect the header. The jupyter notebook code/inspect_raw.ipynb provides a convenient way to explore the raw file interactively.\nReplace example.nc with a real downloaded filename. Review coordinate ranges, variable names, timestamps, units, missing values and product QA information. If the raw file itself has no valid values, diagnose the download/product selection before remapping.",
+    "crumbs": [
+      "Home",
+      "B. Download and preprocess a sample"
+    ]
+  },
+  {
+    "objectID": "tutorial/02-run-code.html#crop-and-remap",
+    "href": "tutorial/02-run-code.html#crop-and-remap",
+    "title": "B. Download and preprocess a sample",
+    "section": "5. Crop and remap",
+    "text": "5. Crop and remap\nAfter aligning the configuration file, run:\nbash code/02_preprocess_cdo.sh\nOptional positional arguments are resolution, input folder and output folder:\nbash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF\nThe script uses code/preprocess_utils/grid.txt, clips each input with sellonlatbox, then remaps to that grid. REMAP_METHOD defaults to bilinear; set REMAP_METHOD=nearest for categorical fields and flags. Bilinear is for continuous variables and smooths values.\nPARALLEL controls the number of independent files processed concurrently; for example:\nPARALLEL=2 bash code/02_preprocess_cdo.sh 0.05\nStart conservatively. Increase parallelism only after checking RAM, disk throughput and temporary storage.\nProcessed files are written beneath data/interim/. Check the cdo.log, then inspect an output:\ncdo -s sinfo data/interim/METREF/2020/06/example_processed.nc\ncdo -s infon data/interim/METREF/2020/06/example_processed.nc",
+    "crumbs": [
+      "Home",
+      "B. Download and preprocess a sample"
+    ]
+  },
+  {
+    "objectID": "tutorial/02-run-code.html#check-for-missing-values",
+    "href": "tutorial/02-run-code.html#check-for-missing-values",
+    "title": "B. Download and preprocess a sample",
+    "section": "6. Check for missing values",
+    "text": "6. Check for missing values\nCompare raw and processed summaries and map the output. An all-NaN or mostly missing result can be caused by:\n\ncrop bounds and target-grid bounds not overlapping;\nwrong variable, coordinate names or coordinate direction;\nfill values not decoded as missing;\na source mask or retrieval-quality exclusion;\ninvalid or unsupported remapping setup.\n\nSome missing values are expected. Set an acceptable valid-coverage threshold for the application, and check coverage spatially as well as numerically. A file existing or opening is not enough to establish fitness for use.",
+    "crumbs": [
+      "Home",
+      "B. Download and preprocess a sample"
+    ]
+  },
+  {
+    "objectID": "tutorial/02-run-code.html#method-caveats",
+    "href": "tutorial/02-run-code.html#method-caveats",
+    "title": "B. Download and preprocess a sample",
+    "section": "7. Method caveats",
+    "text": "7. Method caveats\n\nRegridding does not add source detail. A finer target grid interpolates the source; it does not make the measurement higher resolution.\nBilinear interpolation smooths continuous fields; nearest-neighbour preserves category labels but may look blocky.\nDegree-based cell size changes with latitude.\nPreserve product QA flags and document any masks, unit conversion and temporal aggregation.\nRecord the input product/version, AOI bounds, output grid, resolution, remapping method and software version.",
+    "crumbs": [
+      "Home",
+      "B. Download and preprocess a sample"
+    ]
+  },
+  {
+    "objectID": "tutorial/02-run-code.html#next-page",
+    "href": "tutorial/02-run-code.html#next-page",
+    "title": "B. Download and preprocess a sample",
+    "section": "Next page",
+    "text": "Next page\nContinue to Build and inspect the Zarr cube.",
+    "crumbs": [
+      "Home",
+      "B. Download and preprocess a sample"
     ]
   }
 ]

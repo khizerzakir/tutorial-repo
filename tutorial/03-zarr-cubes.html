@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3. Build Zarr Cubes – Climate Data Cube Workshop</title>
+<title>C. Build and inspect a Zarr cube – Climate Data Cube Workshop</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,6 +25,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -262,7 +297,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -276,11 +311,11 @@ ul.task-list li input[type="checkbox"] {
   </li>  
         <li>
     <a class="dropdown-item" href="../tutorial/02-run-code.html">
- <span class="dropdown-text">B. Download and Preprocess Sample Data</span></a>
+ <span class="dropdown-text">B. Download and preprocess a sample</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../tutorial/03-zarr-cubes.html">
- <span class="dropdown-text">3. Build Zarr Cubes</span></a>
+ <span class="dropdown-text">C. Build and inspect a Zarr cube</span></a>
   </li>  
     </ul>
   </li>
@@ -307,7 +342,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorial/03-zarr-cubes.html">3. Build Zarr Cubes</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorial/03-zarr-cubes.html">C. Build and inspect a Zarr cube</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -321,6 +356,12 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on Practical Tutorial</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../tutorial/01-setup.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">A. Setup</span></a>
   </div>
@@ -328,13 +369,13 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorial/02-run-code.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">B. Download and Preprocess Sample Data</span></a>
+ <span class="menu-text">B. Download and preprocess a sample</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorial/03-zarr-cubes.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">3. Build Zarr Cubes</span></a>
+ <span class="menu-text">C. Build and inspect a Zarr cube</span></a>
   </div>
 </li>
     </ul>
@@ -342,8 +383,21 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#check-the-interim-files" id="toc-check-the-interim-files" class="nav-link active" data-scroll-target="#check-the-interim-files">1. Check the interim files</a></li>
+  <li><a href="#build-the-cube" id="toc-build-the-cube" class="nav-link" data-scroll-target="#build-the-cube">2. Build the cube</a></li>
+  <li><a href="#understand-chunks-shards-and-compression" id="toc-understand-chunks-shards-and-compression" class="nav-link" data-scroll-target="#understand-chunks-shards-and-compression">3. Understand chunks, shards and compression</a></li>
+  <li><a href="#open-and-inspect" id="toc-open-and-inspect" class="nav-link" data-scroll-target="#open-and-inspect">4. Open and inspect</a></li>
+  <li><a href="#validation-after-writing" id="toc-validation-after-writing" class="nav-link" data-scroll-target="#validation-after-writing">5. Validation after writing</a></li>
+  <li><a href="#scaling-beyond-the-sample" id="toc-scaling-beyond-the-sample" class="nav-link" data-scroll-target="#scaling-beyond-the-sample">6. Scaling beyond the sample</a></li>
+  <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">Troubleshooting</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -351,7 +405,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">3. Build Zarr Cubes</h1>
+<h1 class="title">C. Build and inspect a Zarr cube</h1>
 </div>
 
 
@@ -368,8 +422,138 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>This page turns the remapped interim NetCDF files into a compressed, chunked and sharded Zarr v3 store, then opens a small selection for inspection.</p>
+<section id="check-the-interim-files" class="level2">
+<h2 class="anchored" data-anchor-id="check-the-interim-files">1. Check the interim files</h2>
+<p>The builder expects NetCDF files under data/interim/ and dimensions named time, lat and lon.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">find</span> data/interim <span class="at">-name</span> <span class="st">'*_processed.nc'</span> <span class="at">-type</span> f</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> sinfo data/interim/METREF/2020/06/example_processed.nc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Replace the example filename with one of your actual outputs. Confirm time and coordinate dimensions and inspect valid values before building the cube. If your files use x and y, update the dimension names and chunk configuration in code/build_zarr_cube.py.</p>
+</section>
+<section id="build-the-cube" class="level2">
+<h2 class="anchored" data-anchor-id="build-the-cube">2. Build the cube</h2>
+<p>From the repository root:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python code/build_zarr_cube.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The script uses xarray to open multiple files by coordinates and Dask for lazy/chunked processing. It writes to:</p>
+<pre class="text"><code>data/zarr/example.zarr/</code></pre>
+<p>The current builder requires <strong>Zarr 3</strong>. Use a Python environment that resolves Zarr 3 as required by the script. The script removes an existing output store before rebuilding; copy or rename any output you need to keep first.</p>
+</section>
+<section id="understand-chunks-shards-and-compression" class="level2">
+<h2 class="anchored" data-anchor-id="understand-chunks-shards-and-compression">3. Understand chunks, shards and compression</h2>
+<p>The script currently starts with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>INNER_CHUNKS <span class="op">=</span> {<span class="st">"time"</span>: <span class="dv">1</span>, <span class="st">"lat"</span>: <span class="dv">256</span>, <span class="st">"lon"</span>: <span class="dv">256</span>}</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SHARD_CHUNKS <span class="op">=</span> {<span class="st">"time"</span>: <span class="dv">10</span>, <span class="st">"lat"</span>: <span class="dv">512</span>, <span class="st">"lon"</span>: <span class="dv">512</span>}</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>COMPRESSOR <span class="op">=</span> BloscCodec(cname<span class="op">=</span><span class="st">"zstd"</span>, clevel<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="st">"shuffle"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>Role</th>
+<th>Trade-off</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Inner chunks</td>
+<td>Small independently readable blocks</td>
+<td>Smaller blocks help selective reads but add metadata/overhead</td>
+</tr>
+<tr class="even">
+<td>Shards</td>
+<td>Group storage for multiple inner chunks</td>
+<td>Larger shards reduce object count but may make writes/updates coarser</td>
+</tr>
+<tr class="odd">
+<td>Zstd compression</td>
+<td>Reduces stored bytes</td>
+<td>Higher compression can use more CPU</td>
+</tr>
+</tbody>
+</table>
+<p>These are initial values, not universal optima. Benchmark common access patterns: a map at one time, a point/area time series, and a small regional subset.</p>
+</section>
+<section id="open-and-inspect" class="level2">
+<h2 class="anchored" data-anchor-id="open-and-inspect">4. Open and inspect</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> xr.open_zarr(<span class="st">"data/zarr/metref_sample_1month.zarr"</span>, consolidated<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ds)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">list</span>(ds.data_vars))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Select a time slice and a point time series:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>variable <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(ds.data_vars))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>map_at_time <span class="op">=</span> ds[variable].isel(time<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>point_series <span class="op">=</span> ds[variable].isel(lat<span class="op">=</span><span class="dv">100</span>, lon<span class="op">=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>These indices are examples only. Check the coordinates at the selected indices, dimension ordering, variable units, and timestamp before interpreting a plot. The project plotting utilities are in code/plot_utils/; see their README for import and usage examples.</p>
+</section>
+<section id="validation-after-writing" class="level2">
+<h2 class="anchored" data-anchor-id="validation-after-writing">5. Validation after writing</h2>
+<p>The builder reopens the output store and computes a small sample statistic. Also check:</p>
+<ul>
+<li>expected dimensions, coordinate ranges and time count;</li>
+<li>data-variable names and attributes/units;</li>
+<li>valid-value coverage in a few known maps and time slices;</li>
+<li>representative values against the interim NetCDF source;</li>
+<li>whether map/time-series reads perform acceptably for your use case.</li>
+</ul>
+<p>A successful Zarr write checks storage/readability, not the scientific correctness of source values or remapping.</p>
+</section>
+<section id="scaling-beyond-the-sample" class="level2">
+<h2 class="anchored" data-anchor-id="scaling-beyond-the-sample">6. Scaling beyond the sample</h2>
+<p>For a priority subset, measure runtime, peak memory, interim and Zarr sizes, valid coverage and read speed. Expand to a larger region or a 2,000 km corridor by processing grid-aligned spatial tiles and time batches. Add a remapping margin at tile boundaries, then remove duplicate edge cells from the final grid.</p>
+<p>Parallelize independent NetCDF files or tiles up to the measured CPU, memory, storage and network limits of the available workstation/VM. Use isolated temporary stores or non-overlapping Zarr regions; avoid concurrent writes to the same chunk/shard. Keep a manifest and rerun only failed batches. Re-benchmark chunks and shards on the larger workload.</p>
+</section>
+<section id="troubleshooting" class="level2">
+<h2 class="anchored" data-anchor-id="troubleshooting">Troubleshooting</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Symptom</th>
+<th>Checks</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>No interim files</td>
+<td>Check downloader output, input path and CDO log</td>
+</tr>
+<tr class="even">
+<td>Many NaNs after remapping</td>
+<td>Compare raw AOI, crop bounds and target-grid bounds; inspect fill values and source QA</td>
+</tr>
+<tr class="odd">
+<td>Zarr dimension error</td>
+<td>Print ds.sizes; rename coordinates or change chunk dimensions</td>
+</tr>
+<tr class="even">
+<td>Zarr version error</td>
+<td>Check uv run python -c “import zarr; print(zarr.__version__)“; script needs version 3 or newer</td>
+</tr>
+<tr class="odd">
+<td>Slow writes or reads</td>
+<td>Check RAM/disk I/O, chunk and shard sizes, and number of parallel tasks</td>
+</tr>
+<tr class="even">
+<td>Output already exists</td>
+<td>Builder replaces its output; back up the store or change OUTPUT in the script</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps">Next steps</h2>
+<p>After the pilot is validated, add quality-aware masks, explicit coverage thresholds, provenance metadata, reproducible configuration records, and automated tests for representative source files.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -787,8 +971,8 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../tutorial/02-run-code.html" class="pagination-link" aria-label="B. Download and Preprocess Sample Data">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">B. Download and Preprocess Sample Data</span>
+      <a href="../tutorial/02-run-code.html" class="pagination-link" aria-label="B. Download and preprocess a sample">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">B. Download and preprocess a sample</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
