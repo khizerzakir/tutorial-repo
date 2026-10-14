@@ -25,6 +25,7 @@ website:
     - title: Tutorial
       style: floating
       contents:
+        - index.qmd
         - tutorial/01-setup.qmd
         - tutorial/02-run-code.qmd
         - tutorial/03-zarr-cubes.qmd

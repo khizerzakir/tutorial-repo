@@ -1,5 +1,103 @@
 ---
-title: "3. Build Zarr Cubes"
+title: "C. Build and inspect a Zarr cube"
 ---
 
+This page turns the remapped interim NetCDF files into a compressed, chunked and sharded Zarr v3 store, then opens a small selection for inspection.
 
+## 1. Check the interim files
+
+The builder expects NetCDF files under data/interim/ and dimensions named time, lat and lon.
+
+~~~bash
+find data/interim -name '*_processed.nc' -type f
+cdo -s sinfo data/interim/METREF/2020/06/example_processed.nc
+~~~
+
+Replace the example filename with one of your actual outputs. Confirm time and coordinate dimensions and inspect valid values before building the cube. If your files use x and y, update the dimension names and chunk configuration in code/build_zarr_cube.py.
+
+## 2. Build the cube
+
+From the repository root:
+
+~~~bash
+uv run python code/build_zarr_cube.py
+~~~
+
+The script uses xarray to open multiple files by coordinates and Dask for lazy/chunked processing. It writes to:
+
+~~~text
+data/zarr/example.zarr/
+~~~
+
+The current builder requires **Zarr 3**. Use a Python environment that resolves Zarr 3 as required by the script. The script removes an existing output store before rebuilding; copy or rename any output you need to keep first.
+
+## 3. Understand chunks, shards and compression
+
+The script currently starts with:
+
+~~~python
+INNER_CHUNKS = {"time": 1, "lat": 256, "lon": 256}
+SHARD_CHUNKS = {"time": 10, "lat": 512, "lon": 512}
+COMPRESSOR = BloscCodec(cname="zstd", clevel=5, shuffle="shuffle")
+~~~
+
+| Setting | Role | Trade-off |
+|---|---|---|
+| Inner chunks | Small independently readable blocks | Smaller blocks help selective reads but add metadata/overhead |
+| Shards | Group storage for multiple inner chunks | Larger shards reduce object count but may make writes/updates coarser |
+| Zstd compression | Reduces stored bytes | Higher compression can use more CPU |
+
+These are initial values, not universal optima. Benchmark common access patterns: a map at one time, a point/area time series, and a small regional subset.
+
+## 4. Open and inspect
+
+~~~python
+import xarray as xr
+
+ds = xr.open_zarr("data/zarr/metref_sample_1month.zarr", consolidated=False)
+print(ds)
+print(list(ds.data_vars))
+~~~
+
+Select a time slice and a point time series:
+
+~~~python
+variable = next(iter(ds.data_vars))
+map_at_time = ds[variable].isel(time=0)
+point_series = ds[variable].isel(lat=100, lon=100)
+~~~
+
+These indices are examples only. Check the coordinates at the selected indices, dimension ordering, variable units, and timestamp before interpreting a plot. The project plotting utilities are in code/plot_utils/; see their README for import and usage examples.
+
+## 5. Validation after writing
+
+The builder reopens the output store and computes a small sample statistic. Also check:
+
+- expected dimensions, coordinate ranges and time count;
+- data-variable names and attributes/units;
+- valid-value coverage in a few known maps and time slices;
+- representative values against the interim NetCDF source;
+- whether map/time-series reads perform acceptably for your use case.
+
+A successful Zarr write checks storage/readability, not the scientific correctness of source values or remapping.
+
+## 6. Scaling beyond the sample
+
+For a priority subset, measure runtime, peak memory, interim and Zarr sizes, valid coverage and read speed. Expand to a larger region or a 2,000 km corridor by processing grid-aligned spatial tiles and time batches. Add a remapping margin at tile boundaries, then remove duplicate edge cells from the final grid.
+
+Parallelize independent NetCDF files or tiles up to the measured CPU, memory, storage and network limits of the available workstation/VM. Use isolated temporary stores or non-overlapping Zarr regions; avoid concurrent writes to the same chunk/shard. Keep a manifest and rerun only failed batches. Re-benchmark chunks and shards on the larger workload.
+
+## Troubleshooting
+
+| Symptom | Checks |
+|---|---|
+| No interim files | Check downloader output, input path and CDO log |
+| Many NaNs after remapping | Compare raw AOI, crop bounds and target-grid bounds; inspect fill values and source QA |
+| Zarr dimension error | Print ds.sizes; rename coordinates or change chunk dimensions |
+| Zarr version error | Check uv run python -c "import zarr; print(zarr.__version__)"; script needs version 3 or newer |
+| Slow writes or reads | Check RAM/disk I/O, chunk and shard sizes, and number of parallel tasks |
+| Output already exists | Builder replaces its output; back up the store or change OUTPUT in the script |
+
+## Next steps
+
+After the pilot is validated, add quality-aware masks, explicit coverage thresholds, provenance metadata, reproducible configuration records, and automated tests for representative source files.

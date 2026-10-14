@@ -2,9 +2,8 @@
 title: "A. Setup"
 ---
 
-This setup guide will help you install the necessary tools and dependencies to run the Climate Data Cube workshop code on your local machine.
+This setup guide will help you install the necessary tools and dependencies to follow and run this workshop code on your local machine unless you are using a cloud-based environment. The workshop code is designed to run in a Linux environment, so if you are using Windows, we recommend installing **Windows Subsystem for Linux (WSL2)**. If you are using macOS or Linux, you can skip the WSL installation and use your native terminal.
 
-Because the workshop code is designed to run in a Linux environment, we will use **Windows Subsystem for Linux (WSL2)** on Windows. If you are using macOS or Linux or have WSL installed, you can skip the WSL installation and use your native/WSL terminal.
 
 ## 1. Install WSL2 and Ubuntu
 
@@ -48,156 +47,105 @@ If you do not have **VS Code** installed, follow these steps:
 
 **Official WSL + VS Code guide:** <https://code.visualstudio.com/docs/remote/wsl>
 
-## 3. Prepare Ubuntu and system dependencies
+## 3. Get the repository
 
-Open the **Ubuntu terminal** from the Windows Start menu and run:
+On Windows, open WSL2,
+On Linux or macOS, use a terminal and install Git, wget, CDO and Python 3.11+ using your operating system's package manager, 
 
-```bash
+Then run:
+
+~~~bash
 sudo apt update
-sudo apt upgrade -y
-sudo apt install -y \
-  git wget curl ca-certificates \
-  cdo python3 python3-venv python3-pip
-```
+sudo apt install -y git wget curl ca-certificates cdo python3 python3-venv python3-pip
+~~~
 
-Verify:
+Keep the project inside the Linux filesystem on WSL | in your home directory (for Linux and macOS), for example:
 
-```bash
+~~~bash
+mkdir -p ~/projects
+cd ~/projects
+git clone https://github.com/khizerzakir/tutorial-repo.git
+cd tutorial-repo
+~~~
+
+Open the repository from Ubuntu/terminal with the command code dot.
+
+~~~bash
+code .
+~~~
+
+
+## 4. Check your tools
+
+~~~bash
 cdo -V
 git --version
 python3 --version
 wget --version | head -n 1
-```
+~~~
 
-> **Why CDO?** CDO performs the controlled spatial processing in this workshop: clipping and remapping.
+If you use uv, also run uv --version. If CDO is missing, install it through your OS package manager or a conda-forge environment; CDO is not installed by uv or pip.
 
-## 4. Install uv (Python dependency manager)
+## 5. Install Python dependencies
 
-Inside **Ubuntu**, install uv using the official installer:
+The Zarr builder in this repository requires Zarr 3; use Python 3.11 or newer.
 
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
+### Option A: uv
 
-Restart the Ubuntu terminal or refresh the shell configuration (as instructed by the installer). Verify:
+Install uv using the [official instructions](https://docs.astral.sh/uv/getting-started/installation/), then from the repository root run:
 
-```bash
-uv --version
-```
-
-**Documentation:** <https://docs.astral.sh/uv/getting-started/installation/>
-
-## 5. Clone the Repository 
-
-Keep the repository inside the **Linux home directory** for better file performance (for example, `~/projects/`), rather than under `/mnt/c/`.
-
-```bash
-mkdir -p ~/projects
-cd ~/projects
-
-git clone https://github.com/khizerzakir/tutorial-repo.git
-cd <YOUR-REPOSITORY> ## replace with the actual repository name
-```
-
-Open the Linux folder in VS Code:
-
-```bash
-code .
-```
-
-The first launch may install the VS Code Server in WSL. Check the lower-left corner of VS Code for **WSL: Ubuntu**. Open **Terminal → New Terminal**: it should be a Linux shell.
-
-## 6. Install the project's Python dependencies (choose uv or pip)
-
-### Option A — uv (recommended if installed)
-
-From the repository root in the **VS Code WSL terminal**:
-
-```bash
+~~~bash
 uv sync --locked
-```
+~~~
 
-For notebooks, **only if the project defines a `notebook` optional dependency group**:
+Check the core packages and Zarr major version:
 
-```bash
-uv sync --locked --extra notebook
-```
+~~~bash
+uv run python -c "import xarray, zarr; print(xarray.__version__, zarr.__version__)"
+~~~
 
-If `--extra notebook` is not defined, follow the repository's `pyproject.toml` instructions instead. `uv.lock` should be committed so students resolve the same dependency versions. Confirm the environment:
+### Option B: pip
 
-```bash
-uv run python -c "import xarray, zarr; print('xarray and zarr: OK')"
-```
-
-### Option B — pip with `requirements.txt` (no uv required)
-
-If you do not have uv, use the system-provided Python and create an isolated virtual environment. Run these commands **inside Ubuntu**, from the GitLab repository root:
-
-```bash
-# Install Python virtual-environment support if needed
-sudo apt update
-sudo apt install -y python3 python3-venv python3-pip
-
-# Create and activate a project-local environment
+~~~bash
 python3 -m venv .venv
 source .venv/bin/activate
-
-# Install the pinned project requirements
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
+python -c "import xarray, zarr; print(xarray.__version__, zarr.__version__)"
+~~~
 
-# Confirm that key libraries are available
-python -c "import xarray, zarr; print('xarray and zarr: OK')"
-```
+Confirm that the printed Zarr version is 3 or newer before running the cube builder. If the environment resolves Zarr 2, use Python 3.11+ and reinstall the project dependencies.
 
-For notebooks, check whether `requirements.txt` includes `ipykernel` and `jupyterlab`. If not, install them in the activated environment:
+>**Important:** Keep the virtual environment activated for subsequent terminal commands. When you open a new Ubuntu terminal, run `source .venv/bin/activate` again. Do **not** use `sudo pip install`. The `requirements.txt` must be committed to github and kept consistent with the tested `uv.lock`; pip does not read `uv.lock` automatically.
 
-```bash
-python -m pip install ipykernel jupyterlab
-python -m ipykernel install --user --name lsasaf-cube --display-name "Python (LSA SAF Cube)"
-```
+## 6. Configure LSA SAF access
 
->**Important:** Keep the virtual environment activated for subsequent terminal commands. When you open a new Ubuntu terminal, run `source .venv/bin/activate` again. Do **not** use `sudo pip install`. The `requirements.txt` must be committed to GitLab and kept consistent with the tested `uv.lock`; pip does not read `uv.lock` automatically.
+1. Register on the [LSA SAF data portal](https://datalsasaf.lsasvcs.ipma.pt/) and activate your account.
 
-## 7. Set up LSA SAF credentials
+   ![Data portal registration](imgs/portal_reg.png)
 
-Follow the instructions in the repository's [`README.md`](../README.md) to obtain a username and password for the LSA SAF Data Service. You will need these credentials to download sample data.
+2. Add your credentials to a `.env` file in `code/`:
 
-Create a local credentials file (never commit it):
+Edit `code/.env` with your account credentials. The downloader expects the names  `LSASAF_USERNAME ` and  `LSASAF_PASSWORD `. Do not commit this file or include it in screenshots.
+
 
 ```bash
-cp .env.example .env
+   cp code/.env.example code/.env
 ```
 
-Open `.env` in VS Code and enter the account details obtained from the LSA SAF Data Service:
-
-```dotenv
-USERNAME=your_lsa_saf_username
-PASSWORD=your_lsa_saf_password
+```
+   LSASAF_USERNAME="username"
+   LSASAF_PASSWORD="password"
 ```
 
-Register or access your account at <https://datalsasaf.lsasvcs.ipma.pt/>. Ensure `.env` is listed in `.gitignore`. **Do not share `.env` in screenshots, commits, or submissions.**
+3. Choose the products for this tutorial:
+   - [METREF: Reference Evapotranspiration](https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/)
+   - [FVC: Fractional Vegetation Cover](https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/MDFVC/)
 
-## 8. Run the workflow
+   ![Browse the products](imgs/browse.png)
 
-To be added..
 
-## 9. Inspect results in VS Code
 
-To be added..
+## 7. Continue
 
-## 10. Troubleshooting
-
-| Problem | Suggested action |
-|---|---|
-| `wsl` not recognized | Check Windows version and Windows updates; consult the official WSL guide. |
-| WSL installation blocked | Ask university IT about virtualization and Windows feature permissions. |
-| `code: command not found` | Install VS Code on Windows with the WSL extension; reopen Ubuntu and try `code .`. |
-| `cdo: command not found` | Run `sudo apt update && sudo apt install -y cdo` inside Ubuntu. |
-| `uv: command not found` | Restart Ubuntu terminal and follow the PATH instructions from the uv installer. |
-| `Permission denied` for `.sh` | Use `bash scripts/NAME.sh`; ensure scripts use Unix LF line endings. |
-| `config.txt` or `grid.txt` missing | Check the preprocessing wrapper's working directory and configuration paths. |
-| `No NetCDF files found` | Confirm the preceding stage completed and files are under `data/raw/` or `data/interim/` as expected. |
-| Jupyter kernel not found | In VS Code, select the interpreter at `.venv/bin/python` and ensure notebook dependencies are installed. |
-| Slow processing under `/mnt/c` | Move the repository into `~/projects/` in Ubuntu. |
-
+Go to [Download and preprocess a sample](02-run-code.qmd). Run all project commands from the repository root unless the command says otherwise.

@@ -1,6 +1,6 @@
 ---
 title: "Climate Data Cubes"
-subtitle: "From raw satellite data to analysis-ready insight"
+subtitle: "Raw data to a regional analysis-ready cube"
 author: "Khizer Zakir"
 date: today
 title-slide-attributes:
@@ -11,12 +11,14 @@ title-slide-attributes:
 format:
   revealjs:
     theme: [default, theme.scss]
+    css: image-layouts.css
     include-in-header: toggle.html
-    # --- effects ---
-    transition: fade          # none | fade | slide | convex | concave | zoom
+    logo: img/newlogo.png
+    header: IEEE GRSS School on Earth Observation and GeoAI for Climate-Resilient Urban Systems
+    header-logo: img/Austria_Section_Logo_1.png
+    transition: fade
     background-transition: fade
     transition-speed: default
-    # --- navigation ---
     slide-number: true
     controls: true
     controls-layout: bottom-right
@@ -24,98 +26,203 @@ format:
     progress: true
     hash: true
     preview-links: auto
-    footer: <a href="https://khizerzakir.github.io/tutorial-repo/">Tutorial</a> 
+    footer: <a href="https://khizerzakir.github.io/tutorial-repo/">Tutorial</a>
     code-line-numbers: true
     code-copy: true
     width: 1280
     height: 720
+filters:
+  - reveal-header
 ---
 
-# Part 1 {background-color="#06141f"}
+# Climate Data Cubes {background-color="#0e66a9"}
 
-Why data cubes?
+### EUMETSAT data · regional processing · analysis-ready access
 
-## The problem {auto-animate="true"}
+**IEEE GRSS School on Earth Observation and GeoAI for Climate-Resilient Urban Systems**
 
-::: card
-Climate data arrives in **many formats**, resolutions and projections.
-:::
-
-## The problem {auto-animate="true"}
+## Why are we here? {auto-animate="true"}
 
 ::: card
-Climate data arrives in **many formats**, resolutions and projections.
+Climate products are useful, but their files can arrive with different grids, time steps, metadata and quality information.
 :::
 
 :::: {.fragment .fade-up}
 ::: card
-A **data cube** gives one consistent grid: *time × latitude × longitude*.
+Today we make one small, transparent processing path from EUMETSAT source files to a regional data cube.
 :::
 ::::
 
-:::: {.fragment .fade-up}
-::: card
-However, not every EUMETSAT product or authenticated API supports efficient remote reading, so temporary downloads are the more reliable starting point.
-:::
-::::
+## What will we learn?
 
-## Key numbers
+- Find and download a selected LSA SAF product safely. {.fragment .fade-up}
+- Crop and remap a sample to an explicitly defined regional grid. {.fragment .fade-up}
+- Build and inspect a chunked, compressed Zarr cube. {.fragment .fade-up}
+- Check missing data, understand trade-offs, and plan the next scale step. {.fragment .fade-up}
 
-:::::: columns
-::: {.column .fragment .fade-up width="33%"}
-[40+]{.stat}
-
-years of data
-:::
-
-::: {.column .fragment .fade-up width="33%"}
-[1 km]{.stat}
-
-spatial resolution
-:::
-
-::: {.column .fragment .fade-up width="33%"}
-[3]{.stat}
-
-variables
-:::
-::::::
-
-## Picture + text
+## What is a climate data cube?
 
 ::::: columns
-::: {.column width="45%"}
-![The data cube idea](img/cube.svg){fig-align="center" width="85%"}
+::: {.column width="68%"}
+A **data cube** is a multidimensional way to organize data. A climate data cube applies this idea to climate or Earth observation variables, commonly indexed by:
+
+**time × space × variable**
+
+- **Generic cube:** the same structure can store many domains and measurements.
+- **Climate cube:** gives climate/EO data meaningful variables, units, calendars, grids, quality flags, provenance and uncertainty.
+- It is a **domain-focused data organization**, not a separate file format. Here, NetCDF is the input and Zarr is the output.
 :::
 
-::: {.column width="55%"}
-- Replace `img/cube.svg` with your own figure
-- Fragments reveal one point at a time {.fragment}
-- Add alt text for accessibility {.fragment}
+::: {.column width="32%"}
+![A cube as a multidimensional data structure](img/cube.svg){width="100%"}
 :::
 :::::
 
-##  {background-image="img/cube.svg" background-size="40%" background-opacity="0.18" background-position="right"}
+## Data used in this workshop
 
-### Full-slide background image
+| Product | What it represents | In this tutorial |
+|---|---|---|
+| **METREF** | Reference evapotranspiration | Default configured download sample |
+| **FVC / MDFVC** | Fractional vegetation cover | Additional product example; configure its own URL and metadata |
 
-Use `background-image="img/your-photo.jpg"` on any slide. Lower `background-opacity` so the text stays readable.
+Data are accessed from the authenticated [LSA SAF Data Service](https://datalsasaf.lsasvcs.ipma.pt/). Availability, product versions, units, coverage and quality information depend on the selected product; check its product page before analysis.
 
-# Part 2 {background-color="#06141f"}
+## From source file to cube
 
-Running the code
+~~~{mermaid}
+flowchart LR
+    A["LSA SAF product<br/>NetCDF + credentials"] --> B["Download sample<br/>data/raw"]
+    B --> C["Inspect metadata<br/>valid values + QA"]
+    C --> D["Crop to AOI<br/>configured bounds"]
+    D --> E["Remap to target grid<br/>CDO"]
+    E --> F["Validate outputs<br/>coverage + statistics"]
+    F --> G["Build Zarr cube<br/>xarray + Dask"]
+    G --> H["Maps + time series<br/>regional analysis"]
+~~~
 
-## The code
-
-``` {.python code-line-numbers="1-6|9-21"}
-{{< include ../code/build_zarr_cube.py >}}
-```
-
-::: notes
-Walk through the imports first, then the plot.
+::: {.fragment .fade-up}
+Each step leaves a checkable output. If a stage fails, diagnose that stage before moving on.
 :::
 
-## Thank you {.center}
+## Step 1 · Download a small sample
 
-- Tutorial: <https://YOUR-USERNAME.github.io/YOUR-REPO/>
-- Code: <https://github.com/YOUR-USERNAME/YOUR-REPO>
+~~~bash
+cp code/.env.example code/.env   # add credentials; keep local
+bash code/01_download_sample.sh
+~~~
+
+- The downloader reads a product URL, year and month from settings.
+- Raw files go under data/raw/<variable>/YYYY/MM/.
+- It downloads to a temporary .part file, then renames on success.
+
+**Start with one month and one product.** It makes troubleshooting and validation manageable.
+
+## Step 2 · Crop and remap
+
+~~~bash
+bash code/02_preprocess_cdo.sh 0.05
+~~~
+
+The script clips source files using bounds in code/preprocess_utils/config.txt, then remaps using the grid generated from config_resolution.yaml.
+
+::: {.callout-warning}
+Make the clip bounds and target-grid extent describe the same area. In the current examples they differ; a target grid extending beyond the clipped source can create large missing-value regions.
+:::
+
+## Resampling is a decision
+
+| Method | Typical use | Main trade-off |
+|---|---|---|
+| Bilinear | Continuous fields such as many climate variables | Smooths values; can modify extremes |
+| Nearest neighbour | Categories and QA flags | Preserves classes; can look blocky |
+
+Neither method creates finer source detail. For each product, choose a method that matches its values and intended use; retain and apply quality flags where available.
+
+## Step 3 · Store for analysis
+
+~~~python
+INNER_CHUNKS = {"time": 1, "lat": 256, "lon": 256}
+SHARD_CHUNKS = {"time": 10, "lat": 512, "lon": 512}
+COMPRESSOR = BloscCodec(cname="zstd", clevel=5, shuffle="shuffle")
+~~~
+
+- Inner chunks are the read units, for example one date and a spatial window.
+- Shards group chunks to reduce the number of storage objects.
+- These settings are starting points; benchmark the actual map and time-series queries.
+
+Run the builder with uv run python code/build_zarr_cube.py. It expects interim dimensions named time, lat, and lon; it replaces its existing output store when rebuilding.
+
+## Inspect a cube
+
+~~~python
+import xarray as xr
+
+ds = xr.open_zarr("data/zarr/metref_sample_1month.zarr")
+field = next(iter(ds.data_vars))
+map_for_date = ds[field].isel(time=0)
+series_at_cell = ds[field].isel(lat=100, lon=100)
+~~~
+
+The cell indices are illustrative. Check coordinate names, coordinate direction, units and timestamps before interpreting values. Use the reusable functions in code/plot_utils/ for maps and temporal plots.
+
+## QA · what should we check?
+
+- Compare source and output coordinates, timestamps, units and variable names.
+- Check decoded fill values and valid-cell count/fraction.
+- Plot the missing-data footprint; compare it with the source mask and QA flags.
+- Compare a few known source/output values and summary statistics.
+- Reopen Zarr and compute a small selection before processing more data.
+
+**A file that opens is not automatically fit for analysis.** Non-zero valid values do not by themselves prove sufficient spatial coverage.
+
+## What can the cube support?
+
+- Regional and seasonal climate maps.
+- Spatial summaries and time series for locations or zones.
+- Evapotranspiration and vegetation monitoring.
+- Inputs to climate-impact or resilience indicators after domain validation.
+
+The cube makes data access more consistent; scientific interpretation still depends on product quality, aggregation choices and validation.
+
+## Caveats and uncertainty
+
+- Missing values may be real masks/quality exclusions or processing/configuration problems.
+- A crop/grid mismatch, wrong variable, coordinate issue or fill-value handling can cause extensive NaNs.
+- Bilinear remapping smooths; nearest-neighbour can be blocky. Different choices can change statistics.
+- Degree grids have latitude-dependent ground dimensions.
+- Product versions, temporal support, units and quality systems may differ.
+- The example is a regional teaching workflow, not a validated operational climate product.
+
+## APIs, cloud platforms and this workflow
+
+APIs, Microsoft Planetary Computer and Google Earth Engine are useful for discovering, accessing and analyzing many datasets.
+
+This tutorial demonstrates a local, explicit path for selected authenticated LSA SAF data when we need to document a regional crop, target grid and processing choices. The two approaches can complement each other; this workflow does not assume hosted platforms lack the required data.
+
+## Scale the pilot carefully
+
+For a large domain (for example, a 2,000 km corridor), first benchmark a representative priority subset:
+
+- Record runtime, peak memory, file size, valid coverage and output read speed.
+- Split work into grid-aligned spatial tiles and/or time batches.
+- Parallelize independent files within measured CPU, memory and I/O limits.
+- Add remapping margins at tile edges and trim duplicate target cells.
+- Write non-overlapping Zarr regions or isolated stores; track and retry failures.
+
+Do not scale only by multiplying worker count. Disk throughput, memory, output object counts and safe Zarr writes can become the bottleneck.
+
+## Possible next updates
+
+- Harmonize clip and target-grid bounds; add a coverage map and threshold.
+- Apply product-specific quality flags and test decoded no-data values.
+- Record provenance, product versions, units, grid and resampling settings.
+- Benchmark chunk/shard sizes for intended queries and available compute/storage.
+- Add more products only after documenting their spatial and temporal semantics.
+- Add automated tests for sample input files and failed/partial outputs.
+
+## What we learned {.center}
+
+**A useful climate cube starts with consistent, documented choices and honest checks on missing data and resolution.**
+
+Tutorial: <https://khizerzakir.github.io/tutorial-repo/>  
+Code: <https://github.com/khizerzakir/tutorial-repo>

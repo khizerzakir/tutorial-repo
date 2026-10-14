@@ -1,5 +1,5 @@
 ---
-title: "Climate Data Cube Workshop - Tutorial"
+title: "Hands-on Practical Tutorial"
 ---
 
 **Welcome!** If you are here, you are likely participating in the Climate Data Cube Workshop as part of the [IEEE Autumn School 2026](https://it-u.at/en/events/earth-observation-and-geoai-for-climate-resilient-urban-systems-grss-school/) Training.

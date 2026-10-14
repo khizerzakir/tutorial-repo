@@ -9,7 +9,7 @@ __pycache__/
 # Secrets
 .env
 
-
+slides/presentation.qmd
 # Data outputs
 /data/
 /logs/

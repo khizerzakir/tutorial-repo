@@ -1,6 +1,129 @@
 ---
-title: "B. Download and Preprocess Sample Data"
+title: "B. Download and preprocess a sample"
 ---
 
+This page downloads one LSA SAF product sample, crops it to a configured study area, and remaps it to a target grid. Begin with one product and one short time period. Validate the result before extending the period or region.
 
-Draw BBOX - https://onlinemapmaker.com/bounding-box-tool/
+## 1. Check the product and study area
+
+The example defaults to **METREF**. The repository also lists FVC/MDFVC as an example product. Select a product from the [LSA SAF Data Service](https://datalsasaf.lsasvcs.ipma.pt/) and confirm its product URL, time coverage, variable names, units, coordinate system, no-data values and quality flags.
+
+The study area has two related settings:
+
+- code/preprocess_utils/config.txt controls the crop bounds (WEST, SOUTH, EAST, NORTH).
+- code/preprocess_utils/config_resolution.yaml defines the generated output-grid domain.
+
+Coordinates are longitude/latitude in degrees in this example. For a new AOI, record the bounds in this order: **west, south, east, north**. Include a suitable input buffer for the remapping method; verify edge coverage after processing.
+
+## 2. Set credentials
+
+From the repository root:
+
+~~~bash
+cp code/.env.example code/.env
+~~~
+
+Edit `code/.env` and enter your `LSA SAF` credentials - See the [setup guide](01-setup.qmd) for details. The downloader expects:
+
+~~~dotenv
+LSASAF_USERNAME=your_username
+LSASAF_PASSWORD=your_password
+SAMPLE_YEAR=2020
+SAMPLE_MONTH=06
+VARIABLE_NAME=METREF
+URL=https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF
+~~~
+
+Keep code/.env private and never commit it. The script reads this path by default when run from the repository root. If you use another path, set ENV_FILE=/path/to/.env.
+
+## 3. Download the sample
+
+Run from the repository root:
+
+~~~bash
+bash code/01_download_sample.sh
+~~~
+
+You can override the year, month, product and product URL positionally:
+
+~~~bash
+bash code/01_download_sample.sh 2020 06 METREF "https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF"
+~~~
+
+The script checks the service listing and skips files already present. New files are first written as .part, then renamed after a successful download. The default raw-data layout is:
+
+~~~text
+data/raw/METREF/2020/06/*.nc
+~~~
+
+Confirm that files exist and have plausible sizes. A completed download only confirms transfer success; it does not confirm that the data are scientifically valid.
+
+## 4. Inspect raw NetCDF before processing
+
+Use CDO to list metadata and summary information:
+
+~~~bash
+cdo -s sinfo data/raw/METREF/2020/06/example.nc
+cdo -s showname data/raw/METREF/2020/06/example.nc
+cdo -s showtimestamp data/raw/METREF/2020/06/example.nc
+cdo -s infon data/raw/METREF/2020/06/example.nc
+~~~
+
+You can also use `ncdump -h` to inspect the header. The jupyter notebook `code/inspect_raw.ipynb` provides a convenient way to explore the raw file interactively.
+
+Replace `example.nc` with a real downloaded filename. Review coordinate ranges, variable names, timestamps, units, missing values and product QA information. If the raw file itself has no valid values, diagnose the download/product selection before remapping.
+
+## 5. Crop and remap
+
+After aligning the configuration file, run:
+
+~~~bash
+bash code/02_preprocess_cdo.sh
+~~~
+
+Optional positional arguments are resolution, input folder and output folder:
+
+~~~bash
+bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF
+~~~
+
+The script uses `code/preprocess_utils/grid.txt`, clips each input with `sellonlatbox`, then remaps to that grid. `REMAP_METHOD` defaults to bilinear; set `REMAP_METHOD=nearest` for categorical fields and flags. Bilinear is for continuous variables and smooths values.
+
+PARALLEL controls the number of independent files processed concurrently; for example:
+
+~~~bash
+PARALLEL=2 bash code/02_preprocess_cdo.sh 0.05
+~~~
+
+Start conservatively. Increase parallelism only after checking RAM, disk throughput and temporary storage.
+
+Processed files are written beneath data/interim/. Check the cdo.log, then inspect an output:
+
+~~~bash
+cdo -s sinfo data/interim/METREF/2020/06/example_processed.nc
+cdo -s infon data/interim/METREF/2020/06/example_processed.nc
+~~~
+
+## 6. Check for missing values
+
+Compare raw and processed summaries and map the output. An all-NaN or mostly missing result can be caused by:
+
+- crop bounds and target-grid bounds not overlapping;
+- wrong variable, coordinate names or coordinate direction;
+- fill values not decoded as missing;
+- a source mask or retrieval-quality exclusion;
+- invalid or unsupported remapping setup.
+
+Some missing values are expected. Set an acceptable valid-coverage threshold for the application, and check coverage spatially as well as numerically. A file existing or opening is not enough to establish fitness for use.
+
+## 7. Method caveats
+
+- Regridding does not add source detail. A finer target grid interpolates the source; it does not make the measurement higher resolution.
+- Bilinear interpolation smooths continuous fields; nearest-neighbour preserves category labels but may look blocky.
+- Degree-based cell size changes with latitude.
+- Preserve product QA flags and document any masks, unit conversion and temporal aggregation.
+- Record the input product/version, AOI bounds, output grid, resolution, remapping method and software version.
+
+## Next page
+
+Continue to [Build and inspect the Zarr cube](03-zarr-cubes.qmd).
