@@ -107,8 +107,8 @@ Running the code
 
 ## The code
 
-``` {.python code-line-numbers="1-5|7-12"}
-{{< include ../code/analysis.py >}}
+``` {.python code-line-numbers="1-6|9-21"}
+{{< include ../code/build_zarr_cube.py >}}
 ```
 
 ::: notes
