@@ -1,5 +1,93 @@
 [
   {
+    "objectID": "tutorial/01-setup.html",
+    "href": "tutorial/01-setup.html",
+    "title": "A. Setup",
+    "section": "",
+    "text": "This setup guide will help you install the necessary tools and dependencies to follow and run this workshop code on your local machine unless you are using a cloud-based environment. The workshop code is designed to run in a Linux environment, so if you are using Windows, we recommend installing Windows Subsystem for Linux (WSL2). If you are using macOS or Linux, you can skip the WSL installation and use your native terminal.",
+    "crumbs": [
+      "Home",
+      "A. Setup"
+    ]
+  },
+  {
+    "objectID": "tutorial/01-setup.html#install-wsl2-and-ubuntu",
+    "href": "tutorial/01-setup.html#install-wsl2-and-ubuntu",
+    "title": "A. Setup",
+    "section": "1. Install WSL2 and Ubuntu",
+    "text": "1. Install WSL2 and Ubuntu\n\nOpen the Windows Start menu, search for PowerShell, and choose Run as administrator.\nRun the following command in Windows PowerShell:\n\nwsl --install -d Ubuntu\n\nRestart Windows if prompted.\nLaunch Ubuntu from the Start menu and wait for first-time initialization.\nCreate your Ubuntu username and password when prompted. Password characters are not displayed while typing.\n\nCheck installation in Windows PowerShell:\nwsl --list --verbose\nYou should see Ubuntu with VERSION equal to 2. If Ubuntu is version 1, use:\nwsl --set-version Ubuntu 2\nIf wsl --install displays help instead of installing, try wsl --list --online, then wsl --install -d Ubuntu. If installation is blocked by policy or virtualization, contact your IT administrator. Do not attempt to bypass institutional restrictions.\nOfficial guide: https://learn.microsoft.com/en-us/windows/wsl/install",
+    "crumbs": [
+      "Home",
+      "A. Setup"
+    ]
+  },
+  {
+    "objectID": "tutorial/01-setup.html#install-visual-studio-code",
+    "href": "tutorial/01-setup.html#install-visual-studio-code",
+    "title": "A. Setup",
+    "section": "2. Install Visual Studio Code",
+    "text": "2. Install Visual Studio Code\nIf you do not have VS Code installed, follow these steps:\n\nDownload VS Code for Windows: https://code.visualstudio.com/download.\nInstall VS Code on Windows (not inside Ubuntu).\nOpen VS Code → Extensions (Ctrl+Shift+X). Install:\n\nWSL (Microsoft)\nPython (Microsoft)\nJupyter (Microsoft)\n\n\nOfficial WSL + VS Code guide: https://code.visualstudio.com/docs/remote/wsl",
+    "crumbs": [
+      "Home",
+      "A. Setup"
+    ]
+  },
+  {
+    "objectID": "tutorial/01-setup.html#get-the-repository",
+    "href": "tutorial/01-setup.html#get-the-repository",
+    "title": "A. Setup",
+    "section": "3. Get the repository",
+    "text": "3. Get the repository\nOn Windows, open WSL2, On Linux or macOS, use a terminal and install Git, wget, CDO and Python 3.11+ using your operating system’s package manager,\nThen run:\nsudo apt update\nsudo apt install -y git wget curl ca-certificates cdo python3 python3-venv python3-pip\nKeep the project inside the Linux filesystem on WSL | in your home directory (for Linux and macOS), for example:\nmkdir -p ~/projects\ncd ~/projects\ngit clone https://github.com/khizerzakir/tutorial-repo.git\ncd tutorial-repo\nOpen the repository from Ubuntu/terminal with the command code dot.\ncode .",
+    "crumbs": [
+      "Home",
+      "A. Setup"
+    ]
+  },
+  {
+    "objectID": "tutorial/01-setup.html#check-your-tools",
+    "href": "tutorial/01-setup.html#check-your-tools",
+    "title": "A. Setup",
+    "section": "4. Check your tools",
+    "text": "4. Check your tools\ncdo -V\ngit --version\npython3 --version\nwget --version | head -n 1\nIf you use uv, also run uv –version. If CDO is missing, install it through your OS package manager or a conda-forge environment; CDO is not installed by uv or pip.",
+    "crumbs": [
+      "Home",
+      "A. Setup"
+    ]
+  },
+  {
+    "objectID": "tutorial/01-setup.html#install-python-dependencies",
+    "href": "tutorial/01-setup.html#install-python-dependencies",
+    "title": "A. Setup",
+    "section": "5. Install Python dependencies",
+    "text": "5. Install Python dependencies\nThe Zarr builder in this repository requires Zarr 3; use Python 3.11 or newer.\n\nOption A: uv\nInstall uv using the official instructions, then from the repository root run:\nuv sync --locked\nCheck the core packages and Zarr major version:\nuv run python -c \"import xarray, zarr; print(xarray.__version__, zarr.__version__)\"\n\n\nOption B: pip\npython3 -m venv .venv\nsource .venv/bin/activate\npython -m pip install --upgrade pip\npython -m pip install -r requirements.txt\npython -c \"import xarray, zarr; print(xarray.__version__, zarr.__version__)\"\nConfirm that the printed Zarr version is 3 or newer before running the cube builder. If the environment resolves Zarr 2, use Python 3.11+ and reinstall the project dependencies.\n\nImportant: Keep the virtual environment activated for subsequent terminal commands. When you open a new Ubuntu terminal, run source .venv/bin/activate again. Do not use sudo pip install. The requirements.txt must be committed to github and kept consistent with the tested uv.lock; pip does not read uv.lock automatically.",
+    "crumbs": [
+      "Home",
+      "A. Setup"
+    ]
+  },
+  {
+    "objectID": "tutorial/01-setup.html#configure-lsa-saf-access",
+    "href": "tutorial/01-setup.html#configure-lsa-saf-access",
+    "title": "A. Setup",
+    "section": "6. Configure LSA SAF access",
+    "text": "6. Configure LSA SAF access\n\nRegister on the LSA SAF data portal and activate your account.\n\n\n\nData portal registration\n\n\nAdd your credentials to a .env file in code/:\n\nEdit code/.env with your account credentials. The downloader expects the names LSASAF_USERNAME and LSASAF_PASSWORD. Do not commit this file or include it in screenshots.\n   cp code/.env.example code/.env\n   LSASAF_USERNAME=\"username\"\n   LSASAF_PASSWORD=\"password\"\n\nChoose the products for this tutorial:\n\nMETREF: Reference Evapotranspiration\nFVC: Fractional Vegetation Cover\n\n\n\n\nBrowse the products",
+    "crumbs": [
+      "Home",
+      "A. Setup"
+    ]
+  },
+  {
+    "objectID": "tutorial/01-setup.html#continue",
+    "href": "tutorial/01-setup.html#continue",
+    "title": "A. Setup",
+    "section": "7. Continue",
+    "text": "7. Continue\nGo to Download and preprocess a sample. Run all project commands from the repository root unless the command says otherwise.",
+    "crumbs": [
+      "Home",
+      "A. Setup"
+    ]
+  },
+  {
     "objectID": "tutorial/03-zarr-cubes.html",
     "href": "tutorial/03-zarr-cubes.html",
     "title": "C. Build and inspect a Zarr cube",
@@ -99,161 +187,6 @@
     ]
   },
   {
-    "objectID": "tutorial/01-setup.html",
-    "href": "tutorial/01-setup.html",
-    "title": "A. Setup",
-    "section": "",
-    "text": "This setup guide will help you install the necessary tools and dependencies to follow and run this workshop code on your local machine unless you are using a cloud-based environment. The workshop code is designed to run in a Linux environment, so if you are using Windows, we recommend installing Windows Subsystem for Linux (WSL2). If you are using macOS or Linux, you can skip the WSL installation and use your native terminal.",
-    "crumbs": [
-      "Home",
-      "A. Setup"
-    ]
-  },
-  {
-    "objectID": "tutorial/01-setup.html#install-wsl2-and-ubuntu",
-    "href": "tutorial/01-setup.html#install-wsl2-and-ubuntu",
-    "title": "A. Setup",
-    "section": "1. Install WSL2 and Ubuntu",
-    "text": "1. Install WSL2 and Ubuntu\n\nOpen the Windows Start menu, search for PowerShell, and choose Run as administrator.\nRun the following command in Windows PowerShell:\n\nwsl --install -d Ubuntu\n\nRestart Windows if prompted.\nLaunch Ubuntu from the Start menu and wait for first-time initialization.\nCreate your Ubuntu username and password when prompted. Password characters are not displayed while typing.\n\nCheck installation in Windows PowerShell:\nwsl --list --verbose\nYou should see Ubuntu with VERSION equal to 2. If Ubuntu is version 1, use:\nwsl --set-version Ubuntu 2\nIf wsl --install displays help instead of installing, try wsl --list --online, then wsl --install -d Ubuntu. If installation is blocked by policy or virtualization, contact your IT administrator. Do not attempt to bypass institutional restrictions.\nOfficial guide: https://learn.microsoft.com/en-us/windows/wsl/install",
-    "crumbs": [
-      "Home",
-      "A. Setup"
-    ]
-  },
-  {
-    "objectID": "tutorial/01-setup.html#install-visual-studio-code",
-    "href": "tutorial/01-setup.html#install-visual-studio-code",
-    "title": "A. Setup",
-    "section": "2. Install Visual Studio Code",
-    "text": "2. Install Visual Studio Code\nIf you do not have VS Code installed, follow these steps:\n\nDownload VS Code for Windows: https://code.visualstudio.com/download.\nInstall VS Code on Windows (not inside Ubuntu).\nOpen VS Code → Extensions (Ctrl+Shift+X). Install:\n\nWSL (Microsoft)\nPython (Microsoft)\nJupyter (Microsoft)\n\n\nOfficial WSL + VS Code guide: https://code.visualstudio.com/docs/remote/wsl",
-    "crumbs": [
-      "Home",
-      "A. Setup"
-    ]
-  },
-  {
-    "objectID": "tutorial/01-setup.html#get-the-repository",
-    "href": "tutorial/01-setup.html#get-the-repository",
-    "title": "A. Setup",
-    "section": "3. Get the repository",
-    "text": "3. Get the repository\nOn Windows, open WSL2, On Linux or macOS, use a terminal and install Git, wget, CDO and Python 3.11+ using your operating system’s package manager,\nThen run:\nsudo apt update\nsudo apt install -y git wget curl ca-certificates cdo python3 python3-venv python3-pip\nKeep the project inside the Linux filesystem on WSL | in your home directory (for Linux and macOS), for example:\nmkdir -p ~/projects\ncd ~/projects\ngit clone https://github.com/khizerzakir/tutorial-repo.git\ncd tutorial-repo\nOpen the repository from Ubuntu/terminal with the command code dot.\ncode .",
-    "crumbs": [
-      "Home",
-      "A. Setup"
-    ]
-  },
-  {
-    "objectID": "tutorial/01-setup.html#check-your-tools",
-    "href": "tutorial/01-setup.html#check-your-tools",
-    "title": "A. Setup",
-    "section": "4. Check your tools",
-    "text": "4. Check your tools\ncdo -V\ngit --version\npython3 --version\nwget --version | head -n 1\nIf you use uv, also run uv –version. If CDO is missing, install it through your OS package manager or a conda-forge environment; CDO is not installed by uv or pip.",
-    "crumbs": [
-      "Home",
-      "A. Setup"
-    ]
-  },
-  {
-    "objectID": "tutorial/01-setup.html#install-python-dependencies",
-    "href": "tutorial/01-setup.html#install-python-dependencies",
-    "title": "A. Setup",
-    "section": "5. Install Python dependencies",
-    "text": "5. Install Python dependencies\nThe Zarr builder in this repository requires Zarr 3; use Python 3.11 or newer.\n\nOption A: uv\nInstall uv using the official instructions, then from the repository root run:\nuv sync --locked\nCheck the core packages and Zarr major version:\nuv run python -c \"import xarray, zarr; print(xarray.__version__, zarr.__version__)\"\n\n\nOption B: pip\npython3 -m venv .venv\nsource .venv/bin/activate\npython -m pip install --upgrade pip\npython -m pip install -r requirements.txt\npython -c \"import xarray, zarr; print(xarray.__version__, zarr.__version__)\"\nConfirm that the printed Zarr version is 3 or newer before running the cube builder. If the environment resolves Zarr 2, use Python 3.11+ and reinstall the project dependencies.\n\nImportant: Keep the virtual environment activated for subsequent terminal commands. When you open a new Ubuntu terminal, run source .venv/bin/activate again. Do not use sudo pip install. The requirements.txt must be committed to github and kept consistent with the tested uv.lock; pip does not read uv.lock automatically.",
-    "crumbs": [
-      "Home",
-      "A. Setup"
-    ]
-  },
-  {
-    "objectID": "tutorial/01-setup.html#configure-lsa-saf-access",
-    "href": "tutorial/01-setup.html#configure-lsa-saf-access",
-    "title": "A. Setup",
-    "section": "6. Configure LSA SAF access",
-    "text": "6. Configure LSA SAF access\n\nRegister on the LSA SAF data portal and activate your account.\n\n\n\nData portal registration\n\n\nAdd your credentials to a .env file in code/:\n\nEdit code/.env with your account credentials. The downloader expects the names LSASAF_USERNAME and LSASAF_PASSWORD. Do not commit this file or include it in screenshots.\n   cp code/.env.example code/.env\n   LSASAF_USERNAME=\"username\"\n   LSASAF_PASSWORD=\"password\"\n\nChoose the products for this tutorial:\n\nMETREF: Reference Evapotranspiration\nFVC: Fractional Vegetation Cover\n\n\n\n\nBrowse the products",
-    "crumbs": [
-      "Home",
-      "A. Setup"
-    ]
-  },
-  {
-    "objectID": "tutorial/01-setup.html#continue",
-    "href": "tutorial/01-setup.html#continue",
-    "title": "A. Setup",
-    "section": "7. Continue",
-    "text": "7. Continue\nGo to Download and preprocess a sample. Run all project commands from the repository root unless the command says otherwise.",
-    "crumbs": [
-      "Home",
-      "A. Setup"
-    ]
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Hands-on Practical Tutorial",
-    "section": "",
-    "text": "Welcome! If you are here, you are likely participating in the Climate Data Cube Workshop as part of the IEEE Autumn School 2026 Training.\nThis is the hands-on tutorial is designed to introduce participants to the concepts and tools of climate data analysis, with a focus on using satellite-derived climate data from EUMETSAT LSA SAF. The tutorial will guide you through the process of setting up your environment, running example code, and analyzing the results.\n\nImportant links for this workshop\n\n\n📖 Tutorial: start with Setup\n🎤 Slides: open the presentation\n💻 Code: everything you need to run is in the code/ folder",
-    "crumbs": [
-      "Home",
-      "Hands-on Practical Tutorial"
-    ]
-  },
-  {
-    "objectID": "code/plot_utils/Readme.html",
-    "href": "code/plot_utils/Readme.html",
-    "title": "Adaptive cube plotting",
-    "section": "",
-    "text": "adaptive_cube_plot.py provides importable plotting functions for xarray cubes:\n\nplot_time_slices: time-index/date panel maps with shared colour scale, Cartopy projection, inferred data extent, coastlines/borders and optional GeoDataFrame boundaries.\nplot_spatial_timeseries: time series at selected points and area summaries.\nplot_climate_mobility_period: side-by-side climate and aggregated origin/destination mobility maps for a selected half-month.\n\n\n\nInstall the project dependencies plus optional geospatial packages:\npip install matplotlib numpy pandas xarray cartopy geopandas pyarrow pyproj\nCartopy may need system libraries depending on the platform. Importing the module and using time-series plotting does not require Cartopy; map functions do.\n\n\n\nFrom the repository root:\nfrom code.plot_utils.adaptive_cube_plot import (\n    plot_time_slices,\n    plot_spatial_timeseries,\n    plot_climate_mobility_period,\n)\nIf code is not a Python package in the local checkout, add its parent directory to sys.path, or add code/plot_utils directly:\nimport sys\nfrom pathlib import Path\nsys.path.insert(0, str(Path.cwd() / \"code\" / \"plot_utils\"))\nfrom adaptive_cube_plot import plot_time_slices\n\n\n\nimport xarray as xr\nfrom adaptive_cube_plot import plot_time_slices\n\nds = xr.open_zarr(\"data/zarr/metref_sample_1month.zarr\")\nfig, axes = plot_time_slices(\n    ds,\n    var=\"METREF\",\n    time_index=[0, 5, 10],\n    data_crs=\"EPSG:4326\",\n    ncols=3,\n    show=False,\n)\nThe map extent is calculated from the selected coordinates. Set extent=(xmin, xmax, ymin, ymax) to crop all panels to a common area. data_crs describes the existing coordinate values; it does not reproject the data. Longitude/latitude coordinate names imply EPSG:4326. For projected x/y, pass the actual CRS (for example, data_crs=\"EPSG:32628\"). The default display projection is Plate Carrée; supply a Cartopy CRS as map_crs for another projection.\nOverlay an AOI or administrative boundary:\nimport geopandas as gpd\nboundaries = gpd.read_file(\"data/aoi.geojson\")\nfig, axes = plot_time_slices(\n    ds, var=\"METREF\", time_index=[0, 5], data_crs=\"EPSG:4326\",\n    boundaries=boundaries, ncols=2, show=False,\n)\nIf a boundary file has no embedded CRS, provide boundary_crs. This assigns the source CRS metadata. Confirm the source CRS before assigning it.\n\n\n\nThe mobility table is expected to contain an origin or destination ID, a date/period column, and a numeric metric. Defaults match the normalized OD schema (norm_spatial_id_origin, norm_spatial_id_destination, date, N_depart). Spatial units must have a matching ID column and geometry.\nimport geopandas as gpd\nfrom adaptive_cube_plot import plot_climate_mobility_period\n\nunits = gpd.read_parquet(\"data/spatial/units.parquet\")\nfig, axes = plot_climate_mobility_period(\n    ds,\n    mobility=\"data/mobility/flows.parquet\",\n    spatial_units=units,\n    var=\"METREF\",\n    period=\"2020-06-01\",            # dates are grouped into days 1–15 / 16–month-end\n    mobility_metric=\"N_depart_adj\", # or N_depart / N_migrants_adj\n    flow_direction=\"origin\",        # alternatively: destination\n    spatial_id_col=\"norm_spatial_id\",\n    data_crs=\"EPSG:4326\",\n    subset_type=\"your_subset\",      # optional filter, if this column exists\n    days_span=15,                    # optional filter, if this column exists\n    show=False,\n)\nFor HalfMonthIndex tables, set period_col=\"HalfMonthIndex\" and pass the exact key as mobility_period; keep period as the climate date used for climate aggregation. Set origin_col/destination_col if your table uses other ID names. The comparison aggregates counts by origin or destination polygon; it does not draw OD flow lines. The juxtaposition is descriptive and does not establish a climate–mobility relationship. Exact temporal interpretation depends on the product timestamp semantics and the mobility period definition.\n\n\n\nfig, ax = plot_spatial_timeseries(\n    ds, var=\"METREF\",\n    points={\"Site A\": (-16.4, 14.5)},\n    areas={\"AOI\": (-17.0, -16.0, 13.0, 14.0)},\n    show_area_spread=True,\n    show=False,\n)\nPoint coordinates and area bounds must use the cube coordinate system. For projected data, provide projected point/bounds values; the time-series function samples the nearest grid cell and does not transform coordinates.\n\n\n\n\nAutomatic extent assumes rectilinear 1-D x/y coordinates; curvilinear grids need preprocessing or a dedicated plotting path.\nCoastline/border detail is cartographic context, not a replacement for authoritative local boundaries.\nPlate Carrée is a practical default, but can distort area and shape at high latitudes or across wide extents.\nMobility IDs must match the spatial-unit IDs and be consistently typed. Unmatched units appear without a mobility value.\nMobility aggregates depend on filters, adjustment factors and period semantics; inspect those before interpreting the maps."
-  },
-  {
-    "objectID": "code/plot_utils/Readme.html#install",
-    "href": "code/plot_utils/Readme.html#install",
-    "title": "Adaptive cube plotting",
-    "section": "",
-    "text": "Install the project dependencies plus optional geospatial packages:\npip install matplotlib numpy pandas xarray cartopy geopandas pyarrow pyproj\nCartopy may need system libraries depending on the platform. Importing the module and using time-series plotting does not require Cartopy; map functions do."
-  },
-  {
-    "objectID": "code/plot_utils/Readme.html#import",
-    "href": "code/plot_utils/Readme.html#import",
-    "title": "Adaptive cube plotting",
-    "section": "",
-    "text": "From the repository root:\nfrom code.plot_utils.adaptive_cube_plot import (\n    plot_time_slices,\n    plot_spatial_timeseries,\n    plot_climate_mobility_period,\n)\nIf code is not a Python package in the local checkout, add its parent directory to sys.path, or add code/plot_utils directly:\nimport sys\nfrom pathlib import Path\nsys.path.insert(0, str(Path.cwd() / \"code\" / \"plot_utils\"))\nfrom adaptive_cube_plot import plot_time_slices"
-  },
-  {
-    "objectID": "code/plot_utils/Readme.html#panel-maps",
-    "href": "code/plot_utils/Readme.html#panel-maps",
-    "title": "Adaptive cube plotting",
-    "section": "",
-    "text": "import xarray as xr\nfrom adaptive_cube_plot import plot_time_slices\n\nds = xr.open_zarr(\"data/zarr/metref_sample_1month.zarr\")\nfig, axes = plot_time_slices(\n    ds,\n    var=\"METREF\",\n    time_index=[0, 5, 10],\n    data_crs=\"EPSG:4326\",\n    ncols=3,\n    show=False,\n)\nThe map extent is calculated from the selected coordinates. Set extent=(xmin, xmax, ymin, ymax) to crop all panels to a common area. data_crs describes the existing coordinate values; it does not reproject the data. Longitude/latitude coordinate names imply EPSG:4326. For projected x/y, pass the actual CRS (for example, data_crs=\"EPSG:32628\"). The default display projection is Plate Carrée; supply a Cartopy CRS as map_crs for another projection.\nOverlay an AOI or administrative boundary:\nimport geopandas as gpd\nboundaries = gpd.read_file(\"data/aoi.geojson\")\nfig, axes = plot_time_slices(\n    ds, var=\"METREF\", time_index=[0, 5], data_crs=\"EPSG:4326\",\n    boundaries=boundaries, ncols=2, show=False,\n)\nIf a boundary file has no embedded CRS, provide boundary_crs. This assigns the source CRS metadata. Confirm the source CRS before assigning it."
-  },
-  {
-    "objectID": "code/plot_utils/Readme.html#climate-and-mobility-comparison",
-    "href": "code/plot_utils/Readme.html#climate-and-mobility-comparison",
-    "title": "Adaptive cube plotting",
-    "section": "",
-    "text": "The mobility table is expected to contain an origin or destination ID, a date/period column, and a numeric metric. Defaults match the normalized OD schema (norm_spatial_id_origin, norm_spatial_id_destination, date, N_depart). Spatial units must have a matching ID column and geometry.\nimport geopandas as gpd\nfrom adaptive_cube_plot import plot_climate_mobility_period\n\nunits = gpd.read_parquet(\"data/spatial/units.parquet\")\nfig, axes = plot_climate_mobility_period(\n    ds,\n    mobility=\"data/mobility/flows.parquet\",\n    spatial_units=units,\n    var=\"METREF\",\n    period=\"2020-06-01\",            # dates are grouped into days 1–15 / 16–month-end\n    mobility_metric=\"N_depart_adj\", # or N_depart / N_migrants_adj\n    flow_direction=\"origin\",        # alternatively: destination\n    spatial_id_col=\"norm_spatial_id\",\n    data_crs=\"EPSG:4326\",\n    subset_type=\"your_subset\",      # optional filter, if this column exists\n    days_span=15,                    # optional filter, if this column exists\n    show=False,\n)\nFor HalfMonthIndex tables, set period_col=\"HalfMonthIndex\" and pass the exact key as mobility_period; keep period as the climate date used for climate aggregation. Set origin_col/destination_col if your table uses other ID names. The comparison aggregates counts by origin or destination polygon; it does not draw OD flow lines. The juxtaposition is descriptive and does not establish a climate–mobility relationship. Exact temporal interpretation depends on the product timestamp semantics and the mobility period definition."
-  },
-  {
-    "objectID": "code/plot_utils/Readme.html#existing-point-and-area-time-series",
-    "href": "code/plot_utils/Readme.html#existing-point-and-area-time-series",
-    "title": "Adaptive cube plotting",
-    "section": "",
-    "text": "fig, ax = plot_spatial_timeseries(\n    ds, var=\"METREF\",\n    points={\"Site A\": (-16.4, 14.5)},\n    areas={\"AOI\": (-17.0, -16.0, 13.0, 14.0)},\n    show_area_spread=True,\n    show=False,\n)\nPoint coordinates and area bounds must use the cube coordinate system. For projected data, provide projected point/bounds values; the time-series function samples the nearest grid cell and does not transform coordinates."
-  },
-  {
-    "objectID": "code/plot_utils/Readme.html#known-limits",
-    "href": "code/plot_utils/Readme.html#known-limits",
-    "title": "Adaptive cube plotting",
-    "section": "",
-    "text": "Automatic extent assumes rectilinear 1-D x/y coordinates; curvilinear grids need preprocessing or a dedicated plotting path.\nCoastline/border detail is cartographic context, not a replacement for authoritative local boundaries.\nPlate Carrée is a practical default, but can distort area and shape at high latitudes or across wide extents.\nMobility IDs must match the spatial-unit IDs and be consistently typed. Unmatched units appear without a mobility value.\nMobility aggregates depend on filters, adjustment factors and period semantics; inspect those before interpreting the maps."
-  },
-  {
-    "objectID": "code/notebooks/test_outputs.html",
-    "href": "code/notebooks/test_outputs.html",
-    "title": "Test interim NetCDF + Zarr cube",
-    "section": "",
-    "text": "Run the pipeline first:\n\nbash scripts/01_download_sample.sh\nbash scripts/02_preprocess_cdo.sh\nuv run python scripts/03_build_zarr_cube.py\n\n\nfrom pathlib import Path\nimport xarray as xr\n\nROOT = Path('..').resolve()\ninterim = ROOT/'data'/'interim'\nzarr_store = ROOT/'data'/'zarr'/'metref_sample_1month.zarr'\n\nprint('Interim dir:', interim)\nprint('Zarr store:', zarr_store)\n\n\nfiles = sorted(interim.rglob('*.nc'))\nprint('Interim files:', len(files))\nfiles[:3]\n\n\nassert files, 'No interim NetCDF files found. Did preprocessing run?'\n\nds = xr.open_dataset(files[0])\nds\n\n\nassert zarr_store.exists(), 'Zarr store not found. Did cube build run?'\n\nds_z = xr.open_zarr(zarr_store, consolidated=True)\nds_z\n\n\n# Small computation to validate dask/chunks\nvar = list(ds_z.data_vars)[0]\nval = float(ds_z[var].isel(time=0).mean().compute())\nprint('Mean of', var, 'at time=0:', val)"
-  },
-  {
     "objectID": "code/notebooks/test_interim.html",
     "href": "code/notebooks/test_interim.html",
     "title": "Test outputs",
@@ -266,125 +199,6 @@
     "title": "Test Zarr cube",
     "section": "",
     "text": "This notebook opens the Zarr store and runs a small computation to verify integrity.\n\nimport xarray as xr\nfrom pathlib import Path\n# Paths\nrepo_root = next(\n    parent for parent in [Path.cwd().resolve(), *Path.cwd().resolve().parents]\n    if (parent / \"pyproject.toml\").exists()\n)\nstore = repo_root / \"data\" / \"zarr\" / \"metref_sample_1month.zarr\"\n\nds = xr.open_zarr(store, consolidated=False)\nds\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n&lt;xarray.Dataset&gt; Size: 114MB\nDimensions:       (time: 30, lat: 552, lon: 576)\nCoordinates:\n  * time          (time) datetime64[ns] 240B 2020-06-01 ... 2020-06-30\n  * lat           (lat) float64 4kB -10.94 -10.89 -10.84 ... 16.51 16.56 16.61\n  * lon           (lon) float64 5kB -17.18 -17.13 -17.08 ... 11.47 11.52 11.57\nData variables:\n    METREF        (time, lat, lon) float32 38MB dask.array&lt;chunksize=(1, 256, 256), meta=np.ndarray&gt;\n    quality_flag  (time, lat, lon) float64 76MB dask.array&lt;chunksize=(1, 256, 256), meta=np.ndarray&gt;\nAttributes: (12/29)\n    CDI:                        Climate Data Interface version 2.4.0 (https:/...\n    Conventions:                CF-1.6\n    institution:                IM-PT\n    date_created:               2020-10-23T07:20:57Z\n    algorithm_version:          1.3.2\n    base_algorithm_version:     1.0.3\n    ...                         ...\n    westernmost_longitude:      80.0\n    spatial_resolution:          0.05x 0.05\n    geospatial_lat_units:       degrees_north\n    geospatial_lon_units:       degrees_east\n    netcdf_version_id:          netCDF4\n    CDO:                        Climate Data Operators version 2.4.0 (https:/...xarray.DatasetDimensions:time: 30lat: 552lon: 576Coordinates: (3)time(time)datetime64[ns]2020-06-01 ... 2020-06-30standard_name :timelong_name :timeaxis :Tarray(['2020-06-01T00:00:00.000000000', '2020-06-02T00:00:00.000000000',\n       '2020-06-03T00:00:00.000000000', '2020-06-04T00:00:00.000000000',\n       '2020-06-05T00:00:00.000000000', '2020-06-06T00:00:00.000000000',\n       '2020-06-07T00:00:00.000000000', '2020-06-08T00:00:00.000000000',\n       '2020-06-09T00:00:00.000000000', '2020-06-10T00:00:00.000000000',\n       '2020-06-11T00:00:00.000000000', '2020-06-12T00:00:00.000000000',\n       '2020-06-13T00:00:00.000000000', '2020-06-14T00:00:00.000000000',\n       '2020-06-15T00:00:00.000000000', '2020-06-16T00:00:00.000000000',\n       '2020-06-17T00:00:00.000000000', '2020-06-18T00:00:00.000000000',\n       '2020-06-19T00:00:00.000000000', '2020-06-20T00:00:00.000000000',\n       '2020-06-21T00:00:00.000000000', '2020-06-22T00:00:00.000000000',\n       '2020-06-23T00:00:00.000000000', '2020-06-24T00:00:00.000000000',\n       '2020-06-25T00:00:00.000000000', '2020-06-26T00:00:00.000000000',\n       '2020-06-27T00:00:00.000000000', '2020-06-28T00:00:00.000000000',\n       '2020-06-29T00:00:00.000000000', '2020-06-30T00:00:00.000000000'],\n      dtype='datetime64[ns]')lat(lat)float64-10.94 -10.89 ... 16.56 16.61standard_name :latitudelong_name :latitudeunits :degrees_northaxis :Yarray([-10.944114, -10.894114, -10.844114, ...,  16.505886,  16.555886,\n        16.605886], shape=(552,))lon(lon)float64-17.18 -17.13 ... 11.52 11.57standard_name :longitudelong_name :longitudeunits :degrees_eastaxis :Xarray([-17.180733, -17.130733, -17.080733, ...,  11.469267,  11.519267,\n        11.569267], shape=(576,))Data variables: (2)METREF(time, lat, lon)float32dask.array&lt;chunksize=(1, 256, 256), meta=np.ndarray&gt;long_name :METREFunits :mm/daydask.arrayquality_flag(time, lat, lon)float64dask.array&lt;chunksize=(1, 256, 256), meta=np.ndarray&gt;long_name :QFLAGSdask.arrayAttributes: (29)CDI :Climate Data Interface version 2.4.0 (https://mpimet.mpg.de/cdi)Conventions :CF-1.6institution :IM-PTdate_created :2020-10-23T07:20:57Zalgorithm_version :1.3.2base_algorithm_version :1.0.3processing_level :03platform :MSG4sensor :SEVIparent_product_name :METREF;QFLAGS;-;-time_coverage_start :2020-06-01T00:00:00Zimage_reference_time :2020-06-01T00:00:00Zname :METREFregion_name :MSG-Diskarchive_facility :IPMAlicense :Data is freely available for users registered at the LSA SAF website - lsa-saf.eumetsat.inthistory :Wed Oct 14 10:45:01 2026: cdo -L -f nc4 -O -remapbil,/mnt/c/Users/b1113715/Downloads/tutorial-repo/code/preprocess_utils/grid.txt /tmp/tmp.nhKZV1CDqC /mnt/c/Users/b1113715/Downloads/tutorial-repo/data/interim/2020/06/NETCDF4_LSASAF_MSG_METREF_MSG-Disk_202006010000_processed.nc.part\nWed Oct 14 10:45:01 2026: cdo -L -f nc4 -O -sellonlatbox,-17.3807,11.8253,-11.1441,16.852 /mnt/c/Users/b1113715/Downloads/tutorial-repo/data/raw/METREF/2020/06/NETCDF4_LSASAF_MSG_METREF_MSG-Disk_202006010000.nc /tmp/tmp.nhKZV1CDqC\n2020-10-23T07:20:57Z - NetCDF reprojected product ; 2020-06-02T00:00:24Z Original product file created: HDF5_LSASAF_MSG_METREF_MSG-Disk_202006010000geospatial_lat_resolution : 0.05geospatial_lon_resolution : 0.05northernmost_latitude :80.0southernmost_latitude :-80.0references :Data provided by the EUMETSAT Satellite Application Facility on Land Surface Analysis (LSA SAF; Trigo et al., 2011) http://lsa-saf.eumetsat.int Trigo, I. F., C. C. DaCamara, P. Viterbo, J.-L. Roujean, F. Olesen, C. Barroso, F. Camacho-de Coca, D. Carrer, S. C. Freitas, J. García-Haro, B. Geiger, F. Gellens-Meulenberghs, N. Ghilain, J. Meliá, L. Pessanha, N. Siljamo, and A. Arboleda, 2011: The Satellite Application Facility on Land Surface Analysis. Int. J. Remote Sens., 32, 2725-2744, doi: 10.1080/01431161003743199easternmost_longitude :-80.0westernmost_longitude :80.0spatial_resolution : 0.05x 0.05geospatial_lat_units :degrees_northgeospatial_lon_units :degrees_eastnetcdf_version_id :netCDF4CDO :Climate Data Operators version 2.4.0 (https://mpimet.mpg.de/cdo)\n\n\n\nds.METREF.values\n\narray([[[nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        ...,\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan]],\n\n       [[nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        ...,\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan]],\n\n       [[nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        ...,\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan]],\n\n       ...,\n\n       [[nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        ...,\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan]],\n\n       [[nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        ...,\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan]],\n\n       [[nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        ...,\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan],\n        [nan, nan, nan, ..., nan, nan, nan]]],\n      shape=(30, 552, 576), dtype=float32)\n\n\n\n# Example quick check\n# (adjust variable name if needed)\nds.to_array().mean('time').compute()\n\n\nfrom pathlib import Path\nimport sys\n\nrepo_root = next(\n    parent for parent in [Path.cwd().resolve(), *Path.cwd().resolve().parents]\n    if (parent / \"pyproject.toml\").exists()\n)\nmodule_dir = repo_root / \"code\" / \"plot_utils\"\n\nprint(\"Notebook folder:\", repo_root)\nprint(\"Module folder exists:\", module_dir.exists())\nprint(\"Module file exists:\", (module_dir / \"adaptive_cube_plot.py\").exists())\nsys.path.insert(0, str(module_dir))\n\nfrom adaptive_cube_plot import plot_time_slices, plot_spatial_timeseries\n\nNotebook folder: C:\\Users\\b1113715\\Downloads\\tutorial-repo\nModule folder exists: True\nModule file exists: True\n\n\n\nfig, axes = plot_time_slices(\n    ds,\n    var=\"METREF\",\n    time_index=[0],\n    ncols=3,\n    extent=[-17, -15, 10, 18],\n\n)"
-  },
-  {
-    "objectID": "docs/slides/presentation.html#why-are-we-here",
-    "href": "docs/slides/presentation.html#why-are-we-here",
-    "title": "Climate Data Cubes",
-    "section": "Why are we here?",
-    "text": "Why are we here?\n\nClimate products are useful, but their files can arrive with different grids, time steps, metadata and quality information.\n\n\n\nToday we make one small, transparent processing path from EUMETSAT source files to a regional data cube."
-  },
-  {
-    "objectID": "docs/slides/presentation.html#what-will-we-learn",
-    "href": "docs/slides/presentation.html#what-will-we-learn",
-    "title": "Climate Data Cubes",
-    "section": "What will we learn?",
-    "text": "What will we learn?\n\nFind and download a selected LSA SAF product safely. {.fragment .fade-up}\nCrop and remap a sample to an explicitly defined regional grid. {.fragment .fade-up}\nBuild and inspect a chunked, compressed Zarr cube. {.fragment .fade-up}\nCheck missing data, understand trade-offs, and plan the next scale step. {.fragment .fade-up}"
-  },
-  {
-    "objectID": "docs/slides/presentation.html#what-is-a-climate-data-cube",
-    "href": "docs/slides/presentation.html#what-is-a-climate-data-cube",
-    "title": "Climate Data Cubes",
-    "section": "What is a climate data cube?",
-    "text": "What is a climate data cube?\n\n\nA data cube is a multidimensional way to organize data. A climate data cube applies this idea to climate or Earth observation variables, commonly indexed by:\ntime × space × variable\n\nGeneric cube: the same structure can store many domains and measurements.\nClimate cube: gives climate/EO data meaningful variables, units, calendars, grids, quality flags, provenance and uncertainty.\nIt is a domain-focused data organization, not a separate file format. Here, NetCDF is the input and Zarr is the output.\n\n\n\n\n\nA cube as a multidimensional data structure"
-  },
-  {
-    "objectID": "docs/slides/presentation.html#data-used-in-this-workshop",
-    "href": "docs/slides/presentation.html#data-used-in-this-workshop",
-    "title": "Climate Data Cubes",
-    "section": "Data used in this workshop",
-    "text": "Data used in this workshop\n\n\n\n\n\n\n\n\nProduct\nWhat it represents\nIn this tutorial\n\n\n\n\nMETREF\nReference evapotranspiration\nDefault configured download sample\n\n\nFVC / MDFVC\nFractional vegetation cover\nAdditional product example; configure its own URL and metadata\n\n\n\nData are accessed from the authenticated LSA SAF Data Service. Availability, product versions, units, coverage and quality information depend on the selected product; check its product page before analysis."
-  },
-  {
-    "objectID": "docs/slides/presentation.html#from-source-file-to-cube",
-    "href": "docs/slides/presentation.html#from-source-file-to-cube",
-    "title": "Climate Data Cubes",
-    "section": "From source file to cube",
-    "text": "From source file to cube\n~{mermaid} flowchart LR A[“LSA SAF productNetCDF + credentials”] –&gt; B[“Download sampledata/raw”] B –&gt; C[“Inspect metadatavalid values + QA”] C –&gt; D[“Crop to AOIconfigured bounds”] D –&gt; E[“Remap to target gridCDO”] E –&gt; F[“Validate outputscoverage + statistics”] F –&gt; G[“Build Zarr cubexarray + Dask”] G –&gt; H[“Maps + time seriesregional analysis”] ~\n\nEach step leaves a checkable output. If a stage fails, diagnose that stage before moving on."
-  },
-  {
-    "objectID": "docs/slides/presentation.html#step-1-download-a-small-sample",
-    "href": "docs/slides/presentation.html#step-1-download-a-small-sample",
-    "title": "Climate Data Cubes",
-    "section": "Step 1 · Download a small sample",
-    "text": "Step 1 · Download a small sample\ncp code/.env.example code/.env   # add credentials; keep local\nbash code/01_download_sample.sh\n\nThe downloader reads a product URL, year and month from settings.\nRaw files go under data/raw//YYYY/MM/.\nIt downloads to a temporary .part file, then renames on success.\n\nStart with one month and one product. It makes troubleshooting and validation manageable."
-  },
-  {
-    "objectID": "docs/slides/presentation.html#step-2-crop-and-remap",
-    "href": "docs/slides/presentation.html#step-2-crop-and-remap",
-    "title": "Climate Data Cubes",
-    "section": "Step 2 · Crop and remap",
-    "text": "Step 2 · Crop and remap\nbash code/02_preprocess_cdo.sh 0.05\nThe script clips source files using bounds in code/preprocess_utils/config.txt, then remaps using the grid generated from config_resolution.yaml.\n\n\n\n\n\n\nWarning\n\n\nMake the clip bounds and target-grid extent describe the same area. In the current examples they differ; a target grid extending beyond the clipped source can create large missing-value regions."
-  },
-  {
-    "objectID": "docs/slides/presentation.html#resampling-is-a-decision",
-    "href": "docs/slides/presentation.html#resampling-is-a-decision",
-    "title": "Climate Data Cubes",
-    "section": "Resampling is a decision",
-    "text": "Resampling is a decision\n\n\n\n\n\n\n\n\nMethod\nTypical use\nMain trade-off\n\n\n\n\nBilinear\nContinuous fields such as many climate variables\nSmooths values; can modify extremes\n\n\nNearest neighbour\nCategories and QA flags\nPreserves classes; can look blocky\n\n\n\nNeither method creates finer source detail. For each product, choose a method that matches its values and intended use; retain and apply quality flags where available."
-  },
-  {
-    "objectID": "docs/slides/presentation.html#step-3-store-for-analysis",
-    "href": "docs/slides/presentation.html#step-3-store-for-analysis",
-    "title": "Climate Data Cubes",
-    "section": "Step 3 · Store for analysis",
-    "text": "Step 3 · Store for analysis\nINNER_CHUNKS = {\"time\": 1, \"lat\": 256, \"lon\": 256}\nSHARD_CHUNKS = {\"time\": 10, \"lat\": 512, \"lon\": 512}\nCOMPRESSOR = BloscCodec(cname=\"zstd\", clevel=5, shuffle=\"shuffle\")\n\nInner chunks are the read units, for example one date and a spatial window.\nShards group chunks to reduce the number of storage objects.\nThese settings are starting points; benchmark the actual map and time-series queries.\n\nRun the builder with uv run python code/build_zarr_cube.py. It expects interim dimensions named time, lat, and lon; it replaces its existing output store when rebuilding."
-  },
-  {
-    "objectID": "docs/slides/presentation.html#inspect-a-cube",
-    "href": "docs/slides/presentation.html#inspect-a-cube",
-    "title": "Climate Data Cubes",
-    "section": "Inspect a cube",
-    "text": "Inspect a cube\nimport xarray as xr\n\nds = xr.open_zarr(\"data/zarr/metref_sample_1month.zarr\")\nfield = next(iter(ds.data_vars))\nmap_for_date = ds[field].isel(time=0)\nseries_at_cell = ds[field].isel(lat=100, lon=100)\nThe cell indices are illustrative. Check coordinate names, coordinate direction, units and timestamps before interpreting values. Use the reusable functions in code/plot_utils/ for maps and temporal plots."
-  },
-  {
-    "objectID": "docs/slides/presentation.html#qa-what-should-we-check",
-    "href": "docs/slides/presentation.html#qa-what-should-we-check",
-    "title": "Climate Data Cubes",
-    "section": "QA · what should we check?",
-    "text": "QA · what should we check?\n\nCompare source and output coordinates, timestamps, units and variable names.\nCheck decoded fill values and valid-cell count/fraction.\nPlot the missing-data footprint; compare it with the source mask and QA flags.\nCompare a few known source/output values and summary statistics.\nReopen Zarr and compute a small selection before processing more data.\n\nA file that opens is not automatically fit for analysis. Non-zero valid values do not by themselves prove sufficient spatial coverage."
-  },
-  {
-    "objectID": "docs/slides/presentation.html#what-can-the-cube-support",
-    "href": "docs/slides/presentation.html#what-can-the-cube-support",
-    "title": "Climate Data Cubes",
-    "section": "What can the cube support?",
-    "text": "What can the cube support?\n\nRegional and seasonal climate maps.\nSpatial summaries and time series for locations or zones.\nEvapotranspiration and vegetation monitoring.\nInputs to climate-impact or resilience indicators after domain validation.\n\nThe cube makes data access more consistent; scientific interpretation still depends on product quality, aggregation choices and validation."
-  },
-  {
-    "objectID": "docs/slides/presentation.html#caveats-and-uncertainty",
-    "href": "docs/slides/presentation.html#caveats-and-uncertainty",
-    "title": "Climate Data Cubes",
-    "section": "Caveats and uncertainty",
-    "text": "Caveats and uncertainty\n\nMissing values may be real masks/quality exclusions or processing/configuration problems.\nA crop/grid mismatch, wrong variable, coordinate issue or fill-value handling can cause extensive NaNs.\nBilinear remapping smooths; nearest-neighbour can be blocky. Different choices can change statistics.\nDegree grids have latitude-dependent ground dimensions.\nProduct versions, temporal support, units and quality systems may differ.\nThe example is a regional teaching workflow, not a validated operational climate product."
-  },
-  {
-    "objectID": "docs/slides/presentation.html#apis-cloud-platforms-and-this-workflow",
-    "href": "docs/slides/presentation.html#apis-cloud-platforms-and-this-workflow",
-    "title": "Climate Data Cubes",
-    "section": "APIs, cloud platforms and this workflow",
-    "text": "APIs, cloud platforms and this workflow\nAPIs, Microsoft Planetary Computer and Google Earth Engine are useful for discovering, accessing and analyzing many datasets.\nThis tutorial demonstrates a local, explicit path for selected authenticated LSA SAF data when we need to document a regional crop, target grid and processing choices. The two approaches can complement each other; this workflow does not assume hosted platforms lack the required data."
-  },
-  {
-    "objectID": "docs/slides/presentation.html#scale-the-pilot-carefully",
-    "href": "docs/slides/presentation.html#scale-the-pilot-carefully",
-    "title": "Climate Data Cubes",
-    "section": "Scale the pilot carefully",
-    "text": "Scale the pilot carefully\nFor a large domain (for example, a 2,000 km corridor), first benchmark a representative priority subset:\n\nRecord runtime, peak memory, file size, valid coverage and output read speed.\nSplit work into grid-aligned spatial tiles and/or time batches.\nParallelize independent files within measured CPU, memory and I/O limits.\nAdd remapping margins at tile edges and trim duplicate target cells.\nWrite non-overlapping Zarr regions or isolated stores; track and retry failures.\n\nDo not scale only by multiplying worker count. Disk throughput, memory, output object counts and safe Zarr writes can become the bottleneck."
-  },
-  {
-    "objectID": "docs/slides/presentation.html#possible-next-updates",
-    "href": "docs/slides/presentation.html#possible-next-updates",
-    "title": "Climate Data Cubes",
-    "section": "Possible next updates",
-    "text": "Possible next updates\n\nHarmonize clip and target-grid bounds; add a coverage map and threshold.\nApply product-specific quality flags and test decoded no-data values.\nRecord provenance, product versions, units, grid and resampling settings.\nBenchmark chunk/shard sizes for intended queries and available compute/storage.\nAdd more products only after documenting their spatial and temporal semantics.\nAdd automated tests for sample input files and failed/partial outputs."
-  },
-  {
-    "objectID": "docs/slides/presentation.html#what-we-learned",
-    "href": "docs/slides/presentation.html#what-we-learned",
-    "title": "Climate Data Cubes",
-    "section": "What we learned",
-    "text": "What we learned\nA useful climate cube starts with consistent, documented choices and honest checks on missing data and resolution.\nTutorial: https://khizerzakir.github.io/tutorial-repo/\nCode: https://github.com/khizerzakir/tutorial-repo\n\n\n\n\n\n\n\n \n\n\nIEEE GRSS School on Earth Observation and GeoAI for Climate-Resilient Urban Systems {font-size=0.6em}"
   },
   {
     "objectID": "slides/presentation.html#what-is-a-climate-data-cube",
@@ -595,6 +409,73 @@
     "title": "Climate Data Cubes",
     "section": "References · data and software",
     "text": "References · data and software\n\nLSA SAF Data Service: https://datalsasaf.lsasvcs.ipma.pt/\nZarr: https://zarr.dev/\nXarray: https://xarray.dev/\nCDO: https://code.mpimet.mpg.de/projects/cdo\nSTAC: https://stacspec.org/\nIf you use LSA SAF data in publications, follow the LSA SAF attribution guidance.\n\n\n\n\n\n\n\n\n \n\n\nIEEE GRSS School on EO and GeoAI for Climate-Resilient Urban Systems"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Hands-on Practical Tutorial",
+    "section": "",
+    "text": "Welcome! If you are here, you are likely participating in the Climate Data Cube Workshop as part of the IEEE Autumn School 2026 Training.\nThis is the hands-on tutorial is designed to introduce participants to the concepts and tools of climate data analysis, with a focus on using satellite-derived climate data from EUMETSAT LSA SAF. The tutorial will guide you through the process of setting up your environment, running example code, and analyzing the results.\n\nImportant links for this workshop\n\n\n📖 Tutorial: start with Setup\n🎤 Slides: open the presentation\n💻 Code: everything you need to run is in the code/ folder",
+    "crumbs": [
+      "Home",
+      "Hands-on Practical Tutorial"
+    ]
+  },
+  {
+    "objectID": "code/notebooks/test_outputs.html",
+    "href": "code/notebooks/test_outputs.html",
+    "title": "Test interim NetCDF + Zarr cube",
+    "section": "",
+    "text": "Run the pipeline first:\n\nbash scripts/01_download_sample.sh\nbash scripts/02_preprocess_cdo.sh\nuv run python scripts/03_build_zarr_cube.py\n\n\nfrom pathlib import Path\nimport xarray as xr\n\nROOT = Path('..').resolve()\ninterim = ROOT/'data'/'interim'\nzarr_store = ROOT/'data'/'zarr'/'metref_sample_1month.zarr'\n\nprint('Interim dir:', interim)\nprint('Zarr store:', zarr_store)\n\n\nfiles = sorted(interim.rglob('*.nc'))\nprint('Interim files:', len(files))\nfiles[:3]\n\n\nassert files, 'No interim NetCDF files found. Did preprocessing run?'\n\nds = xr.open_dataset(files[0])\nds\n\n\nassert zarr_store.exists(), 'Zarr store not found. Did cube build run?'\n\nds_z = xr.open_zarr(zarr_store, consolidated=True)\nds_z\n\n\n# Small computation to validate dask/chunks\nvar = list(ds_z.data_vars)[0]\nval = float(ds_z[var].isel(time=0).mean().compute())\nprint('Mean of', var, 'at time=0:', val)"
+  },
+  {
+    "objectID": "code/plot_utils/Readme.html",
+    "href": "code/plot_utils/Readme.html",
+    "title": "Adaptive cube plotting",
+    "section": "",
+    "text": "adaptive_cube_plot.py provides importable plotting functions for xarray cubes:\n\nplot_time_slices: time-index/date panel maps with shared colour scale, Cartopy projection, inferred data extent, coastlines/borders and optional GeoDataFrame boundaries.\nplot_spatial_timeseries: time series at selected points and area summaries.\nplot_climate_mobility_period: side-by-side climate and aggregated origin/destination mobility maps for a selected half-month.\n\n\n\nInstall the project dependencies plus optional geospatial packages:\npip install matplotlib numpy pandas xarray cartopy geopandas pyarrow pyproj\nCartopy may need system libraries depending on the platform. Importing the module and using time-series plotting does not require Cartopy; map functions do.\n\n\n\nFrom the repository root:\nfrom code.plot_utils.adaptive_cube_plot import (\n    plot_time_slices,\n    plot_spatial_timeseries,\n    plot_climate_mobility_period,\n)\nIf code is not a Python package in the local checkout, add its parent directory to sys.path, or add code/plot_utils directly:\nimport sys\nfrom pathlib import Path\nsys.path.insert(0, str(Path.cwd() / \"code\" / \"plot_utils\"))\nfrom adaptive_cube_plot import plot_time_slices\n\n\n\nimport xarray as xr\nfrom adaptive_cube_plot import plot_time_slices\n\nds = xr.open_zarr(\"data/zarr/metref_sample_1month.zarr\")\nfig, axes = plot_time_slices(\n    ds,\n    var=\"METREF\",\n    time_index=[0, 5, 10],\n    data_crs=\"EPSG:4326\",\n    ncols=3,\n    show=False,\n)\nThe map extent is calculated from the selected coordinates. Set extent=(xmin, xmax, ymin, ymax) to crop all panels to a common area. data_crs describes the existing coordinate values; it does not reproject the data. Longitude/latitude coordinate names imply EPSG:4326. For projected x/y, pass the actual CRS (for example, data_crs=\"EPSG:32628\"). The default display projection is Plate Carrée; supply a Cartopy CRS as map_crs for another projection.\nOverlay an AOI or administrative boundary:\nimport geopandas as gpd\nboundaries = gpd.read_file(\"data/aoi.geojson\")\nfig, axes = plot_time_slices(\n    ds, var=\"METREF\", time_index=[0, 5], data_crs=\"EPSG:4326\",\n    boundaries=boundaries, ncols=2, show=False,\n)\nIf a boundary file has no embedded CRS, provide boundary_crs. This assigns the source CRS metadata. Confirm the source CRS before assigning it.\n\n\n\nThe mobility table is expected to contain an origin or destination ID, a date/period column, and a numeric metric. Defaults match the normalized OD schema (norm_spatial_id_origin, norm_spatial_id_destination, date, N_depart). Spatial units must have a matching ID column and geometry.\nimport geopandas as gpd\nfrom adaptive_cube_plot import plot_climate_mobility_period\n\nunits = gpd.read_parquet(\"data/spatial/units.parquet\")\nfig, axes = plot_climate_mobility_period(\n    ds,\n    mobility=\"data/mobility/flows.parquet\",\n    spatial_units=units,\n    var=\"METREF\",\n    period=\"2020-06-01\",            # dates are grouped into days 1–15 / 16–month-end\n    mobility_metric=\"N_depart_adj\", # or N_depart / N_migrants_adj\n    flow_direction=\"origin\",        # alternatively: destination\n    spatial_id_col=\"norm_spatial_id\",\n    data_crs=\"EPSG:4326\",\n    subset_type=\"your_subset\",      # optional filter, if this column exists\n    days_span=15,                    # optional filter, if this column exists\n    show=False,\n)\nFor HalfMonthIndex tables, set period_col=\"HalfMonthIndex\" and pass the exact key as mobility_period; keep period as the climate date used for climate aggregation. Set origin_col/destination_col if your table uses other ID names. The comparison aggregates counts by origin or destination polygon; it does not draw OD flow lines. The juxtaposition is descriptive and does not establish a climate–mobility relationship. Exact temporal interpretation depends on the product timestamp semantics and the mobility period definition.\n\n\n\nfig, ax = plot_spatial_timeseries(\n    ds, var=\"METREF\",\n    points={\"Site A\": (-16.4, 14.5)},\n    areas={\"AOI\": (-17.0, -16.0, 13.0, 14.0)},\n    show_area_spread=True,\n    show=False,\n)\nPoint coordinates and area bounds must use the cube coordinate system. For projected data, provide projected point/bounds values; the time-series function samples the nearest grid cell and does not transform coordinates.\n\n\n\n\nAutomatic extent assumes rectilinear 1-D x/y coordinates; curvilinear grids need preprocessing or a dedicated plotting path.\nCoastline/border detail is cartographic context, not a replacement for authoritative local boundaries.\nPlate Carrée is a practical default, but can distort area and shape at high latitudes or across wide extents.\nMobility IDs must match the spatial-unit IDs and be consistently typed. Unmatched units appear without a mobility value.\nMobility aggregates depend on filters, adjustment factors and period semantics; inspect those before interpreting the maps."
+  },
+  {
+    "objectID": "code/plot_utils/Readme.html#install",
+    "href": "code/plot_utils/Readme.html#install",
+    "title": "Adaptive cube plotting",
+    "section": "",
+    "text": "Install the project dependencies plus optional geospatial packages:\npip install matplotlib numpy pandas xarray cartopy geopandas pyarrow pyproj\nCartopy may need system libraries depending on the platform. Importing the module and using time-series plotting does not require Cartopy; map functions do."
+  },
+  {
+    "objectID": "code/plot_utils/Readme.html#import",
+    "href": "code/plot_utils/Readme.html#import",
+    "title": "Adaptive cube plotting",
+    "section": "",
+    "text": "From the repository root:\nfrom code.plot_utils.adaptive_cube_plot import (\n    plot_time_slices,\n    plot_spatial_timeseries,\n    plot_climate_mobility_period,\n)\nIf code is not a Python package in the local checkout, add its parent directory to sys.path, or add code/plot_utils directly:\nimport sys\nfrom pathlib import Path\nsys.path.insert(0, str(Path.cwd() / \"code\" / \"plot_utils\"))\nfrom adaptive_cube_plot import plot_time_slices"
+  },
+  {
+    "objectID": "code/plot_utils/Readme.html#panel-maps",
+    "href": "code/plot_utils/Readme.html#panel-maps",
+    "title": "Adaptive cube plotting",
+    "section": "",
+    "text": "import xarray as xr\nfrom adaptive_cube_plot import plot_time_slices\n\nds = xr.open_zarr(\"data/zarr/metref_sample_1month.zarr\")\nfig, axes = plot_time_slices(\n    ds,\n    var=\"METREF\",\n    time_index=[0, 5, 10],\n    data_crs=\"EPSG:4326\",\n    ncols=3,\n    show=False,\n)\nThe map extent is calculated from the selected coordinates. Set extent=(xmin, xmax, ymin, ymax) to crop all panels to a common area. data_crs describes the existing coordinate values; it does not reproject the data. Longitude/latitude coordinate names imply EPSG:4326. For projected x/y, pass the actual CRS (for example, data_crs=\"EPSG:32628\"). The default display projection is Plate Carrée; supply a Cartopy CRS as map_crs for another projection.\nOverlay an AOI or administrative boundary:\nimport geopandas as gpd\nboundaries = gpd.read_file(\"data/aoi.geojson\")\nfig, axes = plot_time_slices(\n    ds, var=\"METREF\", time_index=[0, 5], data_crs=\"EPSG:4326\",\n    boundaries=boundaries, ncols=2, show=False,\n)\nIf a boundary file has no embedded CRS, provide boundary_crs. This assigns the source CRS metadata. Confirm the source CRS before assigning it."
+  },
+  {
+    "objectID": "code/plot_utils/Readme.html#climate-and-mobility-comparison",
+    "href": "code/plot_utils/Readme.html#climate-and-mobility-comparison",
+    "title": "Adaptive cube plotting",
+    "section": "",
+    "text": "The mobility table is expected to contain an origin or destination ID, a date/period column, and a numeric metric. Defaults match the normalized OD schema (norm_spatial_id_origin, norm_spatial_id_destination, date, N_depart). Spatial units must have a matching ID column and geometry.\nimport geopandas as gpd\nfrom adaptive_cube_plot import plot_climate_mobility_period\n\nunits = gpd.read_parquet(\"data/spatial/units.parquet\")\nfig, axes = plot_climate_mobility_period(\n    ds,\n    mobility=\"data/mobility/flows.parquet\",\n    spatial_units=units,\n    var=\"METREF\",\n    period=\"2020-06-01\",            # dates are grouped into days 1–15 / 16–month-end\n    mobility_metric=\"N_depart_adj\", # or N_depart / N_migrants_adj\n    flow_direction=\"origin\",        # alternatively: destination\n    spatial_id_col=\"norm_spatial_id\",\n    data_crs=\"EPSG:4326\",\n    subset_type=\"your_subset\",      # optional filter, if this column exists\n    days_span=15,                    # optional filter, if this column exists\n    show=False,\n)\nFor HalfMonthIndex tables, set period_col=\"HalfMonthIndex\" and pass the exact key as mobility_period; keep period as the climate date used for climate aggregation. Set origin_col/destination_col if your table uses other ID names. The comparison aggregates counts by origin or destination polygon; it does not draw OD flow lines. The juxtaposition is descriptive and does not establish a climate–mobility relationship. Exact temporal interpretation depends on the product timestamp semantics and the mobility period definition."
+  },
+  {
+    "objectID": "code/plot_utils/Readme.html#existing-point-and-area-time-series",
+    "href": "code/plot_utils/Readme.html#existing-point-and-area-time-series",
+    "title": "Adaptive cube plotting",
+    "section": "",
+    "text": "fig, ax = plot_spatial_timeseries(\n    ds, var=\"METREF\",\n    points={\"Site A\": (-16.4, 14.5)},\n    areas={\"AOI\": (-17.0, -16.0, 13.0, 14.0)},\n    show_area_spread=True,\n    show=False,\n)\nPoint coordinates and area bounds must use the cube coordinate system. For projected data, provide projected point/bounds values; the time-series function samples the nearest grid cell and does not transform coordinates."
+  },
+  {
+    "objectID": "code/plot_utils/Readme.html#known-limits",
+    "href": "code/plot_utils/Readme.html#known-limits",
+    "title": "Adaptive cube plotting",
+    "section": "",
+    "text": "Automatic extent assumes rectilinear 1-D x/y coordinates; curvilinear grids need preprocessing or a dedicated plotting path.\nCoastline/border detail is cartographic context, not a replacement for authoritative local boundaries.\nPlate Carrée is a practical default, but can distort area and shape at high latitudes or across wide extents.\nMobility IDs must match the spatial-unit IDs and be consistently typed. Unmatched units appear without a mobility value.\nMobility aggregates depend on filters, adjustment factors and period semantics; inspect those before interpreting the maps."
   },
   {
     "objectID": "tutorial/02-run-code.html",
