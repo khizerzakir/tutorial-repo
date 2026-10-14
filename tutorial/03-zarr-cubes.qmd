@@ -20,7 +20,7 @@ Replace the example filename with one of your actual outputs. Confirm time and c
 From the repository root:
 
 ~~~bash
-uv run python code/build_zarr_cube.py
+uv run python code/03_build_zarr_cube.py
 ~~~
 
 The script uses xarray to open multiple files by coordinates and Dask for lazy/chunked processing. It writes to:

@@ -29,7 +29,7 @@ The initial run should use a short period and a small, representative area. Vali
 │   ├── .env.example          # Credential/settings template (copy to code/.env)
 │   ├── 01_download_sample.sh # Authenticated LSA SAF download
 │   ├── 02_preprocess_cdo.sh  # Clip, remap, validate and write interim NetCDF
-│   ├── build_zarr_cube.py    # Compressed/sharded Zarr v3 output
+│   ├── 03_build_zarr_cube.py    # Compressed/sharded Zarr v3 output
 │   ├── preprocess_utils/     # Region/grid settings and grid generator
 │   ├── plot_utils/           # Reusable cube plotting functions
 │   └── notebooks/            # Data inspection notebooks
@@ -60,21 +60,13 @@ From the repository root, the main commands are:
 cp code/.env.example code/.env   # Add LSA SAF credentials to code/.env
 bash code/01_download_sample.sh
 bash code/02_preprocess_cdo.sh
-uv run python code/build_zarr_cube.py
+uv run python code/03_build_zarr_cube.py
 ```
 
 Run from the repository root because the download script's default credential path is `code/.env`. Install CDO separately from the Python packages. For a local website build, install Quarto and run `quarto render` from the root.
 
 > **Important:** Select AOIs and workers based on the limitation of your system
 
-## Caveats and uncertainty
-
-- **Bounds must agree.** `config.txt` supplies the clip bounds; `config_resolution.yaml` supplies the output-grid domain. The checked-in examples do not currently describe the same extent. Align them before interpreting coverage. If the target grid extends outside the clipped source, those cells can be missing (NaN); that is a likely configuration cause, not the only possible cause.
-- **No-data has multiple causes.** Source masks, retrieval quality, fill-value decoding, a wrong variable, coordinate issues, a mismatched grid, or a failed remap can all produce missing values. A non-zero valid-cell check catches completely empty results, but does not prove that coverage is sufficient. Compare valid fraction and spatial coverage against an agreed threshold for each product and region.
-- **Remapping changes representation.** Bilinear interpolation is appropriate for many continuous fields but smooths values and is not suitable for categorical classes or QA flags. Use nearest-neighbour or a scientifically justified class-aware method for categorical data. Apply product quality flags before aggregation where possible.
-- **Resolution is not new detail.** Remapping cannot increase source information. A finer target grid only samples/interpolates the original product. Degree grids also have latitude-dependent ground spacing.
-- **Comparability requires choices.** Product versions, units, calendars, temporal aggregation, masks and resampling affect results. Record these in metadata and validate representative values against source files.
-- **Hosted platforms are useful alternatives.** APIs, Microsoft Planetary Computer and Google Earth Engine can simplify discovery and analysis for many datasets. This local example focuses on explicit, repeatable processing for selected authenticated LSA SAF products and a deliberately controlled regional grid; it does not imply those platforms lack relevant data.
 
 ## **Applications and possible updates/next steps**
 

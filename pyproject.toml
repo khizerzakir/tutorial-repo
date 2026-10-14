@@ -21,6 +21,10 @@ dependencies = [
   "fsspec>=2024.1.0",
   "ipykernel>=7.2.0",
   "matplotlib>=3.10.8",
+  "cartopy>=0.23",
+  "geopandas>=0.14",
+  "pyarrow>=14",
+  "pyproj>=3.6",
 ]
 
 [project.optional-dependencies]
