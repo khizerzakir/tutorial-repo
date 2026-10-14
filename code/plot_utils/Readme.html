@@ -82,9 +82,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-c437ad11e1d67a51fa3dde503bd277dc.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-5e239b22ec86e4a63f82b282723b4b9a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-c437ad11e1d67a51fa3dde503bd277dc.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-779814d4eaa9c9e6b02b72ade1d61f9b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-c8bae1f407610881bc621976b8284e03.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-779814d4eaa9c9e6b02b72ade1d61f9b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -346,10 +346,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotting-utils" id="toc-plotting-utils" class="nav-link active" data-scroll-target="#plotting-utils">Plotting Utils</a></li>
-  <li><a href="#plot-maps-by-time-index" id="toc-plot-maps-by-time-index" class="nav-link" data-scroll-target="#plot-maps-by-time-index">Plot maps by time index</a></li>
-  <li><a href="#plot-maps-by-date" id="toc-plot-maps-by-date" class="nav-link" data-scroll-target="#plot-maps-by-date">Plot maps by date</a></li>
-  <li><a href="#plot-time-series-for-selected-points-and-areas" id="toc-plot-time-series-for-selected-points-and-areas" class="nav-link" data-scroll-target="#plot-time-series-for-selected-points-and-areas">Plot time series for selected points and areas</a></li>
+  <li><a href="#adaptive-cube-plotting" id="toc-adaptive-cube-plotting" class="nav-link active" data-scroll-target="#adaptive-cube-plotting">Adaptive cube plotting</a>
+  <ul class="collapse">
+  <li><a href="#install" id="toc-install" class="nav-link" data-scroll-target="#install">Install</a></li>
+  <li><a href="#import" id="toc-import" class="nav-link" data-scroll-target="#import">Import</a></li>
+  <li><a href="#panel-maps" id="toc-panel-maps" class="nav-link" data-scroll-target="#panel-maps">Panel maps</a></li>
+  <li><a href="#climate-and-mobility-comparison" id="toc-climate-and-mobility-comparison" class="nav-link" data-scroll-target="#climate-and-mobility-comparison">Climate and mobility comparison</a></li>
+  <li><a href="#existing-point-and-area-time-series" id="toc-existing-point-and-area-time-series" class="nav-link" data-scroll-target="#existing-point-and-area-time-series">Existing point and area time series</a></li>
+  <li><a href="#known-limits" id="toc-known-limits" class="nav-link" data-scroll-target="#known-limits">Known limits</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -360,76 +365,104 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="plotting-utils" class="level2">
-<h2 class="anchored" data-anchor-id="plotting-utils">Plotting Utils</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>repo_root <span class="op">=</span> <span class="bu">next</span>(</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    parent <span class="cf">for</span> parent <span class="kw">in</span> [Path.cwd().resolve(), <span class="op">*</span>Path.cwd().resolve().parents]</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (parent <span class="op">/</span> <span class="st">"pyproject.toml"</span>).exists()</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>module_dir <span class="op">=</span> repo_root <span class="op">/</span> <span class="st">"code"</span> <span class="op">/</span> <span class="st">"plot_utils"</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>sys.path.insert(<span class="dv">0</span>, <span class="bu">str</span>(module_dir))</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> adaptive_cube_plot <span class="im">import</span> plot_time_slices, plot_spatial_timeseries</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> xr.open_zarr(<span class="st">"data/zarr/metref_sample_1month.zarr"</span>, chunks<span class="op">=</span><span class="st">"auto"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>If your notebook is running outside the repository root, replace <code>Path.cwd()</code> with the full path to your project folder.</p>
+<section id="adaptive-cube-plotting" class="level1">
+<h1>Adaptive cube plotting</h1>
+<p><code>adaptive_cube_plot.py</code> provides importable plotting functions for xarray cubes:</p>
+<ul>
+<li><code>plot_time_slices</code>: time-index/date panel maps with shared colour scale, Cartopy projection, inferred data extent, coastlines/borders and optional GeoDataFrame boundaries.</li>
+<li><code>plot_spatial_timeseries</code>: time series at selected points and area summaries.</li>
+<li><code>plot_climate_mobility_period</code>: side-by-side climate and aggregated origin/destination mobility maps for a selected half-month.</li>
+</ul>
+<section id="install" class="level2">
+<h2 class="anchored" data-anchor-id="install">Install</h2>
+<p>Install the project dependencies plus optional geospatial packages:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install matplotlib numpy pandas xarray cartopy geopandas pyarrow pyproj</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Cartopy may need system libraries depending on the platform. Importing the module and using time-series plotting does not require Cartopy; map functions do.</p>
 </section>
-<section id="plot-maps-by-time-index" class="level2">
-<h2 class="anchored" data-anchor-id="plot-maps-by-time-index">Plot maps by time index</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plot_time_slices(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    ds,</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    var<span class="op">=</span><span class="st">"NDVI"</span>,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    time_index<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">10</span>],</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    ncols<span class="op">=</span><span class="dv">3</span>,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    vmin<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    vmax<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="import" class="level2">
+<h2 class="anchored" data-anchor-id="import">Import</h2>
+<p>From the repository root:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> code.plot_utils.adaptive_cube_plot <span class="im">import</span> (</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    plot_time_slices,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    plot_spatial_timeseries,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    plot_climate_mobility_period,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If <code>code</code> is not a Python package in the local checkout, add its parent directory to <code>sys.path</code>, or add <code>code/plot_utils</code> directly:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sys.path.insert(<span class="dv">0</span>, <span class="bu">str</span>(Path.cwd() <span class="op">/</span> <span class="st">"code"</span> <span class="op">/</span> <span class="st">"plot_utils"</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> adaptive_cube_plot <span class="im">import</span> plot_time_slices</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="plot-maps-by-date" class="level2">
-<h2 class="anchored" data-anchor-id="plot-maps-by-date">Plot maps by date</h2>
-<p>The dates must match timestamps in the dataset.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plot_time_slices(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    ds,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    var<span class="op">=</span><span class="st">"NDVI"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    times<span class="op">=</span>[<span class="st">"2013-01-01"</span>, <span class="st">"2013-06-01"</span>],</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    ncols<span class="op">=</span><span class="dv">2</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    vmin<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    vmax<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You can crop the maps by extent. The order is <strong>xmin, xmax, ymin, ymax</strong>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plot_time_slices(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ds,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    var<span class="op">=</span><span class="st">"NDVI"</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    time_index<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">10</span>],</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    extent<span class="op">=</span>(<span class="op">-</span><span class="dv">18</span>, <span class="op">-</span><span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">17</span>),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    ncols<span class="op">=</span><span class="dv">2</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    vmin<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    vmax<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="panel-maps" class="level2">
+<h2 class="anchored" data-anchor-id="panel-maps">Panel maps</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> adaptive_cube_plot <span class="im">import</span> plot_time_slices</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> xr.open_zarr(<span class="st">"data/zarr/metref_sample_1month.zarr"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plot_time_slices(</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    ds,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    var<span class="op">=</span><span class="st">"METREF"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    time_index<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">10</span>],</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    data_crs<span class="op">=</span><span class="st">"EPSG:4326"</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    ncols<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    show<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The map extent is calculated from the selected coordinates. Set <code>extent=(xmin, xmax, ymin, ymax)</code> to crop all panels to a common area. <code>data_crs</code> describes the existing coordinate values; it does <strong>not</strong> reproject the data. Longitude/latitude coordinate names imply EPSG:4326. For projected <code>x/y</code>, pass the actual CRS (for example, <code>data_crs="EPSG:32628"</code>). The default display projection is Plate Carrée; supply a Cartopy CRS as <code>map_crs</code> for another projection.</p>
+<p>Overlay an AOI or administrative boundary:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>boundaries <span class="op">=</span> gpd.read_file(<span class="st">"data/aoi.geojson"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plot_time_slices(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    ds, var<span class="op">=</span><span class="st">"METREF"</span>, time_index<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">5</span>], data_crs<span class="op">=</span><span class="st">"EPSG:4326"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    boundaries<span class="op">=</span>boundaries, ncols<span class="op">=</span><span class="dv">2</span>, show<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If a boundary file has no embedded CRS, provide <code>boundary_crs</code>. This assigns the source CRS metadata. Confirm the source CRS before assigning it.</p>
 </section>
-<section id="plot-time-series-for-selected-points-and-areas" class="level2">
-<h2 class="anchored" data-anchor-id="plot-time-series-for-selected-points-and-areas">Plot time series for selected points and areas</h2>
-<p>Points use <strong>(longitude, latitude)</strong> and select the nearest grid cell. Areas use a bounding box in the order <strong>(xmin, xmax, ymin, ymax)</strong> and are summarized at every timestep.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plot_spatial_timeseries(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ds,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    var<span class="op">=</span><span class="st">"NDVI"</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    points<span class="op">=</span>{</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Niakhar"</span>: (<span class="op">-</span><span class="fl">16.4</span>, <span class="fl">14.5</span>),</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Dakar"</span>: (<span class="op">-</span><span class="fl">17.45</span>, <span class="fl">14.7</span>),</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    },</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    areas<span class="op">=</span>{</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Study area"</span>: (<span class="op">-</span><span class="dv">17</span>, <span class="op">-</span><span class="dv">16</span>, <span class="dv">13</span>, <span class="dv">14</span>),</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    },</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    area_stat<span class="op">=</span><span class="st">"mean"</span>,          <span class="co"># or "median"</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    show_area_spread<span class="op">=</span><span class="va">True</span>,     <span class="co"># area mean ± spatial standard deviation</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    time_range<span class="op">=</span>(<span class="st">"2013-01-01"</span>, <span class="st">"2015-12-31"</span>),</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The module currently provides two plotting functions: <code>plot_time_slices</code> for map panels and <code>plot_spatial_timeseries</code> for point and area time series. Use the same <code>vmin</code> and <code>vmax</code> when comparing maps across dates; otherwise each call may use its own data range.</p>
+<section id="climate-and-mobility-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="climate-and-mobility-comparison">Climate and mobility comparison</h2>
+<p>The mobility table is expected to contain an origin or destination ID, a date/period column, and a numeric metric. Defaults match the normalized OD schema (<code>norm_spatial_id_origin</code>, <code>norm_spatial_id_destination</code>, <code>date</code>, <code>N_depart</code>). Spatial units must have a matching ID column and geometry.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> adaptive_cube_plot <span class="im">import</span> plot_climate_mobility_period</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>units <span class="op">=</span> gpd.read_parquet(<span class="st">"data/spatial/units.parquet"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plot_climate_mobility_period(</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    ds,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    mobility<span class="op">=</span><span class="st">"data/mobility/flows.parquet"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    spatial_units<span class="op">=</span>units,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    var<span class="op">=</span><span class="st">"METREF"</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    period<span class="op">=</span><span class="st">"2020-06-01"</span>,            <span class="co"># dates are grouped into days 1–15 / 16–month-end</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    mobility_metric<span class="op">=</span><span class="st">"N_depart_adj"</span>, <span class="co"># or N_depart / N_migrants_adj</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    flow_direction<span class="op">=</span><span class="st">"origin"</span>,        <span class="co"># alternatively: destination</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    spatial_id_col<span class="op">=</span><span class="st">"norm_spatial_id"</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    data_crs<span class="op">=</span><span class="st">"EPSG:4326"</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    subset_type<span class="op">=</span><span class="st">"your_subset"</span>,      <span class="co"># optional filter, if this column exists</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    days_span<span class="op">=</span><span class="dv">15</span>,                    <span class="co"># optional filter, if this column exists</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    show<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For <code>HalfMonthIndex</code> tables, set <code>period_col="HalfMonthIndex"</code> and pass the exact key as <code>mobility_period</code>; keep <code>period</code> as the climate date used for climate aggregation. Set <code>origin_col</code>/<code>destination_col</code> if your table uses other ID names. The comparison aggregates counts by origin or destination polygon; it does not draw OD flow lines. The juxtaposition is descriptive and does not establish a climate–mobility relationship. Exact temporal interpretation depends on the product timestamp semantics and the mobility period definition.</p>
+</section>
+<section id="existing-point-and-area-time-series" class="level2">
+<h2 class="anchored" data-anchor-id="existing-point-and-area-time-series">Existing point and area time series</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plot_spatial_timeseries(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    ds, var<span class="op">=</span><span class="st">"METREF"</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    points<span class="op">=</span>{<span class="st">"Site A"</span>: (<span class="op">-</span><span class="fl">16.4</span>, <span class="fl">14.5</span>)},</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    areas<span class="op">=</span>{<span class="st">"AOI"</span>: (<span class="op">-</span><span class="fl">17.0</span>, <span class="op">-</span><span class="fl">16.0</span>, <span class="fl">13.0</span>, <span class="fl">14.0</span>)},</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    show_area_spread<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    show<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Point coordinates and area bounds must use the cube coordinate system. For projected data, provide projected point/bounds values; the time-series function samples the nearest grid cell and does not transform coordinates.</p>
+</section>
+<section id="known-limits" class="level2">
+<h2 class="anchored" data-anchor-id="known-limits">Known limits</h2>
+<ul>
+<li>Automatic extent assumes rectilinear 1-D x/y coordinates; curvilinear grids need preprocessing or a dedicated plotting path.</li>
+<li>Coastline/border detail is cartographic context, not a replacement for authoritative local boundaries.</li>
+<li>Plate Carrée is a practical default, but can distort area and shape at high latitudes or across wide extents.</li>
+<li>Mobility IDs must match the spatial-unit IDs and be consistently typed. Unmatched units appear without a mobility value.</li>
+<li>Mobility aggregates depend on filters, adjustment factors and period semantics; inspect those before interpreting the maps.</li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
