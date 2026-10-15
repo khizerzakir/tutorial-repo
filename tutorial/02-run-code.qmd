@@ -66,35 +66,39 @@ cdo -s showtimestamp data/raw/METREF/2020/06/example.nc
 cdo -s infon data/raw/METREF/2020/06/example.nc
 ~~~
 
-You can also use `ncdump -h` to inspect the header. The jupyter notebook `code/notebooks/read?validate_data.ipynb` provides a convenient way to explore the raw file interactively. You will need the information about `MAIN_VARIABLE` and `QA_VARIABLE` to configure the remapping script.
+Replace example.nc with a real downloaded filename. Review coordinate ranges, variable names, timestamps, units, missing values and product QA information. If the raw file itself has no valid values, diagnose the download/product selection before remapping.
 
-Replace `example.nc` with a real downloaded filename. If the raw file itself has no valid values, diagnose the download/product selection before remapping. 
+## 5. Choose variables and crop/remap
 
-## 5. Crop and remap
-
-After aligning the configuration file, run:
+Inspect the exact variable names:
 
 ~~~bash
-bash code/02_preprocess_cdo.sh
+cdo -s showname data/raw/METREF/2020/06/example.nc
 ~~~
 
-Optional positional arguments are resolution, input folder and output folder:
+Set the main continuous variable, AOI file and optional QA variable names:
 
 ~~~bash
-bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF
+MAIN_VARIABLE=METREF \
+QA_VARIABLES=QUALITY_FLAG,QC_FLAG \
+AOI_GEOJSON=data/aoi/study_area.geojson \
+bash code/02_preprocess_cdo.sh data/raw/METREF data/interim
 ~~~
 
-The script uses `code/preprocess_utils/grid.txt`, clips each input with `sellonlatbox`, then remaps to that grid. `REMAP_METHOD` defaults to bilinear; set `REMAP_METHOD=nearest` for categorical fields and flags. Bilinear is for continuous variables and smooths values.
+Use exact variable names from `showname`; QA names are comma-separated. Omit `QA_VARIABLES` if no QA layers are needed. The pipeline builds one snapped AOI grid from the first raw file, then checks other inputs use the same grid. It selects and bilinearly remaps only `MAIN_VARIABLE` by default. QA layers are selected and processed separately with nearest-neighbour mapping, which chooses an existing code rather than averaging categories. Set `MAIN_REMAP_METHOD=nearest` if the primary variable is categorical.
 
-PARALLEL controls the number of independent files processed concurrently; for example:
+The crop includes a one-cell margin by default to support remapping near AOI edges. Outputs are written to temporary files, checked for readability and valid main-variable cells, and renamed only when complete. QA values are preserved as data layers; this example does not interpret product-specific bit fields or automatically apply a QA mask.
+
+`PARALLEL` controls independent files processed concurrently; for example:
 
 ~~~bash
-PARALLEL=2 bash code/02_preprocess_cdo.sh 0.05
+PARALLEL=2 MAIN_VARIABLE=METREF AOI_GEOJSON=data/aoi/study_area.geojson \
+  bash code/02_preprocess_cdo.sh data/raw/METREF data/interim
 ~~~
 
 Start conservatively. Increase parallelism only after checking RAM, disk throughput and temporary storage.
 
-Processed files are written beneath data/interim/. Check the cdo.log, then inspect an output:
+Processed files are written beneath `data/interim/<MAIN_VARIABLE>/YYYY/MM/`. Check `data/interim/cdo.log`, then inspect an output:
 
 ~~~bash
 cdo -s sinfo data/interim/METREF/2020/06/example_processed.nc
@@ -106,6 +110,7 @@ cdo -s infon data/interim/METREF/2020/06/example_processed.nc
 Compare raw and processed summaries and map the output. An all-NaN or mostly missing result can be caused by:
 
 - crop bounds and target-grid bounds not overlapping;
+- AOI partly outside raw source coverage (output is limited to its overlap);
 - wrong variable, coordinate names or coordinate direction;
 - fill values not decoded as missing;
 - a source mask or retrieval-quality exclusion;

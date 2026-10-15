@@ -81,7 +81,7 @@ def main() -> int:
         OUTPUT,
         mode="w",
         zarr_format=3,
-        consolidated=False,
+        # consolidated=True,
         encoding=encoding,
         align_chunks=True,
     )
