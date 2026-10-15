@@ -1,99 +1,178 @@
 ---
 title: "Climate Data Cubes"
-subtitle: "Raw data to a regional analysis-ready cube"
+subtitle: "Raw satellite files → a regional, analysis-ready Zarr cube"
 author: "Khizer Zakir"
 date: today
 title-slide-attributes:
-  data-background-image: none
-  data-background-size: 38%
-  data-background-position: 250% 50%
-  data-background-opacity: "0.9"
+  data-background-color: "#0b1f33"
 format:
   revealjs:
     theme: [default, theme.scss]
-    # css: image-layouts.css
     include-in-header: toggle.html
     logo: img/GRSSAustrian-600x450-1.jpg
     header: IEEE GRSS School on EO and GeoAI for Climate-Resilient Urban Systems
     header-logo: img/newlogo.png
     transition: fade
     background-transition: fade
-    transition-speed: default
-    slide-number: true
+    auto-animate-easing: ease-in-out
+    auto-animate-duration: 0.9
+    slide-number: c/t
     controls: true
     controls-layout: bottom-right
     controls-tutorial: true
     progress: true
     hash: true
+    menu:
+      side: left
+      numbers: true
+    chalkboard:
+      buttons: false
+      theme: whiteboard
     preview-links: auto
-    footer: <a href="https://khizerzakir.github.io/tutorial-repo/">Tutorial</a>
+    footer: <a href="https://khizerzakir.github.io/tutorial-repo/">Tutorial</a> · <a href="https://khizerzakir.github.io/tutorial-repo/tutorial/reference.html">Command builder</a>
     code-line-numbers: true
     code-copy: true
+    code-overflow: wrap
     width: 1280
     height: 720
 filters:
   - reveal-header
 ---
 
-# Agenda {background-color="#0b1f33"}
+## {.hero}
 
-1. What is a climate cube?
-2. Why are we here, and why use a cube?
-3. Our approach
-4. Tutorial walkthrough
-5. Limitations and caveats
-6. Key message
-7. Links and references
+::: {.hero-grid}
+::: {.cube-3d}
+::: {.cube-3d-inner}
+[]{.f .front} []{.f .back} []{.f .right} []{.f .left} []{.f .top} []{.f .bottom}
+:::
+:::
+
+::: {.hero-text}
+[One month · one region · one cube]{.kicker}
+
+::: {.fragment .fade-up}
+[30]{.stat} daily NetCDF files
+:::
+
+::: {.fragment .fade-up}
+[1]{.stat} Zarr store, compressed and chunked
+:::
+
+::: {.fragment .fade-up}
+[1 line]{.stat} to open it and select by date and place
+:::
+:::
+:::
+
+::: {.notes}
+Press F for full screen, S for speaker notes, T toggles light/dark, C opens the chalkboard, M the menu.
+:::
+
+## Agenda {.agenda}
+
+::: {.agenda-grid}
+::: {.agenda-item .fragment .fade-up}
+[1]{.num} **What is a climate cube?**
+:::
+::: {.agenda-item .fragment .fade-up}
+[2]{.num} **Why build one?**
+:::
+::: {.agenda-item .fragment .fade-up}
+[3]{.num} **Our approach**
+:::
+::: {.agenda-item .fragment .fade-up}
+[4]{.num} **Hands-on walkthrough** --- WSL → download → CDO → Zarr → notebooks
+:::
+::: {.agenda-item .fragment .fade-up}
+[5]{.num} **Caveats & scaling**
+:::
+::: {.agenda-item .fragment .fade-up}
+[6]{.num} **Key message & links**
+:::
+:::
 
 <!-- ======================================================= -->
 # 1 · What is a climate cube? {background-color="#0b1f33"}
 
 Dimensions, variables and the idea behind the cube
 
+## Many files… {auto-animate="true"}
+
+::: {.file-stage}
+[NETCDF4_…20150601.nc]{.file data-id="f1" style="left:4%;top:8%;transform:rotate(-6deg)"}
+[NETCDF4_…20150602.nc]{.file data-id="f2" style="left:52%;top:3%;transform:rotate(4deg)"}
+[NETCDF4_…20150603.nc]{.file data-id="f3" style="left:28%;top:30%;transform:rotate(-2deg)"}
+[NETCDF4_…20150604.nc]{.file data-id="f4" style="left:66%;top:38%;transform:rotate(7deg)"}
+[NETCDF4_…20150605.nc]{.file data-id="f5" style="left:8%;top:56%;transform:rotate(3deg)"}
+[NETCDF4_…20150606.nc]{.file data-id="f6" style="left:44%;top:64%;transform:rotate(-5deg)"}
+:::
+
+::: {.caption-bottom}
+Each file: one date, the full MSG disk (3201 × 3201), packed integers, its own metadata.
+:::
+
+## … one cube {auto-animate="true"}
+
+::: {.file-stage}
+[2015-06-01]{.file .layer data-id="f1" style="left:30%;top:58%"}
+[2015-06-02]{.file .layer data-id="f2" style="left:32.5%;top:50%"}
+[2015-06-03]{.file .layer data-id="f3" style="left:35%;top:42%"}
+[2015-06-04]{.file .layer data-id="f4" style="left:37.5%;top:34%"}
+[2015-06-05]{.file .layer data-id="f5" style="left:40%;top:26%"}
+[2015-06-06]{.file .layer data-id="f6" style="left:42.5%;top:18%"}
+[time →]{.axis style="left:66%;top:16%"}
+[lon →]{.axis style="left:36%;top:84%"}
+[lat ↑]{.axis style="left:18%;top:62%"}
+:::
+
+::: {.caption-bottom}
+**A data cube** = one grid, one time axis, named variables: `METREF(time, lat, lon)`, `quality_flag(time, lat, lon)`.
+:::
+
 ## What is a climate data cube?
 
 ::::: columns
-::: {.column width="68%"}
-A **data cube** is a multidimensional way to organize data. A climate data cube applies this idea to climate or Earth observation variables, commonly indexed by:
-<!-- align the text center -->
-```
-time
-latitude
-longitude
-variable
-```
-- **Climate cube:** gives climate/EO data meaningful arrangement of variables, coordinates and time steps - that allows a harmonized, analysis-ready view of the data.
-- It is a **domain-focused data organization**, not a separate file format. Here, ``NetCDF`` is the input and ``Zarr`` is the output.
-:::
+::: {.column width="62%"}
+A **data cube** organises data along shared dimensions. For climate/EO variables, typically:
 
+```text
+variable(time, latitude, longitude)
+```
+
+::: {.fragment .fade-up}
+- **Harmonised:** one grid, one calendar, consistent units and metadata.
+- **Analysis-ready:** select by label (`time="2015-06-15"`), not by file.
+- **Not a file format:** the *organisation* is the cube; here NetCDF is the input and **Zarr** the storage.
+:::
+:::
+::: {.column width="38%"}
+[![Raster data cube](img/fig-raster-data-cubes-1.png){width="100%"}](https://tmap.geocompx.org/geodata.html#fig-raster-data-cubes)
+
+<small>Image: [tmap — geocompx](https://tmap.geocompx.org/geodata.html#fig-raster-data-cubes)</small>
+:::
 :::::
 
-::: {.positioned-image style="--img-x: 70%; --img-y: 40%; --img-w: 35%; pointer-events: auto;"}
-[![A cube example-multidimensional data structure](img/fig-raster-data-cubes-1.png){width="100%"}](https://tmap.geocompx.org/geodata.html#fig-raster-data-cubes)
+## From a disk image to a regional cube
 
-<small>Image reference: [Tmap examples](https://tmap.geocompx.org/geodata.html#fig-raster-data-cubes)</small>
-::::
-
-## Cube, not file format
-
-::: {#fig-elephants layout-ncol=2}
-
-![Surus](img/plots/metref.png){#fig-surus width="75%" }
-
-
-
-![Hanno](img/plots/Sahel_cube.png){#fig-hanno width="75%" }
-![Hanno](img/plots/Sahel_cube.png){#fig-hanno width="75%" }
-
-Famous Elephants
+::::: columns
+::: {.column width="40%"}
+![Raw METREF, one day, full MSG disk](img/plots/metref.png){height="500px"}
 :::
+::: {.column width="60%" .fragment .fade-left}
+![A Sahel cube (NDVI, 50 time steps) viewed in Lexcube](img/plots/Sahel_cube.png){width="100%"}
 
+::: {.small-note}
+Left: what the provider delivers — one file per day. Right: what analysis wants — a region, stacked in time.
+:::
+:::
+:::::
 
 ## Cubes in practice
 
 ::: {.cube-grid}
 
-::: {.cube-card}
+::: {.cube-card .fragment .fade-up}
 ![Earth System Data Lab](img/logos/esdc.png){width="100%" style="background:#fff;padding:5px;border-radius:12px;"}
 
 Harmonised Earth-system variables on a common grid.
@@ -101,7 +180,7 @@ Harmonised Earth-system variables on a common grid.
 [Open the viewer](https://viewer.earthsystemdatalab.net/)
 :::
 
-::: {.cube-card}
+::: {.cube-card .fragment .fade-up}
 ![Open Data Cube](img/logos/odc.png){width="100%" style="background:#fff;padding:5px;border-radius:12px;"}
 
 Open-source software to manage and analyse EO data cubes.
@@ -109,7 +188,7 @@ Open-source software to manage and analyse EO data cubes.
 [ODC website](https://www.opendatacube.org/)
 :::
 
-::: {.cube-card}
+::: {.cube-card .fragment .fade-up}
 ![Pangeo](img/logos/pangeo.png){width="100%" style="background:#fff;padding:5px;border-radius:12px;"}
 
 Community stack for cloud-native geoscience: Xarray, Dask and Zarr.
@@ -117,7 +196,7 @@ Community stack for cloud-native geoscience: Xarray, Dask and Zarr.
 [Pangeo Ecosystem](https://pangeo.io/)
 :::
 
-::: {.cube-card}
+::: {.cube-card .fragment .fade-up}
 ![xcube](img/logos/xcube.png){width="100%" style="background:#fff;padding:5px;border-radius:12px;"}
 
 Python toolkit to generate and serve analysis-ready cubes.
@@ -128,64 +207,44 @@ Python toolkit to generate and serve analysis-ready cubes.
 :::
 
 ::: {.notes}
-Different communities, same idea: a consistent, labelled, multidimensional structure. Add your own example if you have one.
+Different communities, same idea: a consistent, labelled, multidimensional structure.
 :::
 
 <!-- ======================================================= -->
-# 2 · Why are we here? {background-color="#0b1f33"}
+# 2 · Why build one? {background-color="#0b1f33"}
 
 And why use a cube at all?
 
-## Why are we here? {auto-animate="true"}
+## Why are we here?
 
 :::: {.fragment .fade-down}
 ::: card
-Climate products are useful, but their files can arrive with different grids, time steps, metadata and quality information.
+Climate products are useful, but files arrive with different grids, time steps, packing, metadata and quality flags.
 :::
 ::::
 
 :::: {.fragment .fade-up}
 ::: card
-Today we make one small, transparent processing path from EUMETSAT source files to a regional data cube.
+Today we build one small, transparent path from EUMETSAT LSA SAF files to a regional data cube.
 :::
 ::::
 
 :::: {.fragment .fade-down}
 ::: card
-We will learn how to work with data cubes in a practical setting, using real-world examples and tools.
+Every step leaves an output you can open and check --- and every choice is written down.
 :::
 ::::
 
-## What will we learn? {auto-animate="true"}
-
-:::: {.fragment .fade-down}
-::: card
-Find and download a selected LSA SAF product safely.
-:::
-::::
-
-:::: {.fragment .fade-up}
-::: card
-Crop and remap a sample to an explicitly defined regional grid.
-:::
-::::
-
-:::: {.fragment .fade-down}
-::: card
-Build and inspect a chunked, compressed Zarr cube.
-:::
-::::
-
-<!-- ======================================================= -->
-
-## Why use a cube?
+## Many files vs one cube
 
 | Many separate files | One cube |
 |---|---|
 | Different grids, time steps and naming | One grid, one time axis, named variables |
 | Open and loop over files | Open once, select by label (`time`, `lat`, `lon`) |
 | Read whole files | Read only the chunks you need |
-| Processing choices live in scripts and memory | Choices can be documented with the data |
+| Processing choices live in scripts and memory | Choices stored with the data (`zarr_cube_*` attributes) |
+
+: {.striped .hover}
 
 ## Where a cube fits in the ecosystem
 
@@ -194,59 +253,59 @@ Build and inspect a chunked, compressed Zarr cube.
 ::: {.cube-card}
 ![STAC](img/logos/stac.png)
 
-**Describe**  
+**Describe**
 Standardise metadata for discovering geospatial assets.
 :::
 
 ::: {.cube-card}
 ![Microsoft Planetary Computer](img/logos/mpc.png)
 
-**Discover and process**  
+**Discover and process**
 Access open datasets through STAC and use hosted compute.
 :::
 
 ::: {.cube-card}
 ![Google Earth Engine](img/logos/gee.png)
 
-**Analyse**  
+**Analyse**
 Use a managed platform for large-scale geospatial analysis.
 :::
 
 ::: {.cube-card}
 ![Zarr](img/logos/zarr-pink-stacked.svg){width="100%"}
 
-**Store**  
+**Store**
 Save chunked, compressed multidimensional arrays.
 :::
 
 ::: {.cube-card}
 ![Xarray](img/logos/xarray.png)
 
-**Work with data**  
+**Work with data**
 Select, transform and analyse labelled arrays in Python.
 :::
 
 :::
 
 ::: {.notes}
-These tools have different roles and can be combined in different workflows. STAC describes and helps discover assets; it is not a data cube format. Planetary Computer and Earth Engine are hosted platforms with different data catalogues and processing models. Zarr is a storage format, while Xarray is a Python library for working with labelled arrays.
+STAC describes and helps discover assets; it is not a data cube format. Planetary Computer and Earth Engine are hosted platforms. Zarr is a storage format, Xarray a Python library.
 :::
 
-## Where does our data come from?
+## Where does our data come from? {.smaller}
 
 :::: {.columns}
-::: {.column width="30%"}
+::: {.column width="25%"}
 ![LSA SAF](img/logos/lsasaf.png){width="100%" style="background:#fff;padding:5px;border-radius:5px;"}
 
-![EUMETSAT](img/logos/eumetsat.svg){width="100%" style="background:#fff;padding:5px;border-radius:5px;"} 
+![EUMETSAT](img/logos/eumetsat.svg){width="100%" style="background:#fff;padding:5px;border-radius:5px;"}
 :::
-::: {.column width="70%"}
+::: {.column width="75%"}
 | Product | What it represents | In this tutorial |
 |---|---|---|
-| **METREF** | Reference evapotranspiration | Default configured download sample |
-| **FVC / MDFVC** | Fractional vegetation cover | Additional product example; configure its own URL and metadata |
+| **METREF** | Reference evapotranspiration (mm/day) | Default sample |
+| **MDFVC** | Fractional vegetation cover | Second product: own URL, own folder |
 
-Data are accessed from the authenticated [LSA SAF Data Service](https://datalsasaf.lsasvcs.ipma.pt/). Availability, versions, units, coverage and quality depend on the product; check its product page before analysis.
+Authenticated [LSA SAF Data Service](https://datalsasaf.lsasvcs.ipma.pt/). Versions, units, coverage and QA differ by product --- read the product page first.
 :::
 ::::
 
@@ -255,70 +314,55 @@ Data are accessed from the authenticated [LSA SAF Data Service](https://datalsas
 
 Small, explicit, checkable
 
-## From source file to cube
+## Three scripts, three folders
 
-```{mermaid}
-%%| fig-align: center
-flowchart LR
-    classDef step fill:#0e66a9,stroke:#3ddbd9,color:#ffffff,stroke-width:1px
-    classDef out  fill:#ffb454,stroke:#d9780f,color:#10253a,stroke-width:1px
+::: {.pipe}
+::: {.pipe-stage .fragment .fade-up}
+[☁️]{.ico}
+**LSA SAF**
 
-    subgraph S1["① Download"]
-        direction TB
-        A1["LSA SAF<br/>NetCDF + credentials"]:::step
-        A2["List month's files"]:::step
-        A3["Download in parallel<br/>.part, then rename"]:::step
-        A4[("data/raw<br/>YYYY/MM")]:::out
-        A1 --> A2 --> A3 --> A4
-    end
+credentials in `code/.env`
+:::
 
-    subgraph S2["② Inspect"]
-        direction TB
-        B1["Read metadata"]:::step
-        B2["Valid values<br/>+ QA flags"]:::step
-        B3["Units, time,<br/>variable names"]:::step
-        B1 --> B2 --> B3
-    end
+[→]{.pipe-arrow .fragment .fade-in}
 
-    subgraph S3["③ Crop and remap"]
-        direction TB
-        C1["Crop to AOI<br/>sellonlatbox"]:::step
-        C2["Build target grid<br/>config_resolution"]:::step
-        C3["Remap<br/>remapbil"]:::step
-        C4[("data/interim")]:::out
-        C1 --> C2 --> C3 --> C4
-    end
+::: {.pipe-stage .fragment .fade-up}
+[①]{.ico}
+**`01_download_sample.sh`**
 
-    subgraph S4["④ Validate"]
-        direction TB
-        D1["Coordinates<br/>+ timestamps"]:::step
-        D2["Valid-cell fraction<br/>+ fill values"]:::step
-        D3["Coverage map<br/>+ summary statistics"]:::step
-        D1 --> D2 --> D3
-    end
+`data/raw/METREF/2015/06/`
+:::
 
-    subgraph S5["⑤ Zarr cube"]
-        direction TB
-        E1["Open with xarray<br/>+ Dask"]:::step
-        E2["Chunk + shard<br/>time, lat, lon"]:::step
-        E3["Compress<br/>Blosc zstd"]:::step
-        E4[("data/zarr<br/>cube.zarr")]:::out
-        E1 --> E2 --> E3 --> E4
-    end
+[→]{.pipe-arrow .fragment .fade-in}
 
-    subgraph S6["⑥ Analyse"]
-        direction TB
-        F1["Maps"]:::step
-        F2["Time series"]:::step
-        F3["Regional<br/>indicators"]:::step
-        F1 --> F2 --> F3
-    end
+::: {.pipe-stage .fragment .fade-up}
+[②]{.ico}
+**`02_preprocess_cdo.sh`**
 
-    S1 --> S2 --> S3 --> S4 --> S5 --> S6
-```
+`data/interim/METREF/…`
+:::
 
-::: {.fragment .fade-up}
-Each step leaves a checkable output. If a stage fails, diagnose that stage before moving on.
+[→]{.pipe-arrow .fragment .fade-in}
+
+::: {.pipe-stage .fragment .fade-up}
+[③]{.ico}
+**`03_build_zarr_cube.py`**
+
+`data/zarr/metref_cube.zarr`
+:::
+
+[→]{.pipe-arrow .fragment .fade-in}
+
+::: {.pipe-stage .fragment .fade-up}
+[④]{.ico}
+**notebooks + `plot_utils`**
+
+maps · time series · zones
+:::
+:::
+
+::: {.fragment .fade-up .center-note}
+Each stage writes **its own folder**. If something looks wrong, open the previous folder and check there.
 :::
 
 ## Three principles
@@ -347,236 +391,471 @@ Every stage leaves an output you can inspect.
 :::
 :::::
 
-## APIs, cloud platforms and this workflow
-
-APIs, Microsoft Planetary Computer and Google Earth Engine are useful for discovering, accessing and analyzing many datasets.
-
-This tutorial demonstrates a local, explicit path for selected authenticated LSA SAF data when we need to document a regional crop, target grid and processing choices. The two approaches can complement each other; this workflow does not assume hosted platforms lack the required data.
+::: {.fragment .fade-up style="margin-top:1em"}
+APIs and hosted platforms (Planetary Computer, Earth Engine) are great for discovery and analysis. This workflow is the local, fully documented path for authenticated LSA SAF data --- the two complement each other.
+:::
 
 <!-- ======================================================= -->
-# 4 · Tutorial walkthrough {background-color="#0b1f33"}
+# 4 · Hands-on walkthrough {background-color="#0b1f33"}
 
-Now we will run the pipeline - Please follow the instructions in the tutorial page. 
+Follow along on the [tutorial site](https://khizerzakir.github.io/tutorial-repo/) --- or generate your commands with the [command builder](https://khizerzakir.github.io/tutorial-repo/tutorial/reference.html)
 
-## Step 1 · Download a small sample
+## Step 0 · Open a Linux shell {auto-animate="true"}
 
+::::: columns
+::: {.column width="40%"}
+**Windows → WSL2 (once, admin PowerShell)**
+
+```powershell
+wsl --install -d Ubuntu
+```
+
+**Every session**
+
+- Start menu → **Ubuntu**, or
+- Windows Terminal → ⌄ → **Ubuntu**
+
+[Keep the project in `~/`, not `/mnt/c/` --- much faster.]{.small-note}
+:::
+::: {.column width="60%"}
+::: {.terminal}
+```{.bash code-line-numbers="1-2|3-4|5-7|8"}
+sudo apt update
+sudo apt install -y git wget cdo
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source "$HOME/.local/bin/env"
+mkdir -p ~/projects && cd ~/projects
+git clone https://github.com/khizerzakir/tutorial-repo.git
+cd tutorial-repo
+uv sync --locked --extra notebook
+```
+:::
+:::
+:::::
+
+## Step 0 · Credentials stay local
+
+::::: columns
+::: {.column width="50%"}
 ```bash
-cp code/.env.example code/.env   # add credentials; keep local
-bash code/01_download_sample.sh 2020 06
+cp code/.env.example code/.env
+nano code/.env
 ```
 
-- The downloader reads a product URL, year and month from settings.
-- Raw files go under `data/raw/YYYY/MM/`.
-- It downloads to a temporary `.part` file, then renames on success.
+```{.dotenv code-line-numbers="1-2|3-4|5-6"}
+LSASAF_USERNAME="your_username"
+LSASAF_PASSWORD="your_password"
+SAMPLE_YEAR=2015
+SAMPLE_MONTH=06
+VARIABLE_NAME=METREF
+URL="https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF"
+```
+:::
+::: {.column width="50%" .fragment .fade-left}
+::: card
+`code/.env` is in `.gitignore`.
 
-**Start with one month and one product.** It makes troubleshooting and validation manageable.
+The downloader writes the password to a **temporary wgetrc** that is deleted on exit --- it never appears in the process list or shell history.
+:::
 
-## Download · keep credentials private
+::: {.checkpoint}
+✅ **Checkpoint:** `uv run python -c "import zarr; print(zarr.__version__)"` → `3.x`
+:::
+:::
+:::::
 
-```{.bash code-line-numbers="1-2|3-5"}
+## Step 1 · Download {auto-animate="true" .big-code}
+
+```{.bash}
+bash code/01_download_sample.sh
+```
+
+::: {.small-note}
+Uses month, product and URL from `code/.env`.
+:::
+
+## Step 1 · Download {auto-animate="true" .big-code}
+
+```{.bash}
+bash code/01_download_sample.sh 2015 06
+```
+
+::: {.small-note}
+Arguments **override** `.env`: year and month first …
+:::
+
+## Step 1 · Download {auto-animate="true" .big-code}
+
+```{.bash}
+bash code/01_download_sample.sh 2015 06 MDFVC \
+  "https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/MDFVC/NETCDF"
+```
+
+::: {.small-note}
+… then folder name and product URL --- a second product without editing `.env`.
+:::
+
+## Step 1 · Download {auto-animate="true" .big-code}
+
+```{.bash}
+JOBS=8 bash code/01_download_sample.sh 2015 06 MDFVC \
+  "https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/MDFVC/NETCDF"
+```
+
+::: {.terminal-out}
+::: {.fragment}
+`2015-06: 30 file(s) on server, 30 to download -> data/raw/MDFVC/2015/06`
+:::
+::: {.fragment}
+`First file: ~6s. Estimated remaining: ~0m22s with 8 parallel jobs`
+:::
+::: {.fragment}
+`Done: 30 file(s) in 0m29s`
+:::
+:::
+
+::: {.small-note .fragment}
+`JOBS` = parallel downloads. Re-run any time: existing files are skipped, failed ones retried.
+:::
+
+## Download · inside the script
+
+```{.bash code-line-numbers="1-2|3-4|6-8|10-11|12"}
 ENV_FILE="${ENV_FILE:-$PWD/code/.env}"
-[ -f "$ENV_FILE" ] && { set -a; . "$ENV_FILE"; set +a; }
+set -a; . "$ENV_FILE"; set +a
 WGETRC="$(mktemp)"; export WGETRC; trap 'rm -f "$WGETRC"' EXIT
-printf 'http_user=%s\nhttp_password=%s\n' \
-  "$LSASAF_USERNAME" "$LSASAF_PASSWORD" > "$WGETRC"
-```
+printf 'http_user=%s\nhttp_password=%s\n' "$LSASAF_USERNAME" "$LSASAF_PASSWORD" > "$WGETRC"
 
-- Credentials come from a local `.env`, never from the repository.
-- `wget` reads them from a private temporary file, so the password never appears in the process list.
-
-## Download · find the month's files
-
-```{.bash code-line-numbers="1|2-3"}
-for d in $(seq -w 1 31); do
-  list+=$({ wget -q -O- "$SRC/$YEAR/$MONTH/$d/" || true; } \
-          | tr '"' '\n' | grep -E '\.nc$' | sed "s|^|$HOST|" || true)$'\n'
+for d in $(seq -w 1 31); do                         # list every day folder of the month
+  list+=$(wget -q -O- "$SRC/$YEAR/$MONTH/$d/" | grep -E '\.nc$' …)
 done
+
+get() { wget -q -O "$f.part" "$1" && mv "$f.part" "$f"; }    # .part → rename when complete
+t0=$SECONDS; get "$(head -n1 <<< "$pending")" "$DEST"        # time one file → estimate
+tail -n +2 <<< "$pending" | xargs -P "$JOBS" -I{} bash -c 'get "$1" "$2"' _ {} "$DEST"
 ```
-
-- Loop over possible days; days that do not exist return no listing and are skipped.
-- Keep only `.nc` links and turn them into full URLs.
-
-## Download · safe, parallel, with a time estimate
-
-```{.bash code-line-numbers="1-2|3|4-5"}
-get() { local f="$2/${1##*/}"
-        wget -q -O "$f.part" "$1" && mv "$f.part" "$f"; }
-t0=$SECONDS; get "$(head -n1 <<< "$pending")" "$DEST"
-tail -n +2 <<< "$pending" \
-  | xargs -P "$JOBS" -I{} bash -c 'get "$1" "$2"' _ {} "$DEST"
-```
-
-- A file only gets its final name when the download is complete; interrupted runs never leave half-files that look finished.
-- Timing the first file gives an estimate for the rest; `JOBS` sets parallel downloads.
 
 ::: {.notes}
-Simplified excerpt: the real script also sets retries and timeouts and reports failed files.
+Simplified excerpt; the real script adds retries, timeouts and reports failures. Walk through with the arrow keys: credentials → listing → safe download → parallel.
 :::
 
-## Step 2 · Crop and remap
+## Step 1b · Look before you remap
 
-```bash
-bash code/02_preprocess_cdo.sh 0.05
+```{.bash code-line-numbers="1|2|3|4"}
+cdo -s showname data/raw/METREF/2015/06/*0601*.nc   # METREF quality_flag
+cdo -s sinfo    data/raw/METREF/2015/06/*0601*.nc   # lonlat 3201x3201, -80…80 by 0.05
+cdo -s showtimestamp data/raw/METREF/2015/06/*0601*.nc
+cdo -s infon    data/raw/METREF/2015/06/*0601*.nc   # min / mean / max, missing count
 ```
 
-The script clips source files using bounds in `code/preprocess_utils/config.txt`, then remaps using the grid generated from `config_resolution.yaml`.
+::::: columns
+::: {.column width="50%" .fragment}
+::: card
+`showname` gives you **`MAIN_VARIABLE`** and **`QA_VARIABLES`** for the next step.
+:::
+:::
+::: {.column width="50%" .fragment}
+::: card
+Raw values are **packed** (`int16` × `scale_factor`, `_FillValue`). xarray and CDO decode them --- check that they do.
+:::
+:::
+:::::
 
-::: {.callout-warning}
-Make the clip bounds and target-grid extent describe the same area. In the current examples they differ; a target grid extending beyond the clipped source can create large missing-value regions.
+## Step 2 · Snap the region to the source grid {auto-animate="true"}
+
+::::: columns
+::: {.column width="55%"}
+::: {.grid-demo}
+[]{.aoi data-id="aoi" style="left:23%;top:17%;width:47%;height:51%"}
+:::
+:::
+::: {.column width="45%"}
+Your AOI comes from the YAML `domain:` **or** a vector file (`.geojson`, `.gpkg`, `.shp`, `.parquet`).
+
+Its bounds rarely fall on cell edges …
+:::
+:::::
+
+## Step 2 · Snap the region to the source grid {auto-animate="true"}
+
+::::: columns
+::: {.column width="55%"}
+::: {.grid-demo}
+[]{.aoi .snapped data-id="aoi" style="left:20%;top:10%;width:50%;height:60%"}
+:::
+:::
+::: {.column width="45%"}
+… so `snap_aoi_to_netcdf_grid.py` expands them **outward to whole raw cells**, writes `grid.txt` and updates the YAML.
+
+::: {.fragment}
+- Target cell size **= raw cell size** (0.05°): no invented detail.
+- Crop = grid + `buffer` (0.2°) so bilinear has neighbours at the edge.
+:::
+:::
+:::::
+
+## Step 2 · Crop and remap {auto-animate="true" .big-code}
+
+```{.bash}
+MAIN_VARIABLE=METREF uv run bash code/02_preprocess_cdo.sh
+```
+
+::: {.small-note}
+`MAIN_VARIABLE` is required and checked against `cdo showname`. `uv run` gives the script's internal `python3` the project packages.
 :::
 
-## Processing · key code
+## Step 2 · Crop and remap {auto-animate="true" .big-code}
 
-```{.bash code-line-numbers="1|2|3"}
-command -v cdo >/dev/null || { echo "cdo not found" >&2; exit 1; }
-[ -n "$(find "$RAW_DIR" -name '*.nc' -print -quit)" ] || exit 1
-bash "$SCRIPT_DIR/cdo_preprocess.sh" "$RESOLUTION" "$RAW_DIR" "$INTERIM_DIR"
+```{.bash}
+MAIN_VARIABLE=METREF QA_VARIABLES=quality_flag \
+  uv run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF
 ```
 
-- Fail early: check the tool and the input before doing any work.
-- One call does the work: resolution in, raw files in, interim files out.
+::: {.small-note}
+Arguments: resolution label (log) · input folder · **output folder per product**.
+:::
 
-## Processing · the two CDO operations
+## Step 2 · Crop and remap {auto-animate="true" .big-code}
 
-```{.bash code-line-numbers="1|2"}
-cdo sellonlatbox,LON1,LON2,LAT1,LAT2 in.nc cropped.nc   # 1. crop to the area of interest
-cdo remapbil,target_grid.txt cropped.nc remapped.nc      # 2. remap to the target grid
+```{.bash}
+MAIN_VARIABLE=METREF QA_VARIABLES=quality_flag \
+  uv run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF \
+  data/aoi/spatial_units.geosjon
 ```
 
-Conceptual view of what the pipeline does; the exact calls are in `cdo_preprocess.sh`.
+::::: columns
+::: {.column width="50%"}
+::: {.small-note}
+4th argument: a vector AOI instead of the YAML box. The snapped rectangle is saved as `aoi_aligned.gpkg`.
+:::
+:::
+::: {.column width="50%" .fragment}
+```{.yaml}
+processing:
+  parallel: 4            # files at once (not an env var)
+  remap_method: bilinear # or nearest
+  buffer: 0.2
+```
+:::
+:::::
+
+## Processing · one file's journey
+
+```{.bash code-line-numbers="1|2-3|4|5|6|7"}
+cdo -sellonlatbox,$W,$E,$S,$N          in.nc    clip.nc        # crop (+ buffer)
+cdo -delname,$QA_CSV                   clip.nc  main.nc        # continuous variables
+cdo -selname,$QA_CSV                   clip.nc  qa.nc          # flags
+cdo -remapbil,grid.txt                 main.nc  main_r.nc      # smooth → bilinear
+cdo -remapnn,grid.txt                  qa.nc    qa_r.nc        # codes → nearest, never averaged
+cdo merge main_r.nc qa_r.nc merged.nc                          # back together
+cdo -s sinfo merged.nc && mv merged.nc out.part && mv out.part out_processed.nc  # only valid output lands
+```
+
+::: {.small-note .fragment}
+`processing.parallel` files run at once through `xargs -P`; results and failures go to `data/interim/METREF/cdo.log`.
+:::
 
 ## Resampling is a decision
 
 | Method | Typical use | Main trade-off |
 |---|---|---|
-| Bilinear | Continuous fields such as many climate variables | Smooths values; can modify extremes |
-| Nearest neighbour | Categories and QA flags | Preserves classes; can look blocky |
+| Bilinear | Continuous fields (ETo, temperature, FVC) | Smooths; can shrink extremes |
+| Nearest neighbour | Categories, QA flags | Preserves classes; looks blocky |
 
-Neither method creates finer source detail. For each product, choose a method that matches its values and intended use; retain and apply quality flags where available.
+::: {.fragment .fade-up}
+Neither creates finer detail than the source. Choose per product, keep the QA flags, and **record the choice**.
+:::
 
-## Step 3 · Store for analysis
+::: {.checkpoint .fragment}
+✅ **Checkpoint:** one `*_processed.nc` per raw file · no `status=failed` in `cdo.log` · `cdo sinfo` shows the `grid.txt` size
+:::
 
-```{.python code-line-numbers="1|2|3|4"}
-from zarr.codecs import BloscCodec
-INNER_CHUNKS = {"time": 1, "lat": 256, "lon": 256}
-SHARD_CHUNKS = {"time": 10, "lat": 512, "lon": 512}
-COMPRESSOR = BloscCodec(cname="zstd", clevel=5, shuffle="shuffle")
+## Step 3 · Build the cube {auto-animate="true" .big-code}
+
+```{.bash}
+uv run python code/03_build_zarr_cube.py --input data/interim/METREF --dry-run
 ```
 
-- **Inner chunks** are the read units: one date and a spatial window.
-- **Shards** group chunks to reduce the number of storage objects.
-- **Compression** makes the store smaller; these settings are starting points.
+::: {.terminal-out}
+```text
+Profile          : map
+Files            : 30  (…201506010000_processed.nc … …201506300000_processed.nc)
+Variables        : METREF, quality_flag
+Dimensions       : {'time': 30, 'lat': 91, 'lon': 121}
+Inner chunk      : {'time': 1, 'lat': 91, 'lon': 121}  (~43.0 KB raw each)
+Shard            : {'time': 10, 'lat': 91, 'lon': 121}
+Per variable     : 30 inner chunks in 3 shard object(s)
+Dry run: nothing written.
+```
+:::
 
-Run the builder with `uv run python code/build_zarr_cube.py`. It expects interim dimensions named `time`, `lat`, and `lon`; it replaces its existing output store when rebuilding.
+## Step 3 · Build the cube {auto-animate="true" .big-code}
 
-## Zarr · chunks decide which queries are fast
+```{.bash}
+uv run python code/03_build_zarr_cube.py --input data/interim/METREF
+```
 
-| Query | What it reads with `time=1` chunks | Cost |
-|---|---|---|
-| Map for one date | A few spatial chunks of one time step | Low |
-| Time series at one cell | One chunk per time step | More, smaller reads |
+::: {.terminal-out}
+::: {.fragment}
+`Validation OK    : first/last time steps match the interim NetCDF`
+:::
+::: {.fragment}
+`Valid fraction   : METREF=95.9%, quality_flag=100.0%`
+:::
+::: {.fragment}
+`Stored size      : 841.8 KB in 15 files (compression ≈ 2.3× vs 1.9 MB in memory)`
+:::
+:::
 
-Benchmark the actual map and time-series queries before choosing final chunk and shard sizes.
+::: {.fragment .fade-up}
+Written to `metref_cube.zarr.tmp`, validated, **then** swapped in --- a failed run never destroys a working cube.
+:::
 
-## Inspect a cube
+## Step 3 · Flags you will actually use
 
-```{.python code-line-numbers="1-2|3|4-5"}
+```{.bash code-line-numbers="1|2|3|4|5"}
+uv run python code/03_build_zarr_cube.py --input data/interim/METREF --profile timeseries
+uv run python code/03_build_zarr_cube.py --input data/interim/METREF --append
+uv run python code/03_build_zarr_cube.py --input data/interim/METREF --variables METREF --float32
+uv run python code/03_build_zarr_cube.py --input data/interim/METREF --chunks time=4,lat=64,lon=64
+uv run python code/03_build_zarr_cube.py --input data/interim/METREF --workers 2 --clevel 7
+```
+
+::: {.small-note}
+1 layout for point time series · 2 add next month without rebuilding · 3 keep one variable, halve float64 · 4 custom chunks · 5 limit CPU, compress harder.
+:::
+
+## Chunks · shards · compression
+
+```{.python code-line-numbers="1-5|7-9|11-14"}
+PROFILES = {   # inner chunk                              shard
+  "map":        ({"time": 1,  "lat": 256, "lon": 256}, {"time": 10,  "lat": 512, "lon": 512}),
+  "balanced":   ({"time": 8,  "lat": 128, "lon": 128}, {"time": 32,  "lat": 512, "lon": 512}),
+  "timeseries": ({"time": 64, "lat": 32,  "lon": 32},  {"time": 256, "lat": 256, "lon": 256}),
+}
+
+c = min(inner[dim], size)                          # clamp chunk to the data
+k = min(round(shard[dim] / c), ceil(size / c))     # shard = whole number of chunks
+inner[dim], shard[dim] = c, c * k                  # (Zarr v3 sharding requires this)
+
+ds = ds.chunk(shard)                               # one Dask task = one whole shard
+encoding[var] = {"chunks": inner, "shards": shard,
+                 "compressors": [BloscCodec(cname="zstd", clevel=5, shuffle="shuffle")]}
+ds.to_zarr(tmp, zarr_format=3, encoding=encoding, consolidated=True)
+```
+
+::: {.notes}
+The rounding fixes a real failure: a 300 × 400 AOI with 256-cell chunks and 512 shards would otherwise produce a shard that is not divisible by the chunk and Zarr refuses to write.
+:::
+
+## Try it · which queries are cheap? {.explorer-slide}
+
+{{< include ../tutorial/_chunk-explorer.qmd >}}
+
+## Step 4 · Open and explore
+
+```{.python code-line-numbers="1-2|4|5|6|8-11"}
 import xarray as xr
-ds = xr.open_zarr("data/zarr/metref_sample_1month.zarr")
-field = next(iter(ds.data_vars))
-map_for_date = ds[field].isel(time=0)
-series_at_cell = ds[field].isel(lat=100, lon=100)
+ds = xr.open_zarr("data/zarr/metref_cube.zarr")      # consolidated: one metadata read
+
+day_map = ds.METREF.sel(time="2015-06-15")                       # by label, not by file
+series  = ds.METREF.sel(lon=-16.4, lat=14.5, method="nearest")   # one pixel, all dates
+monthly = ds.METREF.resample(time="1MS").sum()                    # lazy until plotted
+
+import sys; sys.path.insert(0, "code/plot_utils")
+from adaptive_cube_plot import plot_time_slices, plot_spatial_timeseries
+plot_time_slices(ds, var="METREF", time_index=[0, 14, 29], boundaries=units, robust=True)
+plot_spatial_timeseries(ds, var="METREF", points={"Dakar": (-17.19, 14.75)}, show_area_spread=True)
 ```
 
-The cell indices are illustrative. Check coordinate names, coordinate direction, units and timestamps before interpreting values. Use the reusable functions in `code/plot_utils/` for maps and temporal plots.
+## Step 4 · Three notebooks
 
-<!-- ## Result · a map
+::::: columns
+::: {.column width="33%" .fragment .fade-up}
+::: card
+**1 · Validate**
 
-![Replace with your own map](img/plots/map.png){width="80%" fig-align="center"}
+Packed vs decoded raw · AOI coverage per date · interim **==** Zarr · remap effect --- in one `dask.compute`.
+:::
+:::
+::: {.column width="33%" .fragment .fade-up}
+::: card
+**2 · Plot**
 
-## Result · a time series
+Raw disk (strided) with AOI · raw / interim / cube on one colour scale · missing-data footprint.
+:::
+:::
+::: {.column width="33%" .fragment .fade-up}
+::: card
+**3 · Application**
 
-![Replace with your own time series](img/plots/timeseries.png){width="80%" fig-align="center"}
+`plot_utils` maps & time series · half-month ETo · zonal stats · climate ↔ mobility · co-occurrence classes.
+:::
+:::
+:::::
+
+::: {.fragment .fade-up .center-note}
+17 million mobility rows → **one half-month read** with Parquet `filters=` (predicate push-down).
+:::
 
 ## QA · what should we check?
 
-- Compare source and output coordinates, timestamps, units and variable names.
-- Check decoded fill values and valid-cell count/fraction.
-- Plot the missing-data footprint; compare it with the source mask and QA flags.
-- Compare a few known source/output values and summary statistics.
-- Reopen Zarr and compute a small selection before processing more data.
+- Source vs output: coordinates, timestamps, units, variable names.
+- Decoded fill values and valid-cell fraction --- per date, not just overall.
+- Missing-data footprint vs the product mask and QA flags.
+- A few known values and summary statistics, raw → interim → cube.
 
-**A file that opens is not automatically fit for analysis.** Non-zero valid values do not by themselves prove sufficient spatial coverage.
-
-## QA · coverage
-
-![Replace with your coverage / missing-data map](img/plots/coverage.png){width="80%" fig-align="center"}
-
-## What can the cube support?
-
-- Regional and seasonal climate maps.
-- Spatial summaries and time series for locations or zones.
-- Evapotranspiration and vegetation monitoring.
-- Inputs to climate-impact or resilience indicators after domain validation.
-
-The cube makes data access more consistent; scientific interpretation still depends on product quality, aggregation choices and validation. -->
+::: {.fragment .fade-up}
+**A file that opens is not automatically fit for analysis.**
+:::
 
 <!-- ======================================================= -->
-# 5 · Limitations and caveats {background-color="#0b1f33"}
+# 5 · Caveats & scaling {background-color="#0b1f33"}
 
 What the cube does not solve
 
 ## Caveats and uncertainty
 
-- Missing values may be real masks/quality exclusions or processing/configuration problems.
-- A crop/grid mismatch, wrong variable, coordinate issue or fill-value handling can cause extensive NaNs.
-- Bilinear remapping smooths; nearest-neighbour can be blocky. Different choices can change statistics.
-- Degree grids have latitude-dependent ground dimensions.
-- Product versions, temporal support, units and quality systems may differ.
-- The example is a regional teaching workflow, not a validated operational climate product.
+- Missing values may be real masks/QA exclusions --- or configuration problems.
+- A crop/grid mismatch, wrong variable or undecoded fill value can create extensive NaNs.
+- Bilinear smooths; nearest is blocky. Different choices change statistics.
+- Degree grids have latitude-dependent ground size.
+- Product versions, temporal support, units and QA systems differ.
+- This is a **teaching workflow**, not a validated operational product.
 
 ## On-the-fly processing vs a pre-built cube
 
 | | On-the-fly (catalog + lazy loading) | Pre-built cube (this tutorial) |
 |---|---|---|
-| Regridding / resampling | Done at read time; settings are easy to overlook | Fixed once and documented in the pipeline |
+| Regridding | At read time; settings easy to overlook | Fixed once and documented |
 | Compute cost | Paid at every query | Paid once, up front |
 | Storage | Reuses the provider's data | Creates a derived copy |
-| Changing area, grid or method | Change the query | Re-run the pipeline |
-| Following provider updates | Automatic | Needs a rebuild |
+| Change area/grid/method | Change the query | Re-run the pipeline |
+| Provider updates | Automatic | `--append` / rebuild |
 
-Neither is better in general. Choose by use case, and always record the resampling choice.
+Neither is better in general --- choose by use case and always record the resampling choice.
 
 ## Scale the pilot carefully
 
-For a large domain (for example, a 2,000 km corridor), first benchmark a representative priority subset:
+- Benchmark a representative subset: runtime, peak memory, size, valid coverage, **read speed of your real queries**.
+- Grow in **time batches** with `--append`; split very large areas into grid-aligned tiles with a remap margin.
+- Parallelise within measured CPU, memory and disk limits (`processing.parallel`, `JOBS`, `--workers`).
+- Choose the chunk profile for the dominant question; re-benchmark at scale.
 
-- Record runtime, peak memory, file size, valid coverage and output read speed.
-- Split work into grid-aligned spatial tiles and/or time batches.
-- Parallelize independent files within measured CPU, memory and I/O limits.
-- Add remapping margins at tile edges and trim duplicate target cells.
-- Write non-overlapping Zarr regions or isolated stores; track and retry failures.
-
-Do not scale only by multiplying worker count. Disk throughput, memory, output object counts and safe Zarr writes can become the bottleneck.
-
-## Possible next updates
-
-- Harmonize clip and target-grid bounds; add a coverage map and threshold.
-- Apply product-specific quality flags and test decoded no-data values.
-- Record provenance, product versions, units, grid and resampling settings.
-- Benchmark chunk/shard sizes for intended queries and available compute/storage.
-- Add more products only after documenting their spatial and temporal semantics.
-- Add automated tests for sample input files and failed/partial outputs.
+::: {.fragment .fade-up}
+Do not scale only by adding workers --- disk throughput, memory and object counts become the bottleneck.
+:::
 
 <!-- ======================================================= -->
 # 6 · Key message {background-color="#0b1f33"}
 
 ## What we learned {.center}
 
-**A useful climate cube starts with consistent, documented choices and honest checks on missing data and resolution.**
+::: {.big-message .fragment .zoom-in}
+A useful climate cube starts with **consistent, documented choices** and **honest checks** on missing data and resolution.
+:::
 
-<!-- ======================================================= -->
-# 7 · Links {background-color="#0b1f33  "}
+# Links {background-color="#0b1f33"}
 
 ## Scan and explore
 
@@ -598,8 +877,6 @@ Do not scale only by multiplying worker count. Disk throughput, memory, output o
 :::
 ::::
 
-# References {background-color="#0b1f33"}
-
 ## References · papers {.smaller}
 
 - Abernathey, R. P., et al. (2021). Cloud-native repositories for big scientific data. *Computing in Science & Engineering*, 23(2), 26–35. <https://doi.org/10.1109/MCSE.2021.3059437>
@@ -610,8 +887,8 @@ Do not scale only by multiplying worker count. Disk throughput, memory, output o
 ## References · data and software {.smaller}
 
 - LSA SAF Data Service: <https://datalsasaf.lsasvcs.ipma.pt/>
-- Zarr: <https://zarr.dev/> 
-- Xarray: <https://xarray.dev/>
+- Zarr: <https://zarr.dev/> · Xarray: <https://xarray.dev/> · Dask: <https://dask.org/>
 - CDO: <https://code.mpimet.mpg.de/projects/cdo>
-- STAC: <https://stacspec.org/>
+- uv: <https://docs.astral.sh/uv/> · WSL: <https://learn.microsoft.com/windows/wsl/>
+- Lexcube: <https://www.lexcube.org/> · STAC: <https://stacspec.org/>
 - If you use LSA SAF data in publications, follow the LSA SAF attribution guidance.

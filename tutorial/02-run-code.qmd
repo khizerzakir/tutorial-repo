@@ -1,131 +1,282 @@
 ---
-title: "B. Download and preprocess a sample"
+title: "B · Download and preprocess"
+subtitle: "Run the download and preprocessing scripts to get a small sample of LSA SAF data, crop it to your area of interest, and remap it to a regular grid."
 ---
 
-This page downloads one LSA SAF product sample, crops it to a configured study area, and remaps it to a target grid. Begin with one product and one short time period. Validate the result before extending the period or region.
+::: {.pipeline}
+[A · Setup]{.stage} [B · Download & preprocess]{.here} [C · Zarr cube]{.stage} [D · Explore]{.stage}
+:::
 
-## 1. Check the product and study area
+You will run two scripts from the repository root, in the Linux/WSL terminal you opened in
+[Setup](01-setup.qmd#terminal):
 
-The example defaults to **METREF**. The repository also lists FVC/MDFVC as an example product. Select a product from the [LSA SAF Data Service](https://datalsasaf.lsasvcs.ipma.pt/) and confirm its product URL, time coverage, variable names, units, coordinate system, no-data values and quality flags.
+| Script | Input | Output |
+|---|---|---|
+| `code/01_download_sample.sh` | LSA SAF server + `code/.env` | `data/raw/<PRODUCT>/YYYY/MM/*.nc` |
+| `code/02_preprocess_cdo.sh` | raw NetCDF + AOI/YAML bounds | `data/interim/<PRODUCT>/YYYY/MM/*_processed.nc` |
 
-Coordinates are `longitude`/`latitude` in degrees in this example. For a new AOI, store it in `data/aoi/` and there is a `utils/` script to convert a shapefile to a bounding box. The AOI is used to crop the raw files before remapping and using standrdized coordinates. The target grid is defined in `code/preprocess_utils/grid.txt`. The default is a 0.05° global grid, but you can change the resolution and bounds to suit your study area.
+```bash
+cd ~/projects/tutorial-repo     # every command on this page runs from here
+```
 
-The remapping method is bilinear by default. Use nearest-neighbour for categorical fields and flags. The remapping method is set in `code/preprocess_utils/config_resolution.yaml`. 
+::: {.callout-tip appearance="simple"}
+Prefer to fill in a form? The [**command builder**](reference.qmd) writes all the commands on this page
+for your product, month, AOI and number of CPU cores.
+:::
 
-## 2. Set credentials
+## 1 · Download one month {#download}
 
-From the repository root:
+### Run it
 
-~~~bash
-cp code/.env.example code/.env
-~~~
+::: {.panel-tabset}
 
-Edit `code/.env` and enter your `LSA SAF` credentials - See the [setup guide](01-setup.qmd) for details. The downloader expects:
+## Use `code/.env`
 
-~~~dotenv
-LSASAF_USERNAME=your_username
-LSASAF_PASSWORD=your_password
-SAMPLE_YEAR=2020
-SAMPLE_MONTH=06
-VARIABLE_NAME=METREF
-URL=https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF
-~~~
+Uses `SAMPLE_YEAR`, `SAMPLE_MONTH`, `VARIABLE_NAME` and `URL` from `code/.env`:
 
-Keep code/.env private and never commit it. The script reads this path by default when run from the repository root. If you use another path, set ENV_FILE=/path/to/.env.
-
-## 3. Download the sample
-
-Run from the repository root:
-
-~~~bash
+```bash
 bash code/01_download_sample.sh
-~~~
+```
 
-You can override the year, month, product and product URL positionally:
+## Choose the month
 
-~~~bash
-bash code/01_download_sample.sh 2020 06 METREF "https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF"
-~~~
+Positional arguments **override** `code/.env`: `YYYY MM [PRODUCT] [URL]`.
 
-The script checks the service listing and skips files already present. New files are first written as .part, then renamed after a successful download. The default raw-data layout is:
+```bash
+bash code/01_download_sample.sh 2015 06 METREF
+```
 
-~~~text
-data/raw/METREF/2020/06/*.nc
-~~~
+## Another product (FVC)
 
-Confirm that files exist and have plausible sizes. A completed download only confirms transfer success; it does not confirm that the data are scientifically valid.
+The product name is used for the output folder; the URL decides what is downloaded.
 
-## 4. Inspect raw NetCDF before processing
+```bash
+bash code/01_download_sample.sh 2015 06 MDFVC \
+  "https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/MDFVC/NETCDF"
+```
 
-Use CDO to list metadata and summary information:
+## Faster / elsewhere
 
-~~~bash
-cdo -s sinfo data/raw/METREF/2020/06/example.nc
-cdo -s showname data/raw/METREF/2020/06/example.nc
-cdo -s showtimestamp data/raw/METREF/2020/06/example.nc
-cdo -s infon data/raw/METREF/2020/06/example.nc
-~~~
+```bash
+JOBS=8 RAW_DIR=/data/lsasaf bash code/01_download_sample.sh 2015 06 METREF
+```
 
-Replace example.nc with a real downloaded filename. Review coordinate ranges, variable names, timestamps, units, missing values and product QA information. If the raw file itself has no valid values, diagnose the download/product selection before remapping.
+:::
 
-## 5. Choose variables and crop/remap
+**Options**
 
-Inspect the exact variable names:
+::: {.flag-table}
+| Setting | How to set it | Default | Meaning |
+|---|---|---|---|
+| `YYYY MM` | 1st, 2nd argument | `SAMPLE_YEAR`, `SAMPLE_MONTH` in `.env` | Month to download |
+| `PRODUCT` | 3rd argument | `.env VARIABLE_NAME` → `METREF` | Folder name under `data/raw/` |
+| `URL` | 4th argument | `.env URL` | Product NetCDF root on the LSA SAF server |
+| `JOBS` | environment variable | `4` | Parallel downloads |
+| `RAW_DIR` | environment variable | `data/raw` | Where raw files go |
+| `ENV_FILE` | environment variable | `./code/.env` | Credentials/settings file |
+:::
 
-~~~bash
-cdo -s showname data/raw/METREF/2020/06/example.nc
-~~~
+::: {.callout-warning appearance="simple"}
+`code/.env` is loaded *after* environment variables, so `URL=… bash code/01_download_sample.sh` is
+overwritten by the `URL` line in `.env`. Override the month, product and URL with **arguments**.
+:::
 
-Set the main continuous variable, AOI file and optional QA variable names:
+### Example output
 
-~~~bash
-MAIN_VARIABLE=METREF \
-QA_VARIABLES=QUALITY_FLAG,QC_FLAG \
-AOI_GEOJSON=data/aoi/study_area.geojson \
-bash code/02_preprocess_cdo.sh data/raw/METREF data/interim
-~~~
+```text
+2015-06: 30 file(s) on server, 30 to download -> …/data/raw/METREF/2015/06
+First file: ~6s. Estimated remaining: ~0m44s with 4 parallel jobs
+Done: 30 file(s) in 0m52s
+```
 
-Use exact variable names from `showname`; QA names are comma-separated. Omit `QA_VARIABLES` if no QA layers are needed. The pipeline builds one snapped AOI grid from the first raw file, then checks other inputs use the same grid. It selects and bilinearly remaps only `MAIN_VARIABLE` by default. QA layers are selected and processed separately with nearest-neighbour mapping, which chooses an existing code rather than averaging categories. Set `MAIN_REMAP_METHOD=nearest` if the primary variable is categorical.
+Re-running is safe: files that already exist are skipped and only failed ones are retried.
 
-The crop includes a one-cell margin by default to support remapping near AOI edges. Outputs are written to temporary files, checked for readability and valid main-variable cells, and renamed only when complete. QA values are preserved as data layers; this example does not interpret product-specific bit fields or automatically apply a QA mask.
+::: {.callout-note collapse="true"}
+## Walk through the download script
+```{.bash filename="code/01_download_sample.sh (simplified)"}
+ENV_FILE="${ENV_FILE:-$PWD/code/.env}"
+set -a; . "$ENV_FILE"; set +a                                   # <1>
+WGETRC="$(mktemp)"; trap 'rm -f "$WGETRC"' EXIT
+printf 'http_user=%s\nhttp_password=%s\n' "$LSASAF_USERNAME" "$LSASAF_PASSWORD" > "$WGETRC"  # <2>
 
-`PARALLEL` controls independent files processed concurrently; for example:
+for d in $(seq -w 1 31); do                                      # <3>
+  list+=$(wget -q -O- "$SRC/$YEAR/$MONTH/$d/" | grep -E '\.nc$' …)
+done
 
-~~~bash
-PARALLEL=2 MAIN_VARIABLE=METREF AOI_GEOJSON=data/aoi/study_area.geojson \
-  bash code/02_preprocess_cdo.sh data/raw/METREF data/interim
-~~~
+get() { wget -q -O "$f.part" "$1" && mv "$f.part" "$f"; }       # <4>
+xargs -P "$JOBS" -I{} bash -c 'get "$1" "$2"' _ {} "$DEST"      # <5>
+```
+1. Credentials and defaults come from the private `.env`, never from the repository.
+2. `wget` reads the password from a temporary file that is deleted on exit — it never appears in the process list.
+3. Each day folder of the month is listed; days that do not exist return nothing.
+4. Files are written as `.part` and renamed only when complete — an interrupted run never leaves a "finished-looking" half file.
+5. `JOBS` downloads run in parallel.
+:::
 
-Start conservatively. Increase parallelism only after checking RAM, disk throughput and temporary storage.
+## 2 · Inspect a raw file {#inspect}
 
-Processed files are written beneath `data/interim/<MAIN_VARIABLE>/YYYY/MM/`. Check `data/interim/cdo.log`, then inspect an output:
+Never remap blind. Pick one file and look at variable names, grid and values:
 
-~~~bash
-cdo -s sinfo data/interim/METREF/2020/06/example_processed.nc
-cdo -s infon data/interim/METREF/2020/06/example_processed.nc
-~~~
+```bash
+f=$(ls data/raw/METREF/2015/06/*.nc | head -n1); echo "$f"
+cdo -s showname      "$f"   # variable names → MAIN_VARIABLE and QA_VARIABLES
+cdo -s sinfo         "$f"   # grid: lon/lat range and step, data type
+cdo -s showtimestamp "$f"   # time stamp
+cdo -s infon         "$f"   # min / mean / max per variable and number of missing values
+```
 
-## 6. Check for missing values
+::: {.callout-tip appearance="simple"}
+## Check yourself
+- `showname` lists the product variable (e.g. `METREF`) **and** a QA variable (e.g. `quality_flag`).
+- `sinfo` shows a regular `lonlat` grid (for MSG-disk products e.g. `-80 to 80 by 0.05`).
+- `infon` shows plausible values for the product (METREF: mm/day, roughly 0–15).
+:::
 
-Compare raw and processed summaries and map the output. An all-NaN or mostly missing result can be caused by:
+## 3 · Define the region {#region}
 
-- crop bounds and target-grid bounds not overlapping;
-- AOI partly outside raw source coverage (output is limited to its overlap);
-- wrong variable, coordinate names or coordinate direction;
-- fill values not decoded as missing;
-- a source mask or retrieval-quality exclusion;
-- invalid or unsupported remapping setup.
+The region can come from the YAML bounds **or** from a vector file. Either way the script snaps it
+outward to whole raw-grid cells and writes the target grid to `code/preprocess_utils/grid.txt`.
 
-Some missing values are expected. Set an acceptable valid-coverage threshold for the application, and check coverage spatially as well as numerically. A file existing or opening is not enough to establish fitness for use.
+::: {.panel-tabset}
 
-## 7. Method caveats
+## Bounding box in YAML
 
-- Regridding does not add source detail. A finer target grid interpolates the source; it does not make the measurement higher resolution.
-- Bilinear interpolation smooths continuous fields; nearest-neighbour preserves category labels but may look blocky.
-- Degree-based cell size changes with latitude.
-- Preserve product QA flags and document any masks, unit conversion and temporal aggregation.
-- Record the input product/version, AOI bounds, output grid, resolution, remapping method and software version.
+Edit `code/preprocess_utils/config_resolution.yaml`:
 
-## Next page
+```{.yaml filename="code/preprocess_utils/config_resolution.yaml"}
+domain:                   # <1>
+  lon_min: -17.275
+  lon_max: -11.225
+  lat_min: 12.225
+  lat_max: 16.775
+processing:
+  parallel: 4             # <2>
+  remap_method: bilinear  # <3>
+  buffer: 0.2             # <4>
+```
+1. Degrees (EPSG:4326). Snapped outward to raw cell edges on each run.
+2. Files processed at the same time. **This is the only place to set parallelism** for preprocessing — an environment variable `PARALLEL=` is ignored.
+3. `bilinear` for continuous fields, `nearest` for categorical ones. Applies to all non-QA variables; QA variables always use nearest neighbour.
+4. Extra degrees cropped around the grid, so bilinear interpolation has real neighbours at the AOI edge.
 
-Continue to [Build and inspect the Zarr cube](03-zarr-cubes.qmd).
+## Vector AOI file
+
+Pass any GeoPandas-readable file (`.shp`, `.gpkg`, `.geojson`, `.parquet`) as the **4th argument**
+(or `AOI_FILE=`). Its total bounds become the domain:
+
+```bash
+MAIN_VARIABLE=METREF uv run bash code/02_preprocess_cdo.sh \
+  0.05 data/raw/METREF data/interim/METREF data/aoi/spatial_units.geosjon
+```
+
+If the file has no CRS, add `AOI_CRS=EPSG:xxxx`. The snapped rectangle is saved as
+`data/interim/METREF/aoi_aligned.gpkg` (change with `AOI_OUTPUT=`).
+
+:::
+
+::: {.callout-important}
+## The script updates the YAML in place
+Each run rewrites the `domain:` and `grid:` sections of `config_resolution.yaml` with the **snapped**
+bounds (and with the AOI bounds when you pass a vector file). Commit or copy the file if you want to
+keep the previous region; restore the repository default with
+`git checkout code/preprocess_utils/config_resolution.yaml code/preprocess_utils/grid.txt`.
+:::
+
+## 4 · Crop and remap {#preprocess}
+
+### Run it
+
+```bash
+export MAIN_VARIABLE=METREF                 # <1>
+export QA_VARIABLES=quality_flag            # <2>
+uv run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF   # <3>
+```
+1. **Required.** Must match a name from `cdo showname`; the script stops and lists the available names otherwise.
+2. Comma-separated QA/flag variables, remapped with nearest neighbour so flag codes are never averaged. Default `quality_flag`; every name must exist in the file.
+3. `uv run` makes `python3` inside the script use the project environment (YAML + grid helper). Arguments: **resolution label** (written to the log — the target grid always follows the raw grid's cell size, 0.05° for MSG, so no false detail is created), **input folder** (searched recursively for `*.nc`) and **output folder** (use one folder **per product** so the cube builder never mixes products).
+
+**All options**
+
+::: {.flag-table}
+| Setting | How to set it | Default |
+|---|---|---|
+| resolution label | 1st argument | YAML `processing.resolution` |
+| input folder | 2nd argument | `data/raw` |
+| output folder | 3rd argument | `data/interim` |
+| AOI vector file | 4th argument or `AOI_FILE=` | none → YAML `domain` |
+| `MAIN_VARIABLE` | environment variable | — (required) |
+| `QA_VARIABLES` | environment variable | `quality_flag` |
+| `AOI_CRS`, `AOI_OUTPUT` | environment variables | file CRS, `<output>/aoi_aligned.gpkg` |
+| `CONFIG_FILE` | environment variable | `code/preprocess_utils/config_resolution.yaml` |
+| parallel files, remap method, buffer | YAML `processing:` | `4`, `bilinear`, `0.2` |
+:::
+
+### Example output
+
+```text
+Raw resolution: dx=0.05°, dy=0.05°  (121 x 91 cells)
+Aligned bounds: lon -17.275 to -11.225, lat 12.225 to 16.775
+Saved updated YAML: …/code/preprocess_utils/config_resolution.yaml
+Saved CDO target grid: …/code/preprocess_utils/grid.txt
+cdo    remapbil: Bilinear weights from lonlat (129x97) to lonlat (121x91) grid, with source mask (…)
+cdo    remapnn: Nearest neighbor weights from lonlat (129x97) to lonlat (121x91) grid
+…
+Done. Main variables: bilinear; QA variables (quality_flag): nearest-neighbour. Log: data/interim/METREF/cdo.log
+```
+
+::: {.callout-note collapse="true"}
+## Walk through one file's journey (`process_cdo`)
+```{.bash filename="code/02_preprocess_cdo.sh (per file)"}
+cdo -sellonlatbox,$CLIP_WEST,$CLIP_EAST,$CLIP_SOUTH,$CLIP_NORTH  in.nc  clip.nc  # <1>
+cdo -delname,$QA_CSV  clip.nc  main.nc                                        # <2>
+cdo -selname,$QA_CSV  clip.nc  qa.nc
+cdo -remapbil,grid.txt  main.nc  main_remap.nc                                 # <3>
+cdo -remapnn,grid.txt   qa.nc    qa_remap.nc                                   # <4>
+cdo merge main_remap.nc qa_remap.nc merged.nc                                  # <5>
+cdo -s sinfo merged.nc && mv merged.nc out.nc.part && mv out.nc.part out_processed.nc  # <6>
+```
+1. Crop to the target grid **plus the buffer**, so interpolation at the edge has neighbours.
+2. Split continuous variables from QA flags.
+3. Continuous variables: bilinear (or nearest, from the YAML).
+4. Flags: always nearest neighbour — a flag value is a code, not a number to average.
+5. Put them back together.
+6. Only a readable result is renamed into place; temp files are removed on any failure. Existing valid outputs are skipped, so re-running resumes.
+:::
+
+## 5 · Check the output {#check}
+
+```bash
+ls data/interim/METREF/2015/06 | head -n3
+tail -n 3 data/interim/METREF/cdo.log           # status=processed / failed per file
+grep -c "status=processed" data/interim/METREF/cdo.log
+f=$(ls data/interim/METREF/2015/06/*_processed.nc | head -n1)
+cdo -s sinfo "$f"                                # 121x91 lonlat grid, METREF + quality_flag
+cdo -s infon "$f"                                # compare min/mean/max with the raw file
+```
+
+::: {.callout-tip appearance="simple"}
+## Check yourself
+- One `*_processed.nc` per raw file, and no `status=failed` lines in `cdo.log`.
+- The grid matches `code/preprocess_utils/grid.txt`.
+- Value ranges are close to the raw file's; the number of missing values is plausible (ocean, masks).
+:::
+
+### When output is mostly missing
+
+| Likely cause | Check |
+|---|---|
+| AOI outside product coverage | Compare `sinfo` ranges of raw file and `grid.txt` |
+| Wrong variable | `cdo showname` vs `MAIN_VARIABLE` |
+| Fill values not decoded | `cdo infon` on the raw file: are huge negative values counted as data? |
+| Real masks (sea, clouds, retrieval QA) | Inspect `quality_flag` and the product user manual |
+| `ModuleNotFoundError: yaml` / `xarray` | Run the script via `uv run bash …` or `source .venv/bin/activate` |
+| `QA variable 'quality_flag' not found` | Set `QA_VARIABLES` to the flag name your product uses (see `showname`) |
+
+## Method notes
+
+- Regridding never adds detail: a finer target grid only interpolates the source.
+- Bilinear smooths continuous fields (extremes can shrink); nearest keeps categories but looks blocky.
+- Degree cells shrink with latitude (0.05° ≈ 5.5 km at the equator, ≈ 5.3 km at 15° N in longitude).
+- Record product version, AOI, grid, remap method and software versions with your results.
+
+**Next:** [C · Build the Zarr cube →](03-zarr-cubes.qmd)

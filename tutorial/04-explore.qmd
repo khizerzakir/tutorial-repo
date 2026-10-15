@@ -1,0 +1,131 @@
+---
+title: "D · Explore the cube"
+subtitle: "Validate every stage, then map and analyse with plot_utils"
+---
+
+::: {.pipeline}
+[A · Setup]{.stage} [B · Download & preprocess]{.stage} [C · Zarr cube]{.stage} [D · Explore]{.here}
+:::
+
+Three notebooks in `code/notebooks/` take you from "did it work?" to an application. Run them in order.
+
+## Open the notebooks
+
+::: {.panel-tabset group="os"}
+
+## VS Code (WSL or local)
+
+From the repository root, in the WSL/terminal window: `code .` → open `code/notebooks/1_read_validate_data.ipynb`
+→ **Select Kernel** → **Python Environments** → `.venv/bin/python` → **Run All**.
+
+## JupyterLab
+
+```bash
+uv run --extra notebook jupyter lab code/notebooks
+```
+
+On WSL, open the `http://localhost:8888/lab?token=…` link printed in the terminal in your Windows browser.
+
+:::
+
+Each notebook starts with `PRODUCT = "METREF"` — change it if you processed another product. The repository
+root is found automatically, so notebooks work whatever folder Jupyter starts in.
+
+## 1 · `1_read_validate_data.ipynb` — is the data right? {#validate}
+
+| Step | What it does | Why it is fast |
+|---|---|---|
+| Packed view | Shows on-disk dtype, `scale_factor`, `_FillValue` of one raw file | Reads metadata only |
+| Raw (AOI window) | Opens all raw files, keeps only the AOI | Lazy; the large disk is never loaded |
+| Interim + Zarr | Opens all interim files and the cube | Consolidated metadata, lazy arrays |
+| Summary table | Valid %, min, mean, max per stage + coverage per date | **One** `dask.compute` → each file read once |
+| Cross-checks | Interim == Zarr (exact); interim − raw (remap effect) | Vectorised over the whole cube |
+
+::: {.callout-tip appearance="simple"}
+## You are done when
+`Interim == Zarr … True`, valid % of raw-AOI and interim are similar, and the coverage-per-date line has no
+unexplained gaps.
+:::
+
+## 2 · `2_plot_data.ipynb` — what changed at each stage? {#plot}
+
+- The full raw disk, strided to ≈ 800 px wide, with the AOI drawn in red.
+- Raw-AOI, interim and cube for the **same day on one colour scale**, plus an *interim − raw* panel showing
+  what remapping did.
+- A missing-data footprint: the fraction of days with data for every cell.
+
+![Raw METREF disk (EPSG:4326) — the starting point before cropping](../slides/img/plots/metref.png){width="45%" fig-align="center"}
+
+## 3 · `3_application.ipynb` — climate and mobility {#application}
+
+All figures come from **`code/plot_utils/adaptive_cube_plot.py`**:
+
+```python
+import sys; sys.path.insert(0, "code/plot_utils")
+from adaptive_cube_plot import plot_time_slices, plot_spatial_timeseries, plot_climate_mobility_period
+
+ds = xr.open_zarr("data/zarr/metref_cube.zarr")
+
+plot_time_slices(ds, var="METREF", time_index=[0, 14, 29],          # <1>
+                 boundaries=units, robust=True, ncols=3)
+
+plot_spatial_timeseries(ds, var="METREF",                             # <2>
+                        points={"Dakar": (-17.19, 14.75)},
+                        areas={"Whole cube": (-17.3, -11.2, 12.2, 16.8)},
+                        show_area_spread=True)
+
+plot_climate_mobility_period(ds, mobility=mob, spatial_units=units,   # <3>
+                             var="METREF", period="2015-06-01", period_col="date",
+                             mobility_metric="rate_depart", spatial_id_col="norm_id")
+```
+1. Panel maps on a regional Lambert Conformal projection with coastlines, borders, zone outlines and one shared colour bar.
+2. Nearest-cell point series and area means with ±1 SD shading.
+3. Half-month climate mean next to departures aggregated by origin zone.
+
+What the notebook walks through:
+
+::: {.steps}
+::: {.step}
+**Load the cube and the 151 zones** (`data/aoi/spatial_units_with_lat_lon.parquet`, WKB geometry → GeoDataFrame).
+:::
+::: {.step}
+**Daily maps** for the first, middle and last day with zone boundaries.
+:::
+::: {.step}
+**Half-month cumulative ETo** (days 1–15 / 16–end, matching the mobility periods) — the aggregated
+`DataArray` goes straight into `plot_time_slices`.
+:::
+::: {.step}
+**Time series** at three zone centroids and for two areas.
+:::
+::: {.step}
+**Zonal statistics without extra dependencies:** every grid cell is assigned to a zone once
+(`shapely.STRtree` point-in-polygon), then one `groupby` reduces all time steps.
+:::
+::: {.step}
+**Climate ↔ mobility.** Only one half-month of the ~17 M-row mobility table is read, using Parquet
+`filters=` (predicate push-down), then plotted side by side with the climate map.
+:::
+::: {.step}
+**Co-occurrence classes** per zone: high/low ETo × high/low departures — a descriptive map, not a causal claim.
+:::
+:::
+
+::: {.callout-important}
+## Match the periods
+The mobility data cover **Feb 2013 – Dec 2015**. For the climate–mobility steps, build a cube inside that window,
+e.g. `bash code/01_download_sample.sh 2015 06 METREF` → preprocess → build. With another period the
+maps and time series still run and the notebook tells you the mobility part was skipped.
+:::
+
+::: {.callout-note appearance="simple"}
+The first Cartopy map downloads Natural Earth coastlines and borders (internet needed once, then cached).
+:::
+
+## Where next?
+
+- Add a second product (e.g. MDFVC) into its own cube and compare zonal series.
+- Re-chunk for your dominant question with `--profile timeseries` and time it.
+- Apply product QA flags before aggregating (`quality_flag` is already in the cube).
+
+[← Back to the overview](../index.qmd) · [Command builder](reference.qmd) · [Slides](../slides/presentation.qmd)

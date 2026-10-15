@@ -1,13 +1,89 @@
 ---
-title: "Hands-on Practical Tutorial"
+title: "Climate Data Cube Workshop"
+subtitle: "From raw EUMETSAT LSA SAF files to an analysis-ready Zarr cube — hands-on"
+toc: false
 ---
 
-**Welcome!** If you are here, you are likely participating in the Climate Data Cube Workshop as part of the [IEEE Autumn School 2026](https://it-u.at/en/events/earth-observation-and-geoai-for-climate-resilient-urban-systems-grss-school/) Training.
+**Welcome!** This is the hands-on companion to the Climate Data Cube session at the
+[IEEE GRSS Autumn School 2026](https://it-u.at/en/events/earth-observation-and-geoai-for-climate-resilient-urban-systems-grss-school/).
+You will download one month of a satellite climate product, crop it to a region, and turn it into a
+compressed, chunked **Zarr v3 cube** that opens in a second and plots in a few lines of Python.
 
- This is the hands-on tutorial is designed to introduce participants to the concepts and tools of climate data analysis, with a focus on using satellite-derived climate data from EUMETSAT LSA SAF. The tutorial will guide you through the process of setting up your environment, running example code, and analyzing the results.
+```{mermaid}
+%%| fig-align: center
+flowchart LR
+  A["☁️ LSA SAF<br/>Data Service"] -->|"01_download_sample.sh"| B[("data/raw<br/>NetCDF disk")]
+  B -->|"02_preprocess_cdo.sh<br/>crop · remap · QA"| C[("data/interim<br/>regional NetCDF")]
+  C -->|"03_build_zarr_cube.py<br/>chunk · shard · compress"| D[("data/zarr<br/>cube.zarr")]
+  D -->|"notebooks + plot_utils"| E["🗺️ maps<br/>📈 time series"]
+  classDef s fill:#0e66a9,stroke:#3ddbd9,color:#fff
+  classDef d fill:#ffb454,stroke:#d9780f,color:#10253a
+  class A,E s
+  class B,C,D d
+```
 
-> **Important links for this workshop**
+## Choose your route
 
-- 📖 **Tutorial**: start with [Setup](tutorial/01-setup.qmd)
-- 🎤 **Slides**: [open the presentation](slides/presentation.qmd)
-- 💻 **Code**: everything you need to run is in the [`code/`](https://github.com/khizerzakir/tutorial-repo/tree/main/code) folder
+::: {.route-grid}
+
+::: {.route}
+[≈ 20 min]{.badge-time}
+
+### A · [Setup](tutorial/01-setup.qmd)
+Open WSL / a terminal, clone the repository, install CDO and the Python environment, add LSA SAF credentials.
+:::
+
+::: {.route}
+[≈ 15 min]{.badge-time}
+
+### B · [Download & preprocess](tutorial/02-run-code.qmd)
+Download one month, inspect it, crop and remap to your AOI with CDO.
+:::
+
+::: {.route}
+[≈ 10 min]{.badge-time}
+
+### C · [Build the Zarr cube](tutorial/03-zarr-cubes.qmd)
+Choose a chunk profile, build, validate and append to the cube.
+:::
+
+::: {.route}
+[≈ 20 min]{.badge-time}
+
+### D · [Explore](tutorial/04-explore.qmd)
+Validate every stage, plot maps and time series, and run the climate–mobility application.
+:::
+
+:::
+
+## Already set up? The whole pipeline in five commands
+
+::: {.terminal}
+```bash
+# 1. repository root (inside the Ubuntu / WSL window on Windows)
+cd ~/projects/tutorial-repo
+# 2. one month of raw NetCDF
+bash code/01_download_sample.sh 2015 06 METREF
+# 3. crop + remap to the AOI
+MAIN_VARIABLE=METREF uv run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF
+# 4. build the Zarr v3 cube
+uv run python code/03_build_zarr_cube.py --input data/interim/METREF
+# 5. explore (or open code/notebooks in VS Code)
+uv run --extra notebook jupyter lab code/notebooks
+```
+:::
+
+Not sure about a flag? The [**command builder**](tutorial/reference.qmd) generates these commands
+for your product, month, AOI and machine.
+
+::: {.callout-tip appearance="simple"}
+## Workshop materials
+- 🎤 **Slides:** [open the presentation](slides/presentation.qmd) (press **F** for full screen, **S** for speaker view, **T** for light/dark)
+- 💻 **Code:** [`code/`](https://github.com/khizerzakir/tutorial-repo/tree/main/code) on GitHub
+- 📓 **Notebooks:** `code/notebooks/1_read_validate_data.ipynb`, `2_plot_data.ipynb`, `3_application.ipynb`
+:::
+
+::: {.callout-note appearance="simple"}
+This is a **teaching pipeline**, not an operational climate service. Start with one product, one month and
+a small area, validate the result, then scale.
+:::

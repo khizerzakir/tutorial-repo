@@ -1,10 +1,17 @@
 project:
   type: website
   output-dir: docs
+  render:
+    - index.qmd
+    - tutorial/*.qmd
+    - slides/presentation.qmd
 
 website:
   title: "Climate Data Cube Workshop"
   page-navigation: true
+  reader-mode: true
+  repo-url: https://github.com/khizerzakir/tutorial-repo
+  repo-actions: [edit, issue]
   navbar:
     background: primary
     search: true
@@ -16,6 +23,9 @@ website:
           - tutorial/01-setup.qmd
           - tutorial/02-run-code.qmd
           - tutorial/03-zarr-cubes.qmd
+          - tutorial/04-explore.qmd
+      - href: tutorial/reference.qmd
+        text: Command builder
       - href: slides/presentation.qmd
         text: Slides
     right:
@@ -26,18 +36,30 @@ website:
       style: floating
       contents:
         - index.qmd
-        - tutorial/01-setup.qmd
-        - tutorial/02-run-code.qmd
-        - tutorial/03-zarr-cubes.qmd
-  page-footer: "© 2026 Khizer Zakir. Prepared for the Climate Data Cube Workshop."
+        - section: "Walkthrough"
+          contents:
+            - tutorial/01-setup.qmd
+            - tutorial/02-run-code.qmd
+            - tutorial/03-zarr-cubes.qmd
+            - tutorial/04-explore.qmd
+        - tutorial/reference.qmd
+  page-footer:
+    left: "© 2026 Khizer Zakir · Climate Data Cube Workshop"
+    right: "LSA SAF data © EUMETSAT, CC BY 4.0"
 
 format:
   html:
     theme:
-      light: cosmo
-      dark: darkly
+      light: [cosmo, tutorial/tutorial.scss]
+      dark: [darkly, tutorial/tutorial.scss]
     toc: true
+    toc-depth: 3
     code-copy: true
+    code-overflow: scroll
+    code-annotations: below
+    code-tools: false
+    smooth-scroll: true
+    anchor-sections: true
 
 execute:
   freeze: auto

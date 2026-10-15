@@ -1,0 +1,78 @@
+---
+title: "Command builder & reference"
+subtitle: "Fill in the form, copy the commands, paste them into your WSL / Linux terminal"
+toc: true
+---
+
+The commands update as you type. Everything runs from the repository root.
+
+## Your run
+
+{{< include _command-builder.qmd >}}
+
+::: {.callout-warning appearance="simple"}
+Credentials are **not** part of these commands — they stay in `code/.env` (see [Setup §6](01-setup.qmd#credentials)).
+:::
+
+## All script options
+
+### `code/01_download_sample.sh`
+
+```text
+bash code/01_download_sample.sh [YYYY] [MM] [PRODUCT] [URL]
+```
+
+| Option | Set via | Default |
+|---|---|---|
+| year, month | arguments 1–2 | `SAMPLE_YEAR`, `SAMPLE_MONTH` in `.env` |
+| product folder name | argument 3 | `VARIABLE_NAME` in `.env` → `METREF` |
+| product URL | argument 4 | `URL` in `.env` |
+| parallel downloads | `JOBS=` | `4` |
+| raw folder | `RAW_DIR=` | `data/raw` |
+| settings file | `ENV_FILE=` | `./code/.env` |
+
+### `code/02_preprocess_cdo.sh`
+
+```text
+MAIN_VARIABLE=<name> [QA_VARIABLES=a,b] uv run bash code/02_preprocess_cdo.sh [RES] [INPUT] [OUTPUT] [AOI_FILE]
+```
+
+| Option | Set via | Default |
+|---|---|---|
+| main variable (validated) | `MAIN_VARIABLE=` | **required** |
+| QA variables (nearest neighbour) | `QA_VARIABLES=` | `quality_flag` (each must exist) |
+| resolution label (log only) | argument 1 | YAML `processing.resolution` |
+| input / output folders | arguments 2–3 | `data/raw`, `data/interim` |
+| AOI vector file | argument 4 or `AOI_FILE=` | YAML `domain` |
+| AOI CRS / snapped AOI output | `AOI_CRS=`, `AOI_OUTPUT=` | file CRS, `<output>/aoi_aligned.gpkg` |
+| settings file | `CONFIG_FILE=` | `code/preprocess_utils/config_resolution.yaml` |
+| parallel files, remap method, crop buffer | YAML `processing.parallel`, `.remap_method`, `.buffer` | `4`, `bilinear`, `0.2` |
+
+### `code/03_build_zarr_cube.py`
+
+```bash
+uv run python code/03_build_zarr_cube.py --help
+```
+
+| Flag | Default |
+|---|---|
+| `--input DIR` / `--pattern GLOB` | `data/interim` / `*_processed.nc` |
+| `--output PATH` | `data/zarr/<variable>_cube.zarr` |
+| `--variables V …` | all data variables |
+| `--profile map\|balanced\|timeseries` | `map` |
+| `--chunks time=…,lat=…,lon=…` / `--shards …` | from profile |
+| `--clevel 1-9` | `5` |
+| `--float32`, `--append`, `--no-consolidate`, `--dry-run` | off |
+| `--workers N` | all cores |
+
+## WSL quick reference
+
+| Task | Command |
+|---|---|
+| Open Ubuntu | Start menu → **Ubuntu**, or `wsl` in PowerShell |
+| Go to the project | `cd ~/projects/tutorial-repo` |
+| Open in VS Code | `code .` |
+| Open folder in Explorer | `explorer.exe .` |
+| Restart WSL (if stuck) | PowerShell: `wsl --shutdown`, then reopen Ubuntu |
+| Disk usage of data | `du -sh data/*` |
+| Free space from raw files after building | `rm -rf data/raw/<PRODUCT>/<YYYY>/<MM>` |

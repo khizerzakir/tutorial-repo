@@ -1,0 +1,92 @@
+```{=html}
+<!-- Chunk explorer: plain JS, no external libraries (works offline). Mirrors plan_chunks() in code/03_build_zarr_cube.py -->
+<div class="chunk-explorer" data-ce>
+  <style>
+    .chunk-explorer{--ce-a:#0a7f8f;--ce-w:#d9780f;font-size:.92em;margin:1rem 0}
+    .chunk-explorer .ce-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.4rem 1.2rem;margin-bottom:.6rem}
+    .chunk-explorer label{display:flex;flex-direction:column;font-size:.85em;opacity:.9}
+    .chunk-explorer input[type=range]{width:100%;accent-color:var(--ce-a)}
+    .chunk-explorer .ce-prof{display:flex;gap:.4rem;flex-wrap:wrap;margin:.2rem 0 .6rem}
+    .chunk-explorer .ce-prof button{border:1px solid var(--ce-a);background:transparent;color:inherit;border-radius:999px;padding:.15rem .8rem;cursor:pointer;font:inherit}
+    .chunk-explorer .ce-prof button.on{background:var(--ce-a);color:#fff}
+    .chunk-explorer .ce-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;margin:.4rem 0 .8rem}
+    .chunk-explorer .ce-card{border:1px solid color-mix(in srgb,var(--ce-a) 40%,transparent);border-left:5px solid var(--ce-w);border-radius:10px;padding:.45rem .75rem}
+    .chunk-explorer .ce-card small{display:block;opacity:.72;font-size:.78em}
+    .chunk-explorer .ce-card b{display:block;font-size:1.15em;line-height:1.3}
+    .chunk-explorer svg{width:100%;max-width:720px;height:auto;display:block}
+    .chunk-explorer svg rect{transition:all .35s ease}
+    .chunk-explorer .ce-cmd{font-family:var(--bs-font-monospace,monospace);font-size:.82em;padding:.35rem .6rem;border-radius:8px;background:color-mix(in srgb,var(--ce-a) 10%,transparent);overflow-x:auto;white-space:nowrap}
+  </style>
+  <div class="ce-prof" role="group" aria-label="profile">
+    <span style="align-self:center;opacity:.8">--profile</span>
+    <button data-p="map" class="on">map</button><button data-p="balanced">balanced</button><button data-p="timeseries">timeseries</button>
+  </div>
+  <div class="ce-controls">
+    <label>time steps: <output data-o="t">365</output><input data-i="t" type="range" min="1" max="3650" value="365"></label>
+    <label>lat cells: <output data-o="y">300</output><input data-i="y" type="range" min="10" max="2000" step="10" value="300"></label>
+    <label>lon cells: <output data-o="x">400</output><input data-i="x" type="range" min="10" max="2000" step="10" value="400"></label>
+  </div>
+  <div class="ce-cards"></div>
+  <svg viewBox="0 0 720 250" aria-label="chunk layout"></svg>
+  <div class="ce-cmd"></div>
+</div>
+<script>
+(() => {
+  const P = {
+    map:        {inner: {time: 1,  lat: 256, lon: 256}, shard: {time: 10,  lat: 512, lon: 512}},
+    balanced:   {inner: {time: 8,  lat: 128, lon: 128}, shard: {time: 32,  lat: 512, lon: 512}},
+    timeseries: {inner: {time: 64, lat: 32,  lon: 32},  shard: {time: 256, lat: 256, lon: 256}}
+  };
+  const NS = "http://www.w3.org/2000/svg";
+  document.querySelectorAll("[data-ce]").forEach(root => {
+    if (root.dataset.ready) return; root.dataset.ready = 1;
+    let prof = "map";
+    const $ = s => root.querySelector(s), svg = $("svg");
+    const rect = (x, y, w, h, a) => { const r = document.createElementNS(NS, "rect");
+      Object.entries({x, y, width: Math.max(w, .5), height: Math.max(h, .5), ...a}).forEach(([k, v]) => r.setAttribute(k, v)); return r; };
+    const text = (x, y, s, a = {}) => { const t = document.createElementNS(NS, "text");
+      Object.entries({x, y, fill: "currentColor", "font-size": 12, ...a}).forEach(([k, v]) => t.setAttribute(k, v)); t.textContent = s; return t; };
+    function plan(size) {
+      const p = P[prof], inner = {}, shard = {};
+      for (const d of ["time", "lat", "lon"]) {
+        const c = Math.max(1, Math.min(p.inner[d], size[d])), n = Math.ceil(size[d] / c);
+        const k = Math.max(1, Math.min(Math.round(p.shard[d] / c), n));
+        inner[d] = c; shard[d] = c * k;
+      }
+      return {inner, shard};
+    }
+    function draw() {
+      const size = {time: +$("[data-i=t]").value, lat: +$("[data-i=y]").value, lon: +$("[data-i=x]").value};
+      $("[data-o=t]").value = size.time; $("[data-o=y]").value = size.lat; $("[data-o=x]").value = size.lon;
+      const {inner, shard} = plan(size), n = d => Math.ceil(size[d] / inner[d]);
+      const kb = inner.time * inner.lat * inner.lon * 4 / 1024;
+      const mapC = n("lat") * n("lon"), tsC = n("time");
+      const shards = ["time", "lat", "lon"].reduce((a, d) => a * Math.ceil(size[d] / shard[d]), 1);
+      const card = (t, v, s) => `<div class="ce-card"><small>${t}</small><b>${v}</b><small>${s}</small></div>`;
+      $(".ce-cards").innerHTML =
+        card("Inner chunk (t × lat × lon)", `${inner.time} × ${inner.lat} × ${inner.lon}`, `${kb < 1024 ? kb.toFixed(0) + " KB" : (kb / 1024).toFixed(1) + " MB"} float32`) +
+        card("Shard objects / variable", shards, `shard ${shard.time} × ${shard.lat} × ${shard.lon}`) +
+        card("🗺️ Map of one date reads", `${mapC} chunk${mapC > 1 ? "s" : ""}`, `${(mapC * kb / 1024).toFixed(2)} MB decompressed`) +
+        card("📈 Series at one pixel reads", `${tsC} chunk${tsC > 1 ? "s" : ""}`, `${(tsC * kb / 1024).toFixed(2)} MB decompressed`);
+      $(".ce-cmd").textContent = `uv run python code/03_build_zarr_cube.py --input data/interim/METREF --profile ${prof}`;
+      svg.replaceChildren();
+      const gx = n("lon"), gy = n("lat"), cw = Math.min(300 / gx, 190 / gy);
+      const sx = shard.lon / inner.lon, sy = shard.lat / inner.lat;
+      svg.append(text(10, 18, "Map of one date: teal = chunks read · orange = shard files"));
+      for (let j = 0; j < gy; j++) for (let i = 0; i < gx; i++)
+        svg.append(rect(10 + i * cw, 32 + j * cw, cw - (cw > 4 ? 1.2 : 0), cw - (cw > 4 ? 1.2 : 0), {fill: "#0a7f8f", opacity: .8}));
+      for (let j = 0; j < gy; j += sy) for (let i = 0; i < gx; i += sx)
+        svg.append(rect(10 + i * cw, 32 + j * cw, Math.min(sx, gx - i) * cw - 1, Math.min(sy, gy - j) * cw - 1, {fill: "none", stroke: "#d9780f", "stroke-width": 2.5}));
+      const nT = n("time"), shown = Math.min(nT, 240), bw = 330 / shown;
+      svg.append(text(370, 18, "Series at one pixel: one bar per chunk read"));
+      for (let k = 0; k < shown; k++) svg.append(rect(370 + k * bw, 100, bw - (bw > 3 ? 1 : 0), 34, {fill: "#d9780f", opacity: .85}));
+      svg.append(text(370, 156, `${nT} chunk(s) along time${nT > shown ? ` (first ${shown} drawn)` : ""}`, {opacity: .75}));
+    }
+    root.querySelectorAll("[data-i]").forEach(i => i.addEventListener("input", draw));
+    root.querySelectorAll("[data-p]").forEach(b => b.addEventListener("click", () => {
+      prof = b.dataset.p; root.querySelectorAll("[data-p]").forEach(x => x.classList.toggle("on", x === b)); draw(); }));
+    draw();
+  });
+})();
+</script>
+```

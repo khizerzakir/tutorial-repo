@@ -1,151 +1,259 @@
 ---
-title: "A. Setup"
+title: "A · Setup"
+subtitle: "Terminal, repository, tools, Python environment and credentials"
 ---
 
-This setup guide will help you install the necessary tools and dependencies to follow and run this workshop code on your local machine unless you are using a cloud-based environment. The workshop code is designed to run in a Linux environment, so if you are using Windows, we recommend installing **Windows Subsystem for Linux (WSL2)**. If you are using macOS or Linux, you can skip the WSL installation and use your native terminal.
+::: {.pipeline}
+[A · Setup]{.here} [B · Download & preprocess]{.stage} [C · Zarr cube]{.stage} [D · Explore]{.stage}
+:::
 
+The pipeline uses Bash, CDO and Python, so it runs in a **Linux shell**. On Windows that shell is
+**WSL2 (Ubuntu)**; on macOS and Linux it is your normal terminal. Pick your system once — the tabs on
+this page stay in sync.
 
-## 1. Install WSL2 and Ubuntu
+::: {.callout-important appearance="simple"}
+## Before you start
+- ~5 GB free disk (one month of raw METREF disk files is ~1–2 GB).
+- An **LSA SAF account** (free) — registration can take a while to be activated, so do step 6 first if you have not registered yet.
+- Admin rights on Windows for installing WSL (once).
+:::
 
-1. Open the Windows **Start** menu, search for **PowerShell**, and choose **Run as administrator**.
-2. Run the following command **in Windows PowerShell**:
+## 1 · Get a Linux terminal {#terminal}
+
+::: {.panel-tabset group="os"}
+
+## Windows (WSL2)
+
+::: {.steps}
+::: {.step}
+**Install WSL2 + Ubuntu (once).** Start menu → type **PowerShell** → right-click → **Run as administrator**:
 
 ```powershell
 wsl --install -d Ubuntu
 ```
 
-3. Restart Windows if prompted.
-4. Launch **Ubuntu** from the Start menu and wait for first-time initialization.
-5. Create your Ubuntu username and password when prompted. Password characters are not displayed while typing.
+Restart Windows when asked. If the command prints help text instead of installing, run
+`wsl --list --online` and then `wsl --install -d Ubuntu` again.
+:::
 
-Check installation in **Windows PowerShell**:
+::: {.step}
+**First launch.** Open **Ubuntu** from the Start menu and wait for the initialisation. Choose a Linux
+username and password (the password is not echoed while you type — that is normal).
+:::
+
+::: {.step}
+**Check it is WSL 2.** In PowerShell:
 
 ```powershell
-wsl --list --verbose
+wsl --list --verbose          # Ubuntu ... VERSION 2
+wsl --set-version Ubuntu 2    # only if it shows VERSION 1
 ```
+:::
 
-You should see `Ubuntu` with `VERSION` equal to `2`. If Ubuntu is version 1, use:
+::: {.step}
+**Open WSL every time you work on the tutorial** — any of these gives you the same Ubuntu shell:
 
-```powershell
-wsl --set-version Ubuntu 2
-```
+- Start menu → **Ubuntu**, or
+- **Windows Terminal** → ⌄ dropdown → **Ubuntu**, or
+- type `wsl` in PowerShell / `cmd`, then `cd ~`.
 
-If `wsl --install` displays help instead of installing, try `wsl --list --online`, then `wsl --install -d Ubuntu`. If installation is blocked by policy or virtualization, contact your IT administrator. Do not attempt to bypass institutional restrictions.
+Your prompt now looks like `yourname@PC:~$`. Everything below runs **in this window**.
+:::
+:::
 
-**Official guide:** <https://learn.microsoft.com/en-us/windows/wsl/install>
+::: {.callout-warning}
+## Work inside the Linux file system
+Keep the project under `~/` (e.g. `~/projects/tutorial-repo`), **not** under `/mnt/c/...`.
+Windows drives mounted in WSL are 5–10× slower for thousands of small files (raw NetCDF, Zarr chunks).
+To see the files from Windows, run `explorer.exe .` inside the folder or open
+`\\wsl$\Ubuntu\home\<you>\projects` in File Explorer.
+:::
 
-## 2. Install Visual Studio Code
+Official guide: <https://learn.microsoft.com/en-us/windows/wsl/install>
 
-If you do not have **VS Code** installed, follow these steps:
+## macOS
 
-1. Download VS Code for Windows: <https://code.visualstudio.com/download>.
-2. Install VS Code **on Windows** (not inside Ubuntu).
-3. Open VS Code → **Extensions** (`Ctrl+Shift+X`). Install:
-   - **WSL** (Microsoft)
-   - **Python** (Microsoft)
-   - **Jupyter** (Microsoft)
+Open **Terminal** (⌘ + Space → "Terminal"). Install [Homebrew](https://brew.sh) if you do not have it.
 
-**Official WSL + VS Code guide:** <https://code.visualstudio.com/docs/remote/wsl>
+## Linux
 
-## 3. Get the repository
+Open your terminal (Ubuntu/Debian: `Ctrl + Alt + T`). Commands below use `apt`; use your distribution's
+package manager otherwise.
 
-On Windows, open WSL2,
-On Linux or macOS, use a terminal and install Git, wget, CDO and Python 3.11+ using your operating system's package manager, 
+:::
 
-Then run:
+## 2 · Install system tools {#tools}
 
-~~~bash
+::: {.panel-tabset group="os"}
+
+## Windows (WSL2)
+
+In the **Ubuntu** window:
+
+```bash
 sudo apt update
-sudo apt install -y git wget curl ca-certificates cdo python3 python3-venv python3-pip
-~~~
+sudo apt install -y git wget curl ca-certificates cdo
+```
 
-Keep the project inside the Linux filesystem on WSL | in your home directory (for Linux and macOS), for example:
+## macOS
 
-~~~bash
-mkdir -p ~/projects
-cd ~/projects
+```bash
+brew install git wget cdo
+```
+
+## Linux
+
+```bash
+sudo apt update
+sudo apt install -y git wget curl ca-certificates cdo
+```
+
+:::
+
+Then install **uv**, the Python package and environment manager used by this project
+(it also downloads the right Python version for you):
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source "$HOME/.local/bin/env"      # or open a new terminal
+```
+
+Check everything in one go:
+
+::: {.terminal}
+```bash
+git --version && wget --version | head -n1 && cdo -V 2>&1 | head -n1 && uv --version
+```
+:::
+
+::: {.callout-note collapse="true"}
+## CDO is not a Python package
+`pip`/`uv` cannot install CDO. If `apt`/`brew` is not an option, use a conda-forge environment:
+`conda install -c conda-forge cdo` and make sure `cdo` is on your `PATH`.
+:::
+
+## 3 · Clone the repository {#clone}
+
+```bash
+mkdir -p ~/projects && cd ~/projects
 git clone https://github.com/khizerzakir/tutorial-repo.git
 cd tutorial-repo
-~~~
+```
 
-Open the repository from Ubuntu/terminal with the command code dot.
+::: {.callout-tip appearance="simple"}
+**All commands in this tutorial run from the repository root** (`~/projects/tutorial-repo`).
+If you get lost: `cd ~/projects/tutorial-repo`. Already cloned earlier? Update with `git pull`.
+:::
 
-~~~bash
-code .
-~~~
+## 4 · Create the Python environment {#python}
 
+```bash
+uv sync --locked --extra notebook                                         # <1>
+uv run python -c "import xarray, zarr; print('xarray', xarray.__version__, '| zarr', zarr.__version__)"  # <2>
+```
+1. Creates `.venv/` with the exact versions from `uv.lock`, including JupyterLab for the notebooks.
+2. Must print **zarr 3.x**. The cube builder refuses to run with Zarr 2.
 
-## 4. Check your tools
+::: {.callout-important}
+## Always run project commands through `uv run`
+`02_preprocess_cdo.sh` calls `python3` internally (YAML + grid helper). Starting it as
+`uv run bash code/02_preprocess_cdo.sh …` puts the project environment first on `PATH`, so those
+imports work. Alternatively activate the environment once per terminal: `source .venv/bin/activate`.
+:::
 
-~~~bash
-cdo -V
-git --version
-python3 --version
-wget --version | head -n 1
-~~~
-
-If you use uv, also run uv --version. If CDO is missing, install it through your OS package manager or a conda-forge environment; CDO is not installed by uv or pip.
-
-## 5. Install Python dependencies
-
-The Zarr builder in this repository requires Zarr 3; use Python 3.12 or newer.
-
-### Option A: uv
-
-Install uv using the [official instructions](https://docs.astral.sh/uv/getting-started/installation/), then from the repository root run:
-
-~~~bash
-uv sync --locked
-~~~
-
-Check the core packages and Zarr major version:
-
-~~~bash
-uv run python -c "import xarray, zarr; print(xarray.__version__, zarr.__version__)"
-~~~
-
-### Option B: pip
-
-~~~bash
+::: {.callout-note collapse="true"}
+## Prefer plain pip?
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-python -c "import xarray, zarr; print(xarray.__version__, zarr.__version__)"
-~~~
+python -m pip install -r requirements.txt jupyterlab
+```
+Python ≥ 3.12 is required (Ubuntu 24.04 ships 3.12; on 22.04 use uv). Never use `sudo pip`.
+In this mode drop the `uv run` prefix from the commands in this tutorial.
+:::
 
-Confirm that the printed Zarr version is 3 or newer before running the cube builder. If the environment resolves Zarr 2, use Python 3.12+ and reinstall the project dependencies.
+## 5 · Open the project in VS Code (optional, recommended) {#vscode}
 
->**Important:** Keep the virtual environment activated for subsequent terminal commands. When you open a new Ubuntu terminal, run `source .venv/bin/activate` again. Do **not** use `sudo pip install`. The `requirements.txt` must be committed to github and kept consistent with the tested `uv.lock`; pip does not read `uv.lock` automatically.
+::: {.panel-tabset group="os"}
 
-## 6. Configure LSA SAF access
+## Windows (WSL2)
 
-1. Register on the [LSA SAF data portal](https://datalsasaf.lsasvcs.ipma.pt/) and activate your account.
+1. Install [VS Code](https://code.visualstudio.com/download) **on Windows** (not inside Ubuntu).
+2. Extensions (`Ctrl+Shift+X`): **WSL**, **Python**, **Jupyter** (all by Microsoft).
+3. In the Ubuntu window, from the repository root:
 
-   ![Data portal registration](imgs/portal_reg.png)
+   ```bash
+   code .
+   ```
 
-2. Add your credentials to a `.env` file in `code/`:
+   The first run installs the VS Code server inside WSL. The bottom-left corner must show
+   **WSL: Ubuntu**. Open a terminal inside VS Code with ``Ctrl+` `` — it is already in the repository root.
+4. When you open a notebook, pick the kernel **`.venv/bin/python`** (top-right "Select Kernel").
 
-Edit `code/.env` with your account credentials. The downloader expects the names  `LSASAF_USERNAME ` and  `LSASAF_PASSWORD `. Do not commit this file or include it in screenshots.
+Guide: <https://code.visualstudio.com/docs/remote/wsl>
 
+## macOS
+
+Install [VS Code](https://code.visualstudio.com/download) with the **Python** and **Jupyter**
+extensions, then from the repository root run `code .` (enable it via *Command Palette → Shell Command:
+Install 'code' command in PATH*). Select the **`.venv/bin/python`** kernel for notebooks.
+
+## Linux
+
+Install [VS Code](https://code.visualstudio.com/download) with the **Python** and **Jupyter**
+extensions and run `code .` from the repository root. Select the **`.venv/bin/python`** kernel for notebooks.
+
+:::
+
+## 6 · LSA SAF credentials {#credentials}
+
+::: {.steps}
+::: {.step}
+Register on the [LSA SAF Data Service](https://datalsasaf.lsasvcs.ipma.pt/) and activate your account.
+
+![Data portal registration](imgs/portal_reg.png){width="85%"}
+:::
+
+::: {.step}
+Create your private settings file and open it:
 
 ```bash
-   cp code/.env.example code/.env
+cp code/.env.example code/.env
+nano code/.env          # or: code code/.env
+```
+:::
+
+::: {.step}
+Fill in your account and the product you want. The download script reads exactly these names:
+
+```dotenv
+LSASAF_USERNAME="your_username"
+LSASAF_PASSWORD="your_password"
+SAMPLE_YEAR=2015
+SAMPLE_MONTH=06
+VARIABLE_NAME=METREF
+URL="https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF"
 ```
 
-```
-   LSASAF_USERNAME="username"
-   LSASAF_PASSWORD="password"
-```
+`code/.env` is listed in `.gitignore` — never commit it, never paste it in screenshots or chats.
+:::
 
-3. Choose the products for this tutorial:
-   - [METREF: Reference Evapotranspiration](https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/)
-   - [FVC: Fractional Vegetation Cover](https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/MDFVC/)
+::: {.step}
+Browse the product folders to confirm the URL and that your month exists:
 
-   ![Browse the products](imgs/browse.png)
+- [METREF — reference evapotranspiration](https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/)
+- [MDFVC — fractional vegetation cover](https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/MDFVC/)
 
+![Browse the products](imgs/browse.png){width="85%"}
+:::
+:::
 
+## ✅ Setup checklist {#checklist}
 
-## 7. Continue
+- [ ] A Linux shell is open (Ubuntu/WSL on Windows) and `pwd` ends in `/tutorial-repo`
+- [ ] `cdo -V`, `wget --version`, `git --version`, `uv --version` all work
+- [ ] `uv run python -c "import zarr; print(zarr.__version__)"` prints 3.x
+- [ ] `code/.env` exists with your username, password and product `URL`
 
-Go to [Download and preprocess a sample](02-run-code.qmd). Run all project commands from the repository root unless the command says otherwise.
+**Next:** [B · Download and preprocess →](02-run-code.qmd)

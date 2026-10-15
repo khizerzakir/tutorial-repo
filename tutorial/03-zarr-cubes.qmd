@@ -1,103 +1,156 @@
 ---
-title: "C. Build and inspect a Zarr cube"
+title: "C · Build the Zarr cube"
+subtitle: "Chunk, shard, compress — and choose the layout for your questions"
 ---
 
-This page turns the remapped interim NetCDF files into a compressed, chunked and sharded Zarr v3 store, then opens a small selection for inspection.
+::: {.pipeline}
+[A · Setup]{.stage} [B · Download & preprocess]{.stage} [C · Zarr cube]{.here} [D · Explore]{.stage}
+:::
 
-## 1. Check the interim files
+`code/03_build_zarr_cube.py` turns the interim NetCDF files of one product into a single **Zarr v3**
+store: one time axis, one grid, compressed chunks grouped into shards, with consolidated metadata so it
+opens instantly.
 
-The builder expects NetCDF files under data/interim/ and dimensions named time, lat and lon.
+## 1 · Preview the plan (dry run) {#dry-run}
 
-~~~bash
-find data/interim -name '*_processed.nc' -type f
-cdo -s sinfo data/interim/METREF/2020/06/example_processed.nc
-~~~
+Always look before you write. `--dry-run` opens the files lazily and prints what would be built:
 
-Replace the example filename with one of your actual outputs. Confirm time and coordinate dimensions and inspect valid values before building the cube. If your files use x and y, update the dimension names and chunk configuration in code/build_zarr_cube.py.
+```bash
+uv run python code/03_build_zarr_cube.py --input data/interim/METREF --dry-run
+```
 
-## 2. Build the cube
+```text
+Profile          : map
+Files            : 30  (…201506010000_processed.nc … …201506300000_processed.nc)
+Variables        : METREF, quality_flag
+Dimensions       : {'time': 30, 'lat': 91, 'lon': 121}
+Time range       : 2015-06-01 → 2015-06-30
+Inner chunk      : {'time': 1, 'lat': 91, 'lon': 121}  (~43.0 KB raw each)
+Shard            : {'time': 10, 'lat': 91, 'lon': 121}
+Per variable     : 30 inner chunks in 3 shard object(s)
+Uncompressed size: 1.9 MB
+Output           : …/data/zarr/metref_cube.zarr
 
-From the repository root:
+Dry run: nothing written.
+```
 
-~~~bash
-uv run python code/03_build_zarr_cube.py
-~~~
+## 2 · Build {#build}
 
-The script uses xarray to open multiple files by coordinates and Dask for lazy/chunked processing. It writes to:
+```bash
+uv run python code/03_build_zarr_cube.py --input data/interim/METREF
+```
 
-~~~text
-data/zarr/example.zarr/
-~~~
+```text
+…
+Validation OK    : first/last time steps match the interim NetCDF
+Valid fraction   : METREF=95.9%, quality_flag=100.0%
+Stored size      : 841.8 KB in 15 files (compression ≈ 2.3× vs 1.9 MB in memory)
+Done in 3.3s → …/data/zarr/metref_cube.zarr
+```
 
-The current builder requires **Zarr 3**. Use a Python environment that resolves Zarr 3 as required by the script. The script removes an existing output store before rebuilding; copy or rename any output you need to keep first.
+What happens, in order:
 
-## 3. Understand chunks, shards and compression
+::: {.steps}
+::: {.step}
+**Open lazily.** All `*_processed.nc` files under `--input` are opened with xarray + Dask, concatenated
+along `time` in file-name order (no coordinate re-alignment — they share one grid, which is verified
+against the last file).
+:::
+::: {.step}
+**Plan chunks.** Inner chunks and shards come from the `--profile`; shards are rounded to whole multiples
+of the inner chunk (a Zarr v3 requirement) and clamped to the data size.
+:::
+::: {.step}
+**Write safely.** Dask writes whole shards in parallel to `<output>.tmp`. Stale NetCDF encodings are
+dropped; provenance (`zarr_cube_*` attributes) is added.
+:::
+::: {.step}
+**Validate, then swap.** The first and last time steps are compared value-by-value with their source
+files. Only then is the old cube replaced — a failed run never destroys a working cube.
+:::
+:::
 
-The script currently starts with:
+## 3 · Options {#options}
 
-~~~python
-INNER_CHUNKS = {"time": 1, "lat": 256, "lon": 256}
-SHARD_CHUNKS = {"time": 10, "lat": 512, "lon": 512}
-COMPRESSOR = BloscCodec(cname="zstd", clevel=5, shuffle="shuffle")
-~~~
-
-| Setting | Role | Trade-off |
+::: {.flag-table}
+| Flag | Default | Use it to… |
 |---|---|---|
-| Inner chunks | Small independently readable blocks | Smaller blocks help selective reads but add metadata/overhead |
-| Shards | Group storage for multiple inner chunks | Larger shards reduce object count but may make writes/updates coarser |
-| Zstd compression | Reduces stored bytes | Higher compression can use more CPU |
+| `--input DIR` | `data/interim` | point at **one product's** interim folder |
+| `--pattern GLOB` | `*_processed.nc` | select files, e.g. `'*201506*_processed.nc'` |
+| `--output PATH` | `data/zarr/<variable>_cube.zarr` | name the store |
+| `--variables V …` | all | keep only some variables, e.g. `--variables METREF` |
+| `--profile` | `map` | pick a chunk layout: `map`, `balanced`, `timeseries` |
+| `--chunks` / `--shards` | from profile | fine-tune, e.g. `--chunks time=4,lat=64,lon=64` |
+| `--clevel 1-9` | `5` | zstd level: higher = smaller but slower to write |
+| `--float32` | off | store float64 data as float32 (half the size) |
+| `--workers N` | all cores | limit CPU threads on shared machines |
+| `--append` | off | add only newer time steps to an existing cube |
+| `--no-consolidate` | off | skip consolidated metadata (portability over speed) |
+| `--dry-run` | off | print the plan and exit |
+:::
 
-These are initial values, not universal optima. Benchmark common access patterns: a map at one time, a point/area time series, and a small regional subset.
+Grow the cube month by month without rebuilding:
 
-## 4. Open and inspect
+```bash
+bash code/01_download_sample.sh 2015 07 METREF
+MAIN_VARIABLE=METREF uv run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF
+uv run python code/03_build_zarr_cube.py --input data/interim/METREF --append
+```
 
-~~~python
+## 4 · Explore the chunk layout {#chunk-explorer}
+
+Chunks decide **which questions are cheap**. A single-date map should touch few chunks; a long
+time series at one pixel should too — but one layout cannot make both minimal. Change the cube size and
+profile and watch what each query has to read.
+
+{{< include _chunk-explorer.qmd >}}
+
+**Rules of thumb**
+
+- Aim for inner chunks of roughly **100 KB – a few MB** (uncompressed). Tiny chunks mean many requests; huge chunks mean reading data you do not need.
+- **Map-heavy work** (daily maps, animations): `--profile map`. **Time-series-heavy work** (pixel/zone trends, anomalies): `--profile timeseries`. Unsure: `balanced`.
+- Shards reduce the number of files/objects (important on laptops, HPC and object storage); they do not change what is decompressed.
+- Benchmark your real queries before scaling up — these profiles are starting points, not optima.
+
+## 5 · Open the cube {#open}
+
+```python
 import xarray as xr
 
-ds = xr.open_zarr("data/zarr/metref_sample_1month.zarr", consolidated=False)
+ds = xr.open_zarr("data/zarr/metref_cube.zarr")                 # <1>
 print(ds)
-print(list(ds.data_vars))
-~~~
+print(ds.METREF.encoding["chunks"], ds.METREF.encoding["shards"])  # <2>
 
-Select a time slice and a point time series:
+day_map = ds.METREF.sel(time="2015-06-15")                      # <3>
+series  = ds.METREF.sel(lon=-16.4, lat=14.5, method="nearest")  # <4>
+monthly = ds.METREF.resample(time="1MS").sum()                  # <5>
+day_map.plot(); series.plot()
+```
+1. Consolidated metadata → a single read, whatever the number of chunks. Nothing is loaded yet.
+2. The layout you chose, stored with the data.
+3. Select by **label** (date), not by file.
+4. Nearest grid cell to a coordinate — check that it is the cell you expect.
+5. Any xarray operation works lazily; only the touched chunks are read when you plot or `.compute()`.
 
-~~~python
-variable = next(iter(ds.data_vars))
-map_at_time = ds[variable].isel(time=0)
-point_series = ds[variable].isel(lat=100, lon=100)
-~~~
+The notebooks in [D · Explore](04-explore.qmd) build on this with validation, comparison plots and the
+reusable `code/plot_utils` functions.
 
-These indices are examples only. Check the coordinates at the selected indices, dimension ordering, variable units, and timestamp before interpreting a plot. The project plotting utilities are in code/plot_utils/; see their README for import and usage examples.
+## 6 · Troubleshooting {#troubleshooting}
 
-## 5. Validation after writing
-
-The builder reopens the output store and computes a small sample statistic. Also check:
-
-- expected dimensions, coordinate ranges and time count;
-- data-variable names and attributes/units;
-- valid-value coverage in a few known maps and time slices;
-- representative values against the interim NetCDF source;
-- whether map/time-series reads perform acceptably for your use case.
-
-A successful Zarr write checks storage/readability, not the scientific correctness of source values or remapping.
-
-## 6. Scaling beyond the sample
-
-For a priority subset, measure runtime, peak memory, interim and Zarr sizes, valid coverage and read speed. Expand to a larger region or a 2,000 km corridor by processing grid-aligned spatial tiles and time batches. Add a remapping margin at tile boundaries, then remove duplicate edge cells from the final grid.
-
-Parallelize independent NetCDF files or tiles up to the measured CPU, memory, storage and network limits of the available workstation/VM. Use isolated temporary stores or non-overlapping Zarr regions; avoid concurrent writes to the same chunk/shard. Keep a manifest and rerun only failed batches. Re-benchmark chunks and shards on the larger workload.
-
-## Troubleshooting
-
-| Symptom | Checks |
+| Symptom | Fix |
 |---|---|
-| No interim files | Check downloader output, input path and CDO log |
-| Many NaNs after remapping | Compare raw AOI, crop bounds and target-grid bounds; inspect fill values and source QA |
-| Zarr dimension error | Print ds.sizes; rename coordinates or change chunk dimensions |
-| Zarr version error | Check uv run python -c "import zarr; print(zarr.__version__)"; script needs version 3 or newer |
-| Slow writes or reads | Check RAM/disk I/O, chunk and shard sizes, and number of parallel tasks |
-| Output already exists | Builder replaces its output; back up the store or change OUTPUT in the script |
+| `No files matching '*_processed.nc'` | Run step B, or point `--input` at the right folder |
+| `Duplicate timestamps found` | Two products or two runs in one folder — use `--input data/interim/<PRODUCT>` |
+| `Expected dimensions ('time','lat','lon')` | Your files use other names; `latitude/longitude/x/y` are renamed automatically, others need preprocessing |
+| `Zarr >= 3.0 is required` | Run through `uv run …` (project environment) |
+| `different lat grid than …` | Files were processed with different AOIs — delete the folder and rerun step B |
+| Slow on WSL | Keep the repository in `~/…`, not `/mnt/c/…`; limit `--workers` if RAM is tight |
 
-## Next steps
+## 7 · Scaling beyond the sample
 
-After the pilot is validated, add quality-aware masks, explicit coverage thresholds, provenance metadata, reproducible configuration records, and automated tests for representative source files.
+For a larger region or many years: benchmark a representative subset (runtime, peak memory, stored size,
+read speed of your real queries), then process in **time batches** and grow the cube with `--append`.
+For very large areas split into grid-aligned tiles with a remapping margin, write each to its own store
+or to non-overlapping Zarr regions, and keep a manifest so only failed batches are re-run.
+
+**Next:** [D · Explore the cube →](04-explore.qmd)

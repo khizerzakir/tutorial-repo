@@ -1,0 +1,122 @@
+```{=html}
+<!-- Command builder: plain JS, no external libraries (works offline). -->
+<div class="cmd-builder" id="cmd-builder">
+  <style>
+    .cmd-builder{--cb-a:#0a7f8f;--cb-w:#d9780f;margin:1rem 0 1.5rem}
+    .cmd-builder fieldset{border:1px solid color-mix(in srgb,var(--cb-a) 35%,transparent);border-radius:10px;padding:.6rem 1rem .8rem;margin-bottom:.8rem}
+    .cmd-builder legend{font-size:.9em;font-weight:600;padding:0 .4rem;width:auto;float:none;margin:0}
+    .cmd-builder .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.5rem 1rem}
+    .cmd-builder label{display:flex;flex-direction:column;font-size:.83em;gap:.15rem}
+    .cmd-builder input[type=text],.cmd-builder input[type=number],.cmd-builder input[type=month],.cmd-builder select{padding:.3rem .45rem;border-radius:6px;border:1px solid #9aa;background:transparent;color:inherit;font:inherit;font-size:.95em}
+    .cmd-builder select option{color:#111}
+    .cmd-builder .inline{flex-direction:row;align-items:center;gap:.4rem}
+    .cmd-builder input[type=range]{accent-color:var(--cb-a)}
+    .cmd-builder pre{white-space:pre-wrap;padding:1rem;border-radius:10px;border:1px solid color-mix(in srgb,var(--cb-a) 45%,transparent);border-top:26px solid #2d3748;position:relative;font-size:.83em;margin:0}
+    .cmd-builder pre::before{content:"● ● ●  bash";position:absolute;top:-21px;left:10px;font-size:10px;color:#f6ad55;letter-spacing:1px}
+    .cmd-builder pre code{white-space:pre-wrap!important;word-break:break-word}
+    .cmd-builder .c{opacity:.6}
+    .cmd-builder .bar{display:flex;gap:.5rem;align-items:center;margin:.4rem 0}
+    .cmd-builder .warn{color:var(--cb-w);font-weight:600;font-size:.88em}
+    .cmd-builder .hidden{display:none}
+  </style>
+
+  <fieldset><legend>1 · Product and month</legend><div class="grid">
+    <label>Product
+      <select data-k="product"><option>METREF</option><option value="MDFVC">MDFVC (FVC)</option><option value="custom">other…</option></select></label>
+    <label>Month <input data-k="month" type="month" value="2015-06" min="2004-01"></label>
+    <label>Folder name <input data-k="folder" type="text" value="METREF"></label>
+    <label style="grid-column:1/-1">Product URL <input data-k="url" type="text" value=""></label>
+    <label>MAIN_VARIABLE <input data-k="main" type="text" value="METREF"></label>
+    <label>QA_VARIABLES <input data-k="qa" type="text" value="quality_flag"></label>
+  </div></fieldset>
+
+  <fieldset><legend>2 · Region</legend>
+    <div class="bar">
+      <label class="inline"><input type="radio" name="cb-aoi" data-k="aoimode" value="bbox" checked> bounding box (YAML)</label>
+      <label class="inline"><input type="radio" name="cb-aoi" data-k="aoimode" value="file"> vector AOI file</label>
+    </div>
+    <div class="grid" data-show="bbox">
+      <label>lon_min <input data-k="w" type="number" step="0.05" value="-17.275"></label>
+      <label>lon_max <input data-k="e" type="number" step="0.05" value="-11.225"></label>
+      <label>lat_min <input data-k="s" type="number" step="0.05" value="12.225"></label>
+      <label>lat_max <input data-k="n" type="number" step="0.05" value="16.775"></label>
+    </div>
+    <div class="grid hidden" data-show="file">
+      <label style="grid-column:1/-1">AOI file (.geojson, .gpkg, .shp, .parquet) <input data-k="aoifile" type="text" value="data/aoi/spatial_units.geosjon"></label>
+    </div>
+    <div class="warn" data-warn></div>
+  </fieldset>
+
+  <fieldset><legend>3 · Machine and cube</legend><div class="grid">
+    <label>CPU cores to use: <output data-o="cores">4</output><input data-k="cores" type="range" min="1" max="32" value="4"></label>
+    <label>Cube profile
+      <select data-k="profile"><option>map</option><option>balanced</option><option>timeseries</option></select></label>
+    <label class="inline"><input data-k="dry" type="checkbox" checked> dry run first</label>
+    <label class="inline"><input data-k="append" type="checkbox"> append to existing cube</label>
+    <label class="inline"><input data-k="f32" type="checkbox"> --float32</label>
+  </div></fieldset>
+
+  <div class="bar"><button type="button" class="btn btn-sm btn-primary" data-copy>📋 Copy commands</button>
+    <span style="font-size:.85em;opacity:.75">Paste into the Ubuntu / WSL (or Linux/macOS) terminal.</span></div>
+  <pre><code data-out></code></pre>
+  <div data-yaml style="margin-top:.8rem"></div>
+</div>
+<script>
+(() => {
+  const root = document.getElementById("cmd-builder");
+  if (!root || root.dataset.ready) return; root.dataset.ready = 1;
+  const URLS = {METREF: ["https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF", "METREF"],
+                MDFVC: ["https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/MDFVC/NETCDF", "FVC"],
+                custom: ["https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/<PRODUCT>/NETCDF", "<VARIABLE>"]};
+  const q = k => root.querySelector(`[data-k=${k}]`);
+  const val = k => { const el = q(k); return el.type === "checkbox" ? el.checked : el.value.trim(); };
+  const esc = s => s.replace(/[&<>]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;"})[c]);
+  let plain = "";
+  function onProduct() {
+    const p = val("product"), [u, m] = URLS[p];
+    q("url").value = u; q("main").value = m; q("folder").value = p === "custom" ? "MYPRODUCT" : p; render();
+  }
+  function render() {
+    const mode = root.querySelector("[name=cb-aoi]:checked").value;
+    root.querySelectorAll("[data-show]").forEach(d => d.classList.toggle("hidden", d.dataset.show !== mode));
+    const [y, m] = (val("month") || "2015-06").split("-"), f = val("folder") || "METREF";
+    const cores = +val("cores"); root.querySelector("[data-o=cores]").value = cores;
+    const raw = `data/raw/${f}`, interim = `data/interim/${f}`;
+    const aoiArg = mode === "file" ? ` ${val("aoifile")}` : "";
+    const qa = val("qa") ? ` QA_VARIABLES=${val("qa")}` : "";
+    const opts = [`--input ${interim}`, `--profile ${val("profile")}`, `--workers ${cores}`];
+    if (val("f32")) opts.push("--float32");
+    if (val("append")) opts.push("--append");
+    const L = [
+      ["# 0 · repository root (Windows: inside the Ubuntu / WSL window)"], ["cd ~/projects/tutorial-repo"], [""],
+      [`# 1 · download ${y}-${m}`], [`JOBS=${Math.min(cores, 8)} bash code/01_download_sample.sh ${y} ${m} ${f} "${val("url")}"`], [""],
+      [`# 2 · check the variable names (expect ${val("main")}${val("qa") ? " and " + val("qa") : ""})`],
+      [`cdo -s showname "$(ls ${raw}/${y}/${m}/*.nc | head -n1)"`], [""],
+      [`# 3 · crop + remap   (YAML processing.parallel: ${cores})`],
+      [`MAIN_VARIABLE=${val("main")}${qa} uv run bash code/02_preprocess_cdo.sh 0.05 ${raw} ${interim}${aoiArg}`], [""],
+      ["# 4 · build the Zarr cube"]];
+    if (val("dry")) L.push([`uv run python code/03_build_zarr_cube.py ${opts.join(" ")} --dry-run`]);
+    L.push([`uv run python code/03_build_zarr_cube.py ${opts.join(" ")}`], [""],
+           ["# 5 · explore"], ["uv run --extra notebook jupyter lab code/notebooks"]);
+    plain = L.map(x => x[0]).join("\n");
+    root.querySelector("[data-out]").innerHTML = L.map(([s]) => s.startsWith("#") ? `<span class="c">${esc(s)}</span>` : esc(s)).join("\n");
+    const w = +val("w"), e = +val("e"), s = +val("s"), n = +val("n");
+    root.querySelector("[data-warn]").textContent =
+      mode === "bbox" && (w >= e || s >= n) ? "⚠ min must be smaller than max" : "";
+    root.querySelector("[data-yaml]").innerHTML = mode === "bbox"
+      ? `<p style="font-size:.9em;margin:.2rem 0">Before step 3, set these blocks in <code>code/preprocess_utils/config_resolution.yaml</code>:</p>
+         <pre style="border-top-width:1px"><code>domain:\n  lon_min: ${w}\n  lon_max: ${e}\n  lat_min: ${s}\n  lat_max: ${n}\nprocessing:\n  resolution: 0.05\n  parallel: ${cores}\n  remap_method: bilinear\n  buffer: 0.2</code></pre>`
+      : `<p style="font-size:.9em">The AOI's bounds are snapped to the raw grid and written into the YAML. Set <code>processing.parallel: ${cores}</code> there. If the file has no CRS, prefix step 3 with <code>AOI_CRS=EPSG:4326</code>.</p>`;
+  }
+  q("product").addEventListener("change", onProduct);
+  root.querySelectorAll("input,select").forEach(el => { if (el.dataset.k !== "product") el.addEventListener("input", render); });
+  root.querySelector("[data-copy]").addEventListener("click", async ev => {
+    const b = ev.currentTarget;
+    try { await navigator.clipboard.writeText(plain); b.textContent = "✅ Copied"; }
+    catch (_) { b.textContent = "Select the text and copy"; }
+    setTimeout(() => b.textContent = "📋 Copy commands", 1800);
+  });
+  onProduct();
+})();
+</script>
+```

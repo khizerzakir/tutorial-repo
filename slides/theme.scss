@@ -64,7 +64,7 @@ header.reveal-header img,
 .reveal a:hover { color: var(--warm); }
 
 .reveal h2 {
-  display: inline-block;
+  display: table;
   border-bottom: 4px solid var(--warm);
   padding-bottom: 0.15em;
   margin-bottom: 0.6em;
@@ -204,3 +204,258 @@ header.reveal-header img,
 .reveal .ecosystem-grid > .cube-card:nth-child(5) {
   grid-column: 4 / span 2;
 }
+// =====================================================================
+// Animated / interactive components (2026 refresh)
+// =====================================================================
+.reveal .kicker {
+  display: inline-block;
+  font-family: "Poppins", sans-serif;
+  color: var(--accent);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  font-size: .7em;
+  margin-bottom: .6em;
+}
+.reveal .hero .stat { font-size: 1.6em; margin-right: .25em; }
+.reveal .hero .fragment { margin: .35em 0; font-size: .95em; }
+
+// ---- Spinning chunked cube (pure CSS) ----
+.reveal .cube-3d {
+  perspective: 1100px;
+  height: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.reveal .cube-3d-inner {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  transform-style: preserve-3d;
+  animation: cube-spin 18s linear infinite;
+}
+.reveal .cube-3d-inner p { margin: 0; position: absolute; inset: 0; transform-style: preserve-3d; }
+.reveal .cube-3d .f {
+  position: absolute;
+  inset: 0;
+  width: 260px;
+  height: 260px;
+  border: 2px solid var(--accent);
+  background:
+    linear-gradient(var(--accent) 1px, transparent 1px) 0 0 / 65px 65px,
+    linear-gradient(90deg, var(--accent) 1px, transparent 1px) 0 0 / 65px 65px,
+    linear-gradient(135deg, rgba(61,219,217,.22), rgba(255,180,84,.28));
+  box-shadow: 0 0 40px rgba(61,219,217,.25) inset;
+  opacity: .92;
+}
+.reveal .cube-3d .front  { transform: translateZ(130px); }
+.reveal .cube-3d .back   { transform: rotateY(180deg) translateZ(130px); }
+.reveal .cube-3d .right  { transform: rotateY(90deg) translateZ(130px); }
+.reveal .cube-3d .left   { transform: rotateY(-90deg) translateZ(130px); }
+.reveal .cube-3d .top    { transform: rotateX(90deg) translateZ(130px);
+  background: linear-gradient(var(--warm) 1px, transparent 1px) 0 0 / 65px 65px,
+              linear-gradient(90deg, var(--warm) 1px, transparent 1px) 0 0 / 65px 65px,
+              rgba(255,180,84,.25); }
+.reveal .cube-3d .bottom { transform: rotateX(-90deg) translateZ(130px); }
+@keyframes cube-spin {
+  from { transform: rotateX(-24deg) rotateY(0deg); }
+  to   { transform: rotateX(-24deg) rotateY(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal .cube-3d-inner { animation: none; transform: rotateX(-24deg) rotateY(35deg); }
+}
+
+// ---- Agenda ----
+.reveal .agenda-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: .5em .9em;
+  font-size: .8em;
+}
+.reveal .agenda-item {
+  background: var(--card);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  padding: .45em .8em;
+  display: flex;
+  align-items: center;
+  gap: .6em;
+}
+.reveal .agenda-item p { margin: 0; }
+.reveal .agenda-item .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.7em;
+  height: 1.7em;
+  border-radius: 50%;
+  background: var(--warm);
+  color: #10253a;
+  font-weight: 700;
+  margin-right: .5em;
+}
+
+// ---- Files → cube auto-animate ----
+.reveal .file-stage {
+  position: relative;
+  height: 470px;
+  margin-top: .2em;
+}
+.reveal .file-stage > p { margin: 0; }
+.reveal .file-stage .file {
+  position: absolute;
+  padding: .35em .7em;
+  font-family: "JetBrains Mono", monospace;
+  font-size: .5em;
+  color: var(--fg);
+  background: var(--card);
+  border: 1px solid var(--accent);
+  border-left: 6px solid var(--warm);
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.25);
+  white-space: nowrap;
+}
+.reveal .file-stage .file.layer {
+  width: 30%;
+  height: 22%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  transform: skewX(-28deg);
+  background:
+    linear-gradient(var(--accent) 1px, transparent 1px) 0 0 / 22px 22px,
+    linear-gradient(90deg, var(--accent) 1px, transparent 1px) 0 0 / 22px 22px,
+    rgba(14,102,169,.55);
+}
+.reveal .file-stage .axis {
+  position: absolute;
+  color: var(--warm);
+  font-size: .55em;
+  font-weight: 600;
+}
+.reveal .caption-bottom {
+  position: absolute;
+  bottom: 1.6em;
+  width: 100%;
+  font-size: .6em;
+  opacity: .9;
+}
+
+// ---- Small notes, checkpoints, centred notes ----
+.reveal .small-note { font-size: .6em; opacity: .85; margin-top: .4em; }
+.reveal .center-note { text-align: center; font-size: .7em; margin-top: 1em; }
+.reveal .checkpoint {
+  margin-top: .8em;
+  font-size: .6em;
+  padding: .5em .9em;
+  border-radius: 10px;
+  border: 1px dashed var(--accent);
+  background: rgba(61,219,217,.08);
+}
+.reveal .big-message {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.25em;
+  line-height: 1.35;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+// ---- Pipeline strip ----
+.reveal .pipe {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: .3em;
+  margin-top: .8em;
+}
+.reveal .pipe > p { margin: 0; display: flex; align-items: center; }
+.reveal .pipe-stage {
+  flex: 1 1 0;
+  background: var(--card);
+  border: 1px solid var(--accent);
+  border-top: 5px solid var(--warm);
+  border-radius: 12px;
+  padding: .5em .5em;
+  text-align: center;
+  font-size: .5em;
+}
+.reveal .pipe-stage p { margin: .25em 0; }
+.reveal .pipe-stage .ico { font-size: 2em; display: block; }
+.reveal .pipe-arrow { color: var(--warm); font-size: 1.1em; align-self: center; }
+
+// ---- Terminal look ----
+.reveal .terminal pre,
+.reveal .terminal-out {
+  border-top: 22px solid #2d3748;
+  position: relative;
+}
+.reveal .terminal pre::before,
+.reveal .terminal-out::before {
+  content: "● ● ●";
+  position: absolute;
+  top: -19px;
+  left: 10px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #f6ad55;
+}
+.reveal .terminal-out {
+  margin-top: .6em;
+  background: var(--code-bg);
+  border-left: 1px solid var(--accent);
+  border-right: 1px solid var(--accent);
+  border-bottom: 1px solid var(--accent);
+  border-radius: 10px;
+  padding: .5em .9em;
+  font-size: .55em;
+}
+.reveal .terminal-out p { margin: .15em 0; }
+.reveal .terminal-out code { color: var(--fg); background: none; }
+.reveal .terminal-out pre { border: 0; margin: 0; box-shadow: none; background: none; }
+.reveal .terminal-out pre::before { content: none; }
+.reveal .terminal-out pre, .reveal .terminal-out pre code { font-size: 1em; line-height: 1.35; }
+.reveal pre { font-size: .62em; }
+.reveal .big-code pre { font-size: .9em; }
+.reveal .big-code .small-note { font-size: .7em; }
+.reveal .hero-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: center; height: 600px; }
+.reveal .hero-grid p { margin: .25em 0; }
+
+// ---- AOI snapping demo ----
+.reveal .grid-demo {
+  position: relative;
+  height: 430px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  background:
+    linear-gradient(var(--grid-line, rgba(61,219,217,.35)) 1px, transparent 1px) 0 0 / 10% 10%,
+    linear-gradient(90deg, var(--grid-line, rgba(61,219,217,.35)) 1px, transparent 1px) 0 0 / 10% 10%,
+    var(--card);
+}
+.reveal .grid-demo > p { margin: 0; }
+.reveal .grid-demo .aoi {
+  position: absolute;
+  border: 3px dashed var(--warm);
+  background: rgba(255,180,84,.15);
+  border-radius: 4px;
+}
+.reveal .grid-demo .aoi.snapped {
+  border-style: solid;
+  background: rgba(255,180,84,.28);
+  border-radius: 0;
+}
+
+// ---- Interactive chunk explorer on a slide ----
+.reveal .explorer-slide .chunk-explorer { font-size: .6em; margin: 0; }
+.reveal .explorer-slide .chunk-explorer svg { max-width: 1000px; max-height: 330px; }
+.reveal .explorer-slide .chunk-explorer button { font-size: 1em; }
+.reveal .explorer-slide .chunk-explorer .ce-card { background: var(--card); }
+.reveal .explorer-slide .chunk-explorer .ce-cmd { color: var(--fg); }
+
+.reveal .center h2, .reveal section.center h2 { margin-left: auto; margin-right: auto; }
+.reveal section.center .big-message { text-align: center; }
+
+// Keep code panels dark in light mode so syntax colours stay readable.
+:root.light .reveal pre { background: #10253a; }
+:root.light .reveal pre code { color: #e8f1f8; }
+:root.light .reveal .terminal-out { background: #10253a; color: #e8f1f8; }
+:root.light .reveal .terminal-out code { color: #e8f1f8; }
