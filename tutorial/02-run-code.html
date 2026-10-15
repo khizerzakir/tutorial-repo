@@ -427,11 +427,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="check-the-product-and-study-area" class="level2">
 <h2 class="anchored" data-anchor-id="check-the-product-and-study-area">1. Check the product and study area</h2>
 <p>The example defaults to <strong>METREF</strong>. The repository also lists FVC/MDFVC as an example product. Select a product from the <a href="https://datalsasaf.lsasvcs.ipma.pt/">LSA SAF Data Service</a> and confirm its product URL, time coverage, variable names, units, coordinate system, no-data values and quality flags.</p>
-<p>The bounds settings is in the following file:</p>
-<ul>
-<li>code/preprocess_utils/config_resolution.yaml defines the generated output-grid domain.</li>
-</ul>
-<p>Coordinates are longitude/latitude in degrees in this example. For a new AOI, record the bounds in this order: <strong>west, south, east, north</strong>. Include a suitable input buffer for the remapping method; verify edge coverage after processing.</p>
+<p>Coordinates are <code>longitude</code>/<code>latitude</code> in degrees in this example. For a new AOI, store it in <code>data/aoi/</code> and there is a <code>utils/</code> script to convert a shapefile to a bounding box. The AOI is used to crop the raw files before remapping and using standrdized coordinates. The target grid is defined in <code>code/preprocess_utils/grid.txt</code>. The default is a 0.05° global grid, but you can change the resolution and bounds to suit your study area.</p>
+<p>The remapping method is bilinear by default. Use nearest-neighbour for categorical fields and flags. The remapping method is set in <code>code/preprocess_utils/config_resolution.yaml</code>.</p>
 </section>
 <section id="set-credentials" class="level2">
 <h2 class="anchored" data-anchor-id="set-credentials">2. Set credentials</h2>
@@ -463,8 +460,8 @@ URL=https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF</code></pre>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> showname data/raw/METREF/2020/06/example.nc</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> showtimestamp data/raw/METREF/2020/06/example.nc</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> infon data/raw/METREF/2020/06/example.nc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You can also use <code>ncdump -h</code> to inspect the header. The jupyter notebook <code>code/inspect_raw.ipynb</code> provides a convenient way to explore the raw file interactively.</p>
-<p>Replace <code>example.nc</code> with a real downloaded filename. Review coordinate ranges, variable names, timestamps, units, missing values and product QA information. If the raw file itself has no valid values, diagnose the download/product selection before remapping.</p>
+<p>You can also use <code>ncdump -h</code> to inspect the header. The jupyter notebook <code>code/notebooks/read?validate_data.ipynb</code> provides a convenient way to explore the raw file interactively. You will need the information about <code>MAIN_VARIABLE</code> and <code>QA_VARIABLE</code> to configure the remapping script.</p>
+<p>Replace <code>example.nc</code> with a real downloaded filename. If the raw file itself has no valid values, diagnose the download/product selection before remapping.</p>
 </section>
 <section id="crop-and-remap" class="level2">
 <h2 class="anchored" data-anchor-id="crop-and-remap">5. Crop and remap</h2>
