@@ -8,11 +8,9 @@ This page downloads one LSA SAF product sample, crops it to a configured study a
 
 The example defaults to **METREF**. The repository also lists FVC/MDFVC as an example product. Select a product from the [LSA SAF Data Service](https://datalsasaf.lsasvcs.ipma.pt/) and confirm its product URL, time coverage, variable names, units, coordinate system, no-data values and quality flags.
 
-The bounds settings is in the following file:
+Coordinates are `longitude`/`latitude` in degrees in this example. For a new AOI, store it in `data/aoi/` and there is a `utils/` script to convert a shapefile to a bounding box. The AOI is used to crop the raw files before remapping and using standrdized coordinates. The target grid is defined in `code/preprocess_utils/grid.txt`. The default is a 0.05° global grid, but you can change the resolution and bounds to suit your study area.
 
-- code/preprocess_utils/config_resolution.yaml defines the generated output-grid domain.
-
-Coordinates are longitude/latitude in degrees in this example. For a new AOI, record the bounds in this order: **west, south, east, north**. Include a suitable input buffer for the remapping method; verify edge coverage after processing.
+The remapping method is bilinear by default. Use nearest-neighbour for categorical fields and flags. The remapping method is set in `code/preprocess_utils/config_resolution.yaml`. 
 
 ## 2. Set credentials
 
@@ -68,9 +66,9 @@ cdo -s showtimestamp data/raw/METREF/2020/06/example.nc
 cdo -s infon data/raw/METREF/2020/06/example.nc
 ~~~
 
-You can also use `ncdump -h` to inspect the header. The jupyter notebook `code/inspect_raw.ipynb` provides a convenient way to explore the raw file interactively.
+You can also use `ncdump -h` to inspect the header. The jupyter notebook `code/notebooks/read?validate_data.ipynb` provides a convenient way to explore the raw file interactively. You will need the information about `MAIN_VARIABLE` and `QA_VARIABLE` to configure the remapping script.
 
-Replace `example.nc` with a real downloaded filename. Review coordinate ranges, variable names, timestamps, units, missing values and product QA information. If the raw file itself has no valid values, diagnose the download/product selection before remapping.
+Replace `example.nc` with a real downloaded filename. If the raw file itself has no valid values, diagnose the download/product selection before remapping. 
 
 ## 5. Crop and remap
 

@@ -88,7 +88,7 @@ If you use uv, also run uv --version. If CDO is missing, install it through your
 
 ## 5. Install Python dependencies
 
-The Zarr builder in this repository requires Zarr 3; use Python 3.11 or newer.
+The Zarr builder in this repository requires Zarr 3; use Python 3.12 or newer.
 
 ### Option A: uv
 
@@ -114,7 +114,7 @@ python -m pip install -r requirements.txt
 python -c "import xarray, zarr; print(xarray.__version__, zarr.__version__)"
 ~~~
 
-Confirm that the printed Zarr version is 3 or newer before running the cube builder. If the environment resolves Zarr 2, use Python 3.11+ and reinstall the project dependencies.
+Confirm that the printed Zarr version is 3 or newer before running the cube builder. If the environment resolves Zarr 2, use Python 3.12+ and reinstall the project dependencies.
 
 >**Important:** Keep the virtual environment activated for subsequent terminal commands. When you open a new Ubuntu terminal, run `source .venv/bin/activate` again. Do **not** use `sudo pip install`. The `requirements.txt` must be committed to github and kept consistent with the tested `uv.lock`; pip does not read `uv.lock` automatically.
 
