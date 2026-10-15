@@ -1,0 +1,29 @@
+/* Small, reusable image-layout helpers for the Reveal.js deck.
+   These add placement options without changing the existing theme. */
+
+.reveal .slides section {
+  position: relative;
+}
+
+/* Attach .positioned-image to a fenced div and set --img-x, --img-y and --img-w. */
+.reveal .slides section .positioned-image {
+  position: absolute;
+  left: var(--img-x, 70%);
+  top: var(--img-y, 20%);
+  width: var(--img-w, 25%);
+  max-height: 70%;
+  margin: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.reveal .slides section .positioned-image img {
+  display: block;
+  width: 100%;
+  max-height: 65vh;
+  object-fit: contain;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
