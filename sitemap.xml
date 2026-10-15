@@ -2,38 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://khizerzakir.github.io/tutorial-repo/tutorial/01-setup.html</loc>
-    <lastmod>2026-10-14T15:49:18.033Z</lastmod>
+    <lastmod>2026-10-15T11:57:58.576Z</lastmod>
   </url>
   <url>
     <loc>https://khizerzakir.github.io/tutorial-repo/tutorial/03-zarr-cubes.html</loc>
-    <lastmod>2026-10-14T15:49:18.034Z</lastmod>
+    <lastmod>2026-10-15T11:57:58.577Z</lastmod>
   </url>
   <url>
-    <loc>https://khizerzakir.github.io/tutorial-repo/code/notebooks/test_interim.html</loc>
-    <lastmod>2026-10-14T15:49:18.016Z</lastmod>
+    <loc>https://khizerzakir.github.io/tutorial-repo/code/notebooks/application.html</loc>
+    <lastmod>2026-10-15T11:57:58.010Z</lastmod>
   </url>
   <url>
-    <loc>https://khizerzakir.github.io/tutorial-repo/code/notebooks/test_zarr.html</loc>
-    <lastmod>2026-10-14T15:49:18.017Z</lastmod>
+    <loc>https://khizerzakir.github.io/tutorial-repo/code/notebooks/plot_data.html</loc>
+    <lastmod>2026-10-15T11:57:58.015Z</lastmod>
   </url>
   <url>
     <loc>https://khizerzakir.github.io/tutorial-repo/slides/presentation.html</loc>
-    <lastmod>2026-10-14T15:49:18.033Z</lastmod>
+    <lastmod>2026-10-15T11:57:58.576Z</lastmod>
   </url>
   <url>
     <loc>https://khizerzakir.github.io/tutorial-repo/index.html</loc>
-    <lastmod>2026-10-14T15:49:18.018Z</lastmod>
+    <lastmod>2026-10-15T11:57:58.560Z</lastmod>
   </url>
   <url>
-    <loc>https://khizerzakir.github.io/tutorial-repo/code/notebooks/test_outputs.html</loc>
-    <lastmod>2026-10-14T15:49:18.017Z</lastmod>
+    <loc>https://khizerzakir.github.io/tutorial-repo/code/notebooks/read_validate_data.html</loc>
+    <lastmod>2026-10-15T11:57:58.016Z</lastmod>
   </url>
   <url>
     <loc>https://khizerzakir.github.io/tutorial-repo/code/plot_utils/Readme.html</loc>
-    <lastmod>2026-10-14T15:49:18.017Z</lastmod>
+    <lastmod>2026-10-15T11:57:58.016Z</lastmod>
   </url>
   <url>
     <loc>https://khizerzakir.github.io/tutorial-repo/tutorial/02-run-code.html</loc>
-    <lastmod>2026-10-14T15:49:18.034Z</lastmod>
+    <lastmod>2026-10-15T11:57:58.577Z</lastmod>
   </url>
 </urlset>

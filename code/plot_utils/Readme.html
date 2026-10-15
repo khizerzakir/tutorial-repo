@@ -407,7 +407,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    ncols<span class="op">=</span><span class="dv">3</span>,</span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    show<span class="op">=</span><span class="va">False</span>,</span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The map extent is calculated from the selected coordinates. Set <code>extent=(xmin, xmax, ymin, ymax)</code> to crop all panels to a common area. <code>data_crs</code> describes the existing coordinate values; it does <strong>not</strong> reproject the data. Longitude/latitude coordinate names imply EPSG:4326. For projected <code>x/y</code>, pass the actual CRS (for example, <code>data_crs="EPSG:32628"</code>). The default display projection is Plate Carrée; supply a Cartopy CRS as <code>map_crs</code> for another projection.</p>
+<p>The map extent is calculated from the selected coordinates. Set <code>extent=(xmin, xmax, ymin, ymax)</code> to crop all panels to a common area. <code>data_crs</code> describes the existing coordinate values; it does <strong>not</strong> reproject the data. Longitude/latitude coordinate names imply EPSG:4326. For projected <code>x/y</code>, pass the actual CRS (for example, <code>data_crs="EPSG:32628"</code>). Regional geographic maps default to a local Lambert Conformal projection to avoid the visual x-axis stretch of plotting longitude and latitude as equal Cartesian units. Pass a Cartopy CRS as <code>map_crs</code> to override it.</p>
 <p>Overlay an AOI or administrative boundary:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>boundaries <span class="op">=</span> gpd.read_file(<span class="st">"data/aoi.geojson"</span>)</span>
@@ -456,7 +456,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>Automatic extent assumes rectilinear 1-D x/y coordinates; curvilinear grids need preprocessing or a dedicated plotting path.</li>
 <li>Coastline/border detail is cartographic context, not a replacement for authoritative local boundaries.</li>
-<li>Plate Carrée is a practical default, but can distort area and shape at high latitudes or across wide extents.</li>
+<li>For plain Matplotlib axes without Cartopy, a rough local aspect correction for lon/lat data is <code>ax.set_aspect(1 / np.cos(np.deg2rad(mean_lat)))</code>; for regional maps the module uses a local projection instead. Avoid applying this correction to already-projected axes.</li>
+<li>The automatically selected Lambert Conformal projection is intended for regional maps; choose a suitable projection explicitly for broad or unusual extents.</li>
 <li>Mobility IDs must match the spatial-unit IDs and be consistently typed. Unmatched units appear without a mobility value.</li>
 <li>Mobility aggregates depend on filters, adjustment factors and period semantics; inspect those before interpreting the maps.</li>
 </ul>

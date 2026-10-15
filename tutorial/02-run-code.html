@@ -427,9 +427,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="check-the-product-and-study-area" class="level2">
 <h2 class="anchored" data-anchor-id="check-the-product-and-study-area">1. Check the product and study area</h2>
 <p>The example defaults to <strong>METREF</strong>. The repository also lists FVC/MDFVC as an example product. Select a product from the <a href="https://datalsasaf.lsasvcs.ipma.pt/">LSA SAF Data Service</a> and confirm its product URL, time coverage, variable names, units, coordinate system, no-data values and quality flags.</p>
-<p>The study area has two related settings:</p>
+<p>The bounds settings is in the following file:</p>
 <ul>
-<li>code/preprocess_utils/config.txt controls the crop bounds (WEST, SOUTH, EAST, NORTH).</li>
 <li>code/preprocess_utils/config_resolution.yaml defines the generated output-grid domain.</li>
 </ul>
 <p>Coordinates are longitude/latitude in degrees in this example. For a new AOI, record the bounds in this order: <strong>west, south, east, north</strong>. Include a suitable input buffer for the remapping method; verify edge coverage after processing.</p>
