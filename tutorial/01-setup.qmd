@@ -249,7 +249,7 @@ Browse the product folders to confirm the URL and that your month exists:
 :::
 :::
 
-## ✅ Setup checklist {#checklist}
+## Setup checklist {#checklist}
 
 - [ ] A Linux shell is open (Ubuntu/WSL on Windows) and `pwd` ends in `/tutorial-repo`
 - [ ] `cdo -V`, `wget --version`, `git --version`, `uv --version` all work

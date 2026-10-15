@@ -1,6 +1,6 @@
 ---
-title: "Climate Data Cubes"
-subtitle: "Raw satellite files → a regional, analysis-ready Zarr cube"
+title: "Climate Data Cube"
+subtitle: "A simple workflow to download, preprocess and store LSA SAF products in a Zarr cube"
 author: "Khizer Zakir"
 date: today
 title-slide-attributes:
@@ -82,13 +82,13 @@ Press F for full screen, S for speaker notes, T toggles light/dark, C opens the 
 [3]{.num} **Our approach**
 :::
 ::: {.agenda-item .fragment .fade-up}
-[4]{.num} **Hands-on walkthrough** --- WSL → download → CDO → Zarr → notebooks
+[4]{.num} **Hands-on walkthrough** - WSL → download → CDO → Zarr → notebooks
 :::
 ::: {.agenda-item .fragment .fade-up}
 [5]{.num} **Caveats & scaling**
 :::
 ::: {.agenda-item .fragment .fade-up}
-[6]{.num} **Key message & links**
+[6]{.num} **Wrap-up & resources**
 :::
 :::
 
@@ -163,7 +163,10 @@ variable(time, latitude, longitude)
 ![A Sahel cube (NDVI, 50 time steps) viewed in Lexcube](img/plots/Sahel_cube.png){width="100%"}
 
 ::: {.small-note}
-Left: what the provider delivers — one file per day. Right: what analysis wants — a region, stacked in time.
+
+Left: what the provider delivers — one file per day. 
+
+Right: what analysis wants — a region, stacked in time.
 :::
 :::
 :::::
@@ -231,11 +234,14 @@ Today we build one small, transparent path from EUMETSAT LSA SAF files to a regi
 
 :::: {.fragment .fade-down}
 ::: card
-Every step leaves an output you can open and check --- and every choice is written down.
+
+Every step leaves an output you can open and check
+
+and every choice is written down.
 :::
 ::::
 
-## Many files vs one cube
+<!-- ## Many files vs one cube
 
 | Many separate files | One cube |
 |---|---|
@@ -244,7 +250,7 @@ Every step leaves an output you can open and check --- and every choice is writt
 | Read whole files | Read only the chunks you need |
 | Processing choices live in scripts and memory | Choices stored with the data (`zarr_cube_*` attributes) |
 
-: {.striped .hover}
+: {.striped .hover} -->
 
 ## Where a cube fits in the ecosystem
 
@@ -312,7 +318,7 @@ Authenticated [LSA SAF Data Service](https://datalsasaf.lsasvcs.ipma.pt/). Versi
 <!-- ======================================================= -->
 # 3 · Our approach {background-color="#0b1f33"}
 
-Small, explicit, checkable
+What we will follow in this tutorial
 
 ## Three scripts, three folders
 
@@ -392,7 +398,7 @@ Every stage leaves an output you can inspect.
 :::::
 
 ::: {.fragment .fade-up style="margin-top:1em"}
-APIs and hosted platforms (Planetary Computer, Earth Engine) are great for discovery and analysis. This workflow is the local, fully documented path for authenticated LSA SAF data --- the two complement each other.
+APIs and hosted platforms (Planetary Computer, Earth Engine) are great for discovery and analysis. This workflow is the local, fully documented path for authenticated LSA SAF data --- the two complement each other rather than competing.
 :::
 
 <!-- ======================================================= -->
@@ -459,7 +465,7 @@ The downloader writes the password to a **temporary wgetrc** that is deleted on 
 :::
 
 ::: {.checkpoint}
-✅ **Checkpoint:** `uv run python -c "import zarr; print(zarr.__version__)"` → `3.x`
+**Checkpoint:** `uv run python -c "import zarr; print(zarr.__version__)"` → `3.x`
 :::
 :::
 :::::
@@ -626,7 +632,7 @@ MAIN_VARIABLE=METREF QA_VARIABLES=quality_flag \
 ::::: columns
 ::: {.column width="50%"}
 ::: {.small-note}
-4th argument: a vector AOI instead of the YAML box. The snapped rectangle is saved as `aoi_aligned.gpkg`.
+4th argument: a vector AOI instead of the YAML box.
 :::
 :::
 ::: {.column width="50%" .fragment}
@@ -667,7 +673,7 @@ Neither creates finer detail than the source. Choose per product, keep the QA fl
 :::
 
 ::: {.checkpoint .fragment}
-✅ **Checkpoint:** one `*_processed.nc` per raw file · no `status=failed` in `cdo.log` · `cdo sinfo` shows the `grid.txt` size
+**Checkpoint:** one `*_processed.nc` per raw file · no `status=failed` in `cdo.log` · `cdo sinfo` shows the `grid.txt` size
 :::
 
 ## Step 3 · Build the cube {auto-animate="true" .big-code}
@@ -705,10 +711,6 @@ uv run python code/03_build_zarr_cube.py --input data/interim/METREF
 ::: {.fragment}
 `Stored size      : 841.8 KB in 15 files (compression ≈ 2.3× vs 1.9 MB in memory)`
 :::
-:::
-
-::: {.fragment .fade-up}
-Written to `metref_cube.zarr.tmp`, validated, **then** swapped in --- a failed run never destroys a working cube.
 :::
 
 ## Step 3 · Flags you will actually use
@@ -775,21 +777,22 @@ plot_spatial_timeseries(ds, var="METREF", points={"Dakar": (-17.19, 14.75)}, sho
 ::: card
 **1 · Validate**
 
-Packed vs decoded raw · AOI coverage per date · interim **==** Zarr · remap effect --- in one `dask.compute`.
+Quick data validation at convenience.
+
 :::
 :::
 ::: {.column width="33%" .fragment .fade-up}
 ::: card
 **2 · Plot**
 
-Raw disk (strided) with AOI · raw / interim / cube on one colour scale · missing-data footprint.
+Some quick visualisations of the cube: maps, time series, zonal stats.
 :::
 :::
 ::: {.column width="33%" .fragment .fade-up}
 ::: card
 **3 · Application**
 
-`plot_utils` maps & time series · half-month ETo · zonal stats · climate ↔ mobility · co-occurrence classes.
+A specific use case, if time allows, we can explore this in detail.
 :::
 :::
 :::::
@@ -821,7 +824,7 @@ What the cube does not solve
 - Bilinear smooths; nearest is blocky. Different choices change statistics.
 - Degree grids have latitude-dependent ground size.
 - Product versions, temporal support, units and QA systems differ.
-- This is a **teaching workflow**, not a validated operational product.
+- This is a **training/small-scale workflow**, not a validated operational product.
 
 ## On-the-fly processing vs a pre-built cube
 
@@ -852,29 +855,31 @@ Do not scale only by adding workers --- disk throughput, memory and object count
 ## What we learned {.center}
 
 ::: {.big-message .fragment .zoom-in}
-A useful climate cube starts with **consistent, documented choices** and **honest checks** on missing data and resolution.
+A useful climate cube starts with **consistent, documented choices** and **honest checks** on missing data and resolution AND the resources.
 :::
+
+## Thank you {.center}
+
+- I hope this tutorial has been helpful in understanding the process of creating a climate cube from raw data.
+You can find the code and slides on GitHub, 
+- and I encourage you to explore further and apply these techniques to your own data. 
+- Also, if you have any questions or feedback, please feel free to reach out to me. Thank you for your attention!
+
 
 # Links {background-color="#0b1f33"}
 
-## Scan and explore
+## Scan and Connect
 
 :::: {.columns}
-::: {.column width="33%"}
-![Tutorial site](img/qr/tutorial.png){width="85%" fig-align="center"}
+::: {.column width="45%" align="center"}
+![Email](img/qr/email.png){width="85%" fig-align="center"}
 
-[Tutorial](https://khizerzakir.github.io/tutorial-repo/)
 :::
-::: {.column width="33%"}
-![Code](img/qr/code.png){width="85%" fig-align="center"}
+::: {.column width="45%"}
+![Linkedin](img/qr/linkedin.png){width="85%" fig-align="center"}
 
-[Code](https://github.com/khizerzakir/tutorial-repo)
 :::
-::: {.column width="33%"}
-![Slides](img/qr/slides.png){width="85%" fig-align="center"}
 
-[Slides](https://khizerzakir.github.io/tutorial-repo/slides/presentation.html)
-:::
 ::::
 
 ## References · papers {.smaller}

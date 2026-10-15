@@ -169,9 +169,6 @@ MAIN_VARIABLE=METREF uv run bash code/02_preprocess_cdo.sh \
   0.05 data/raw/METREF data/interim/METREF data/aoi/spatial_units.geosjon
 ```
 
-If the file has no CRS, add `AOI_CRS=EPSG:xxxx`. The snapped rectangle is saved as
-`data/interim/METREF/aoi_aligned.gpkg` (change with `AOI_OUTPUT=`).
-
 :::
 
 ::: {.callout-important}
@@ -206,7 +203,6 @@ uv run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF  
 | AOI vector file | 4th argument or `AOI_FILE=` | none → YAML `domain` |
 | `MAIN_VARIABLE` | environment variable | — (required) |
 | `QA_VARIABLES` | environment variable | `quality_flag` |
-| `AOI_CRS`, `AOI_OUTPUT` | environment variables | file CRS, `<output>/aoi_aligned.gpkg` |
 | `CONFIG_FILE` | environment variable | `code/preprocess_utils/config_resolution.yaml` |
 | parallel files, remap method, buffer | YAML `processing:` | `4`, `bilinear`, `0.2` |
 :::
