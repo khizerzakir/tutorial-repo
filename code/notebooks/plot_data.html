@@ -417,7 +417,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="raw-netcdf" class="level2">
 <h2 class="anchored" data-anchor-id="raw-netcdf">Raw NetCDF</h2>
-<div id="45bf700f" class="cell">
+<div id="45bf700f" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>raw_files <span class="op">=</span> <span class="bu">sorted</span>((DATA_ROOT <span class="op">/</span> <span class="st">"raw"</span>).rglob(<span class="st">"*.nc"</span>))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">## assert that we have at least one raw file to work with</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> raw_files, <span class="st">"No raw NetCDF files found"</span></span>
@@ -431,7 +431,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Raw METREF snapshot"</span>)</span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Raw: NETCDF4_LSASAF_MSG_METREF_MSG-Disk_201001010000.nc: plotting METREF, shape=(3201, 3201)</code></pre>
+<pre><code>Raw: NETCDF4_LSASAF_MSG_METREF_MSG-Disk_202006010000.nc: plotting METREF, shape=(3201, 3201)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -444,7 +444,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="interim-netcdf" class="level2">
 <h2 class="anchored" data-anchor-id="interim-netcdf">Interim NetCDF</h2>
-<div id="9caf29e0" class="cell" data-execution_count="8">
+<div id="9caf29e0" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>interim_files <span class="op">=</span> <span class="bu">sorted</span>((DATA_ROOT <span class="op">/</span> <span class="st">"interim"</span>).rglob(<span class="st">"*.nc"</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> interim_files, <span class="st">"No interim NetCDF files found"</span></span>
@@ -462,7 +462,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Interim METREF snapshot"</span>)</span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Interim: NETCDF4_LSASAF_MSG_METREF_MSG-Disk_201001010000_processed.nc: plotting METREF, shape=(552, 576)</code></pre>
+<pre><code>Interim: NETCDF4_LSASAF_MSG_METREF_MSG-Disk_202006010000_processed.nc: plotting METREF, shape=(91, 121)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -475,7 +475,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="zarr" class="level2">
 <h2 class="anchored" data-anchor-id="zarr">Zarr</h2>
-<div id="1013d185" class="cell" data-execution_count="9">
+<div id="1013d185" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>zarr_stores <span class="op">=</span> <span class="bu">sorted</span>(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    path <span class="cf">for</span> path <span class="kw">in</span> (DATA_ROOT <span class="op">/</span> <span class="st">"zarr"</span>).iterdir()</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> path.is_dir() <span class="kw">and</span> ((path <span class="op">/</span> <span class="st">"zarr.json"</span>).exists() <span class="kw">or</span> (path <span class="op">/</span> <span class="st">".zgroup"</span>).exists())</span>
@@ -486,20 +486,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    plot_snapshot(zarr_ds, <span class="ss">f"Zarr: </span><span class="sc">{</span>zarr_path<span class="sc">.</span>name<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Zarr METREF snapshot"</span>)</span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/tmp/ipykernel_926059/1317735194.py:7: RuntimeWarning: Failed to open Zarr store with consolidated metadata, but successfully read with non-consolidated metadata. This is typically much slower for opening a dataset. To silence this warning, consider:
-1. Consolidating metadata in this existing store with zarr.consolidate_metadata().
-2. Explicitly setting consolidated=False, to avoid trying to read consolidate metadata, or
-3. Explicitly setting consolidated=True, to raise an error in this case instead of falling back to try reading non-consolidated metadata.
-  with xr.open_zarr(zarr_path, consolidated=None) as zarr_ds:</code></pre>
-</div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Zarr: metref_sample_1month.zarr: plotting METREF, shape=(552, 576)</code></pre>
+<pre><code>Zarr: metref_sample_1month.zarr: plotting METREF, shape=(91, 121)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="plot_data_files/figure-html/cell-5-output-3.png" class="img-fluid figure-img"></p>
+<p><img src="plot_data_files/figure-html/cell-5-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -508,23 +501,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="raw-versus-interim-versus-zarr-means" class="level2">
 <h2 class="anchored" data-anchor-id="raw-versus-interim-versus-zarr-means">Raw versus interim versus Zarr means</h2>
 <div id="bb964cc2" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">18</span>, <span class="dv">5</span>), constrained_layout<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> [(<span class="st">"Raw"</span>, raw_path), (<span class="st">"Interim"</span>, interim_path), (<span class="st">"Zarr"</span>, zarr_path)]</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> axis, (label, path) <span class="kw">in</span> <span class="bu">zip</span>(axes, sources):</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> label <span class="op">==</span> <span class="st">"Zarr"</span>:</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        ds <span class="op">=</span> xr.open_zarr(path, consolidated<span class="op">=</span><span class="va">None</span>)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        ds <span class="op">=</span> xr.open_dataset(path, decode_cf<span class="op">=</span><span class="va">True</span>, mask_and_scale<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        variable <span class="op">=</span> select_plot_variable(ds)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        da <span class="op">=</span> ds[variable]</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="st">"time"</span> <span class="kw">in</span> da.dims:</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>            da <span class="op">=</span> da.isel(time<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        da.plot(ax<span class="op">=</span>axis, robust<span class="op">=</span><span class="va">True</span>, add_colorbar<span class="op">=</span><span class="va">False</span>, cmap<span class="op">=</span><span class="st">"viridis"</span>)</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        axis.set_title(label)</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">finally</span>:</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        ds.close()</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">18</span>, <span class="dv">5</span>), constrained_layout<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> [(<span class="st">"Raw"</span>, raw_path), (<span class="st">"Interim"</span>, interim_path), (<span class="st">"Zarr"</span>, zarr_path)]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> axis, (label, path) <span class="kw">in</span> <span class="bu">zip</span>(axes, sources):</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> label <span class="op">==</span> <span class="st">"Zarr"</span>:</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        ds <span class="op">=</span> xr.open_zarr(path, consolidated<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        ds <span class="op">=</span> xr.open_dataset(path, decode_cf<span class="op">=</span><span class="va">True</span>, mask_and_scale<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        variable <span class="op">=</span> select_plot_variable(ds)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        da <span class="op">=</span> ds[variable]</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="st">"time"</span> <span class="kw">in</span> da.dims:</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>            da <span class="op">=</span> da.isel(time<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        da.plot(ax<span class="op">=</span>axis, robust<span class="op">=</span><span class="va">True</span>, add_colorbar<span class="op">=</span><span class="va">False</span>, cmap<span class="op">=</span><span class="st">"viridis"</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        axis.set_title(label)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">finally</span>:</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        ds.close()</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/tmp/ipykernel_926059/1154902113.py:5: RuntimeWarning: Failed to open Zarr store with consolidated metadata, but successfully read with non-consolidated metadata. This is typically much slower for opening a dataset. To silence this warning, consider:
 1. Consolidating metadata in this existing store with zarr.consolidate_metadata().
