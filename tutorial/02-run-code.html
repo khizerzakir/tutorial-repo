@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>B. Download and preprocess a sample – Climate Data Cube Workshop</title>
+<title>B · Download and preprocess – Climate Data Cube Workshop</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -84,9 +84,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-779814d4eaa9c9e6b02b72ade1d61f9b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-c8bae1f407610881bc621976b8284e03.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-779814d4eaa9c9e6b02b72ade1d61f9b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-482e8ff703e164d7371dd0a028094024.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-d90499ef6ee6d792734ee735fd68a163.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-482e8ff703e164d7371dd0a028094024.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -114,6 +114,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<style>html{ scroll-behavior: smooth; }</style>
 
 
 </head>
@@ -308,18 +309,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="dropdown-menu" aria-labelledby="nav-menu-tutorial">    
         <li>
     <a class="dropdown-item" href="../tutorial/01-setup.html">
- <span class="dropdown-text">A. Setup</span></a>
+ <span class="dropdown-text">A · Setup</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../tutorial/02-run-code.html">
- <span class="dropdown-text">B. Download and preprocess a sample</span></a>
+ <span class="dropdown-text">B · Download and preprocess</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../tutorial/03-zarr-cubes.html">
- <span class="dropdown-text">C. Build and inspect a Zarr cube</span></a>
+ <span class="dropdown-text">C · Build the Zarr cube</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../tutorial/04-explore.html">
+ <span class="dropdown-text">D · Explore the cube</span></a>
   </li>  
     </ul>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../tutorial/reference.html"> 
+<span class="menu-text">Command builder</span></a>
+  </li>  
   <li class="nav-item">
     <a class="nav-link" href="../slides/presentation.html"> 
 <span class="menu-text">Slides</span></a>
@@ -335,6 +344,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -343,7 +357,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorial/02-run-code.html">B. Download and preprocess a sample</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorial/01-setup.html">Walkthrough</a></li><li class="breadcrumb-item"><a href="../tutorial/02-run-code.html">B · Download and preprocess</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -358,25 +372,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Hands-on Practical Tutorial</span></a>
+ <span class="menu-text">Climate Data Cube Workshop</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Walkthrough</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorial/01-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">A. Setup</span></a>
+ <span class="menu-text">A · Setup</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorial/02-run-code.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">B. Download and preprocess a sample</span></a>
+ <span class="menu-text">B · Download and preprocess</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorial/03-zarr-cubes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">C. Build and inspect a Zarr cube</span></a>
+ <span class="menu-text">C · Build the Zarr cube</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorial/04-explore.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">D · Explore the cube</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorial/reference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Command builder &amp; reference</span></a>
   </div>
 </li>
     </ul>
@@ -389,24 +426,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#check-the-product-and-study-area" id="toc-check-the-product-and-study-area" class="nav-link active" data-scroll-target="#check-the-product-and-study-area">1. Check the product and study area</a></li>
-  <li><a href="#set-credentials" id="toc-set-credentials" class="nav-link" data-scroll-target="#set-credentials">2. Set credentials</a></li>
-  <li><a href="#download-the-sample" id="toc-download-the-sample" class="nav-link" data-scroll-target="#download-the-sample">3. Download the sample</a></li>
-  <li><a href="#inspect-raw-netcdf-before-processing" id="toc-inspect-raw-netcdf-before-processing" class="nav-link" data-scroll-target="#inspect-raw-netcdf-before-processing">4. Inspect raw NetCDF before processing</a></li>
-  <li><a href="#choose-variables-and-cropremap" id="toc-choose-variables-and-cropremap" class="nav-link" data-scroll-target="#choose-variables-and-cropremap">5. Choose variables and crop/remap</a></li>
-  <li><a href="#check-for-missing-values" id="toc-check-for-missing-values" class="nav-link" data-scroll-target="#check-for-missing-values">6. Check for missing values</a></li>
-  <li><a href="#method-caveats" id="toc-method-caveats" class="nav-link" data-scroll-target="#method-caveats">7. Method caveats</a></li>
-  <li><a href="#next-page" id="toc-next-page" class="nav-link" data-scroll-target="#next-page">Next page</a></li>
+  <li><a href="#download" id="toc-download" class="nav-link active" data-scroll-target="#download">1 · Download one month</a>
+  <ul class="collapse">
+  <li><a href="#run-it" id="toc-run-it" class="nav-link" data-scroll-target="#run-it">Run it</a></li>
+  <li><a href="#example-output" id="toc-example-output" class="nav-link" data-scroll-target="#example-output">Example output</a></li>
+  </ul></li>
+  <li><a href="#inspect" id="toc-inspect" class="nav-link" data-scroll-target="#inspect">2 · Inspect a raw file</a></li>
+  <li><a href="#region" id="toc-region" class="nav-link" data-scroll-target="#region">3 · Define the region</a></li>
+  <li><a href="#preprocess" id="toc-preprocess" class="nav-link" data-scroll-target="#preprocess">4 · Crop and remap</a>
+  <ul class="collapse">
+  <li><a href="#run-it-1" id="toc-run-it-1" class="nav-link" data-scroll-target="#run-it-1">Run it</a></li>
+  <li><a href="#example-output-1" id="toc-example-output-1" class="nav-link" data-scroll-target="#example-output-1">Example output</a></li>
+  </ul></li>
+  <li><a href="#check" id="toc-check" class="nav-link" data-scroll-target="#check">5 · Check the output</a>
+  <ul class="collapse">
+  <li><a href="#when-output-is-mostly-missing" id="toc-when-output-is-mostly-missing" class="nav-link" data-scroll-target="#when-output-is-mostly-missing">When output is mostly missing</a></li>
+  </ul></li>
+  <li><a href="#method-notes" id="toc-method-notes" class="nav-link" data-scroll-target="#method-notes">Method notes</a></li>
   </ul>
-</nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/khizerzakir/tutorial-repo/edit/main/tutorial/02-run-code.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/khizerzakir/tutorial-repo/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorial/01-setup.html">Walkthrough</a></li><li class="breadcrumb-item"><a href="../tutorial/02-run-code.html">B · Download and preprocess</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">B. Download and preprocess a sample</h1>
+<h1 class="title">B · Download and preprocess</h1>
+<p class="subtitle lead">Run the download and preprocessing scripts to get a small sample of LSA SAF data, crop it to your area of interest, and remap it to a regular grid.</p>
 </div>
 
 
@@ -423,90 +470,517 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This page downloads one LSA SAF product sample, crops it to a configured study area, and remaps it to a target grid. Begin with one product and one short time period. Validate the result before extending the period or region.</p>
-<section id="check-the-product-and-study-area" class="level2">
-<h2 class="anchored" data-anchor-id="check-the-product-and-study-area">1. Check the product and study area</h2>
-<p>The example defaults to <strong>METREF</strong>. The repository also lists FVC/MDFVC as an example product. Select a product from the <a href="https://datalsasaf.lsasvcs.ipma.pt/">LSA SAF Data Service</a> and confirm its product URL, time coverage, variable names, units, coordinate system, no-data values and quality flags.</p>
-<p>Coordinates are <code>longitude</code>/<code>latitude</code> in degrees in this example. For a new AOI, store it in <code>data/aoi/</code> and there is a <code>utils/</code> script to convert a shapefile to a bounding box. The AOI is used to crop the raw files before remapping and using standrdized coordinates. The target grid is defined in <code>code/preprocess_utils/grid.txt</code>. The default is a 0.05° global grid, but you can change the resolution and bounds to suit your study area.</p>
-<p>The remapping method is bilinear by default. Use nearest-neighbour for categorical fields and flags. The remapping method is set in <code>code/preprocess_utils/config_resolution.yaml</code>.</p>
+<div class="pipeline">
+<p><span class="stage">A · Setup</span> <span class="here">B · Download &amp; preprocess</span> <span class="stage">C · Zarr cube</span> <span class="stage">D · Explore</span></p>
+</div>
+<p>You will run two scripts from the repository root, in the Linux/WSL terminal you opened in <a href="../tutorial/01-setup.html#terminal">Setup</a>:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Script</th>
+<th>Input</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>code/01_download_sample.sh</code></td>
+<td>LSA SAF server + <code>code/.env</code></td>
+<td><code>data/raw/&lt;PRODUCT&gt;/YYYY/MM/*.nc</code></td>
+</tr>
+<tr class="even">
+<td><code>code/02_preprocess_cdo.sh</code></td>
+<td>raw NetCDF + AOI/YAML bounds</td>
+<td><code>data/interim/&lt;PRODUCT&gt;/YYYY/MM/*_processed.nc</code></td>
+</tr>
+</tbody>
+</table>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/projects/tutorial-repo     <span class="co"># every command on this page runs from here</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Prefer to fill in a form? The <a href="../tutorial/reference.html"><strong>command builder</strong></a> writes all the commands on this page for your product, month, AOI and number of CPU cores.</p>
+</div>
+</div>
+</div>
+<section id="download" class="level2">
+<h2 class="anchored" data-anchor-id="download">1 · Download one month</h2>
+<section id="run-it" class="level3">
+<h3 class="anchored" data-anchor-id="run-it">Run it</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Use <code>code/.env</code></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Choose the month</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Another product (FVC)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Faster / elsewhere</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Uses <code>SAMPLE_YEAR</code>, <code>SAMPLE_MONTH</code>, <code>VARIABLE_NAME</code> and <code>URL</code> from <code>code/.env</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> code/01_download_sample.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Positional arguments <strong>override</strong> <code>code/.env</code>: <code>YYYY MM [PRODUCT] [URL]</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> code/01_download_sample.sh 2015 06 METREF</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p>The product name is used for the output folder; the URL decides what is downloaded.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> code/01_download_sample.sh 2015 06 MDFVC <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/MDFVC/NETCDF"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="va">JOBS</span><span class="op">=</span>8 <span class="va">RAW_DIR</span><span class="op">=</span>/data/lsasaf <span class="fu">bash</span> code/01_download_sample.sh 2015 06 METREF</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p><strong>Options</strong></p>
+<div class="flag-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>How to set it</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>YYYY MM</code></td>
+<td>1st, 2nd argument</td>
+<td><code>SAMPLE_YEAR</code>, <code>SAMPLE_MONTH</code> in <code>.env</code></td>
+<td>Month to download</td>
+</tr>
+<tr class="even">
+<td><code>PRODUCT</code></td>
+<td>3rd argument</td>
+<td><code>.env VARIABLE_NAME</code> → <code>METREF</code></td>
+<td>Folder name under <code>data/raw/</code></td>
+</tr>
+<tr class="odd">
+<td><code>URL</code></td>
+<td>4th argument</td>
+<td><code>.env URL</code></td>
+<td>Product NetCDF root on the LSA SAF server</td>
+</tr>
+<tr class="even">
+<td><code>JOBS</code></td>
+<td>environment variable</td>
+<td><code>4</code></td>
+<td>Parallel downloads</td>
+</tr>
+<tr class="odd">
+<td><code>RAW_DIR</code></td>
+<td>environment variable</td>
+<td><code>data/raw</code></td>
+<td>Where raw files go</td>
+</tr>
+<tr class="even">
+<td><code>ENV_FILE</code></td>
+<td>environment variable</td>
+<td><code>./code/.env</code></td>
+<td>Credentials/settings file</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout callout-style-simple callout-warning">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><code>code/.env</code> is loaded <em>after</em> environment variables, so <code>URL=… bash code/01_download_sample.sh</code> is overwritten by the <code>URL</code> line in <code>.env</code>. Override the month, product and URL with <strong>arguments</strong>.</p>
+</div>
+</div>
+</div>
 </section>
-<section id="set-credentials" class="level2">
-<h2 class="anchored" data-anchor-id="set-credentials">2. Set credentials</h2>
-<p>From the repository root:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> code/.env.example code/.env</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Edit <code>code/.env</code> and enter your <code>LSA SAF</code> credentials - See the <a href="../tutorial/01-setup.html">setup guide</a> for details. The downloader expects:</p>
-<pre class="dotenv"><code>LSASAF_USERNAME=your_username
-LSASAF_PASSWORD=your_password
-SAMPLE_YEAR=2020
-SAMPLE_MONTH=06
-VARIABLE_NAME=METREF
-URL=https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF</code></pre>
-<p>Keep code/.env private and never commit it. The script reads this path by default when run from the repository root. If you use another path, set ENV_FILE=/path/to/.env.</p>
+<section id="example-output" class="level3">
+<h3 class="anchored" data-anchor-id="example-output">Example output</h3>
+<pre class="text"><code>2015-06: 30 file(s) on server, 30 to download -&gt; …/data/raw/METREF/2015/06
+First file: ~6s. Estimated remaining: ~0m44s with 4 parallel jobs
+Done: 30 file(s) in 0m52s</code></pre>
+<p>Re-running is safe: files that already exist are skipped and only failed ones are retried.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Walk through the download script
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>code/01_download_sample.sh (simplified)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-11" data-filename="code/01_download_sample.sh (simplified)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-11-1"><a href="#annotated-cell-11-1" aria-hidden="true" tabindex="-1"></a><span class="va">ENV_FILE</span><span class="op">=</span><span class="st">"</span><span class="va">${ENV_FILE</span><span class="op">:-</span><span class="va">$PWD</span>/code/.env<span class="va">}</span><span class="st">"</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-11-2" class="code-annotation-target"><a href="#annotated-cell-11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-a</span><span class="kw">;</span> <span class="bu">.</span> <span class="st">"</span><span class="va">$ENV_FILE</span><span class="st">"</span><span class="kw">;</span> <span class="bu">set</span> +a</span>
+<span id="annotated-cell-11-3"><a href="#annotated-cell-11-3" aria-hidden="true" tabindex="-1"></a><span class="va">WGETRC</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="fu">mktemp</span><span class="va">)</span><span class="st">"</span><span class="kw">;</span> <span class="bu">trap</span> <span class="st">'rm -f "$WGETRC"'</span> EXIT</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-11-4" class="code-annotation-target"><a href="#annotated-cell-11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'http_user=%s\nhttp_password=%s\n'</span> <span class="st">"</span><span class="va">$LSASAF_USERNAME</span><span class="st">"</span> <span class="st">"</span><span class="va">$LSASAF_PASSWORD</span><span class="st">"</span> <span class="op">&gt;</span> <span class="st">"</span><span class="va">$WGETRC</span><span class="st">"</span></span>
+<span id="annotated-cell-11-5"><a href="#annotated-cell-11-5" aria-hidden="true" tabindex="-1"></a></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-11-6" class="code-annotation-target"><a href="#annotated-cell-11-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> d <span class="kw">in</span> <span class="va">$(</span><span class="fu">seq</span> <span class="at">-w</span> 1 31<span class="va">)</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="annotated-cell-11-7"><a href="#annotated-cell-11-7" aria-hidden="true" tabindex="-1"></a>  <span class="va">list</span><span class="op">+=</span><span class="va">$(</span><span class="fu">wget</span> <span class="at">-q</span> <span class="at">-O-</span> <span class="st">"</span><span class="va">$SRC</span><span class="st">/</span><span class="va">$YEAR</span><span class="st">/</span><span class="va">$MONTH</span><span class="st">/</span><span class="va">$d</span><span class="st">/"</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'\.nc$'</span> …<span class="va">)</span></span>
+<span id="annotated-cell-11-8"><a href="#annotated-cell-11-8" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="annotated-cell-11-9"><a href="#annotated-cell-11-9" aria-hidden="true" tabindex="-1"></a></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-11-10" class="code-annotation-target"><a href="#annotated-cell-11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">get()</span> <span class="kw">{</span> <span class="fu">wget</span> <span class="at">-q</span> <span class="at">-O</span> <span class="st">"</span><span class="va">$f</span><span class="st">.part"</span> <span class="st">"</span><span class="va">$1</span><span class="st">"</span> <span class="kw">&amp;&amp;</span> <span class="fu">mv</span> <span class="st">"</span><span class="va">$f</span><span class="st">.part"</span> <span class="st">"</span><span class="va">$f</span><span class="st">"</span><span class="kw">;</span> <span class="kw">}</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-11-11" class="code-annotation-target"><a href="#annotated-cell-11-11" aria-hidden="true" tabindex="-1"></a><span class="fu">xargs</span> <span class="at">-P</span> <span class="st">"</span><span class="va">$JOBS</span><span class="st">"</span> <span class="at">-I{}</span> bash <span class="at">-c</span> <span class="st">'get "$1" "$2"'</span> _ {} <span class="st">"</span><span class="va">$DEST</span><span class="st">"</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-11" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="2" data-code-annotation="1">Credentials and defaults come from the private <code>.env</code>, never from the repository.</span>
+</dd>
+<dt data-target-cell="annotated-cell-11" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="4" data-code-annotation="2"><code>wget</code> reads the password from a temporary file that is deleted on exit — it never appears in the process list.</span>
+</dd>
+<dt data-target-cell="annotated-cell-11" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="6" data-code-annotation="3">Each day folder of the month is listed; days that do not exist return nothing.</span>
+</dd>
+<dt data-target-cell="annotated-cell-11" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="10" data-code-annotation="4">Files are written as <code>.part</code> and renamed only when complete — an interrupted run never leaves a “finished-looking” half file.</span>
+</dd>
+<dt data-target-cell="annotated-cell-11" data-target-annotation="5">5</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="11" data-code-annotation="5"><code>JOBS</code> downloads run in parallel.</span>
+</dd>
+</dl>
+</div>
+</div>
+</div>
 </section>
-<section id="download-the-sample" class="level2">
-<h2 class="anchored" data-anchor-id="download-the-sample">3. Download the sample</h2>
-<p>Run from the repository root:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> code/01_download_sample.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You can override the year, month, product and product URL positionally:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> code/01_download_sample.sh 2020 06 METREF <span class="st">"https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The script checks the service listing and skips files already present. New files are first written as .part, then renamed after a successful download. The default raw-data layout is:</p>
-<pre class="text"><code>data/raw/METREF/2020/06/*.nc</code></pre>
-<p>Confirm that files exist and have plausible sizes. A completed download only confirms transfer success; it does not confirm that the data are scientifically valid.</p>
 </section>
-<section id="inspect-raw-netcdf-before-processing" class="level2">
-<h2 class="anchored" data-anchor-id="inspect-raw-netcdf-before-processing">4. Inspect raw NetCDF before processing</h2>
-<p>Use CDO to list metadata and summary information:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> sinfo data/raw/METREF/2020/06/example.nc</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> showname data/raw/METREF/2020/06/example.nc</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> showtimestamp data/raw/METREF/2020/06/example.nc</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> infon data/raw/METREF/2020/06/example.nc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Replace example.nc with a real downloaded filename. Review coordinate ranges, variable names, timestamps, units, missing values and product QA information. If the raw file itself has no valid values, diagnose the download/product selection before remapping.</p>
-</section>
-<section id="choose-variables-and-cropremap" class="level2">
-<h2 class="anchored" data-anchor-id="choose-variables-and-cropremap">5. Choose variables and crop/remap</h2>
-<p>Inspect the exact variable names:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> showname data/raw/METREF/2020/06/example.nc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Set the main continuous variable, AOI file and optional QA variable names:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="va">MAIN_VARIABLE</span><span class="op">=</span>METREF <span class="dt">\</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="va">QA_VARIABLES</span><span class="op">=</span>QUALITY_FLAG,QC_FLAG <span class="dt">\</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="va">AOI_GEOJSON</span><span class="op">=</span>data/aoi/study_area.geojson <span class="dt">\</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> code/02_preprocess_cdo.sh data/raw/METREF data/interim</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Use exact variable names from <code>showname</code>; QA names are comma-separated. Omit <code>QA_VARIABLES</code> if no QA layers are needed. The pipeline builds one snapped AOI grid from the first raw file, then checks other inputs use the same grid. It selects and bilinearly remaps only <code>MAIN_VARIABLE</code> by default. QA layers are selected and processed separately with nearest-neighbour mapping, which chooses an existing code rather than averaging categories. Set <code>MAIN_REMAP_METHOD=nearest</code> if the primary variable is categorical.</p>
-<p>The crop includes a one-cell margin by default to support remapping near AOI edges. Outputs are written to temporary files, checked for readability and valid main-variable cells, and renamed only when complete. QA values are preserved as data layers; this example does not interpret product-specific bit fields or automatically apply a QA mask.</p>
-<p><code>PARALLEL</code> controls independent files processed concurrently; for example:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="va">PARALLEL</span><span class="op">=</span>2 <span class="va">MAIN_VARIABLE</span><span class="op">=</span>METREF <span class="va">AOI_GEOJSON</span><span class="op">=</span>data/aoi/study_area.geojson <span class="dt">\</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bash</span> code/02_preprocess_cdo.sh data/raw/METREF data/interim</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Start conservatively. Increase parallelism only after checking RAM, disk throughput and temporary storage.</p>
-<p>Processed files are written beneath <code>data/interim/&lt;MAIN_VARIABLE&gt;/YYYY/MM/</code>. Check <code>data/interim/cdo.log</code>, then inspect an output:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> sinfo data/interim/METREF/2020/06/example_processed.nc</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> infon data/interim/METREF/2020/06/example_processed.nc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="check-for-missing-values" class="level2">
-<h2 class="anchored" data-anchor-id="check-for-missing-values">6. Check for missing values</h2>
-<p>Compare raw and processed summaries and map the output. An all-NaN or mostly missing result can be caused by:</p>
+<section id="inspect" class="level2">
+<h2 class="anchored" data-anchor-id="inspect">2 · Inspect a raw file</h2>
+<p>Never remap blind. Pick one file and look at variable names, grid and values:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="va">f</span><span class="op">=</span><span class="va">$(</span><span class="fu">ls</span> data/raw/METREF/2015/06/<span class="pp">*</span>.nc <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n1</span><span class="va">)</span><span class="kw">;</span> <span class="bu">echo</span> <span class="st">"</span><span class="va">$f</span><span class="st">"</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> showname      <span class="st">"</span><span class="va">$f</span><span class="st">"</span>   <span class="co"># variable names → MAIN_VARIABLE and QA_VARIABLES</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> sinfo         <span class="st">"</span><span class="va">$f</span><span class="st">"</span>   <span class="co"># grid: lon/lat range and step, data type</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> showtimestamp <span class="st">"</span><span class="va">$f</span><span class="st">"</span>   <span class="co"># time stamp</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> infon         <span class="st">"</span><span class="va">$f</span><span class="st">"</span>   <span class="co"># min / mean / max per variable and number of missing values</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Check yourself
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <ul>
-<li>crop bounds and target-grid bounds not overlapping;</li>
-<li>AOI partly outside raw source coverage (output is limited to its overlap);</li>
-<li>wrong variable, coordinate names or coordinate direction;</li>
-<li>fill values not decoded as missing;</li>
-<li>a source mask or retrieval-quality exclusion;</li>
-<li>invalid or unsupported remapping setup.</li>
+<li><code>showname</code> lists the product variable (e.g.&nbsp;<code>METREF</code>) <strong>and</strong> a QA variable (e.g.&nbsp;<code>quality_flag</code>).</li>
+<li><code>sinfo</code> shows a regular <code>lonlat</code> grid (for MSG-disk products e.g.&nbsp;<code>-80 to 80 by 0.05</code>).</li>
+<li><code>infon</code> shows plausible values for the product (METREF: mm/day, roughly 0–15).</li>
 </ul>
-<p>Some missing values are expected. Set an acceptable valid-coverage threshold for the application, and check coverage spatially as well as numerically. A file existing or opening is not enough to establish fitness for use.</p>
+</div>
+</div>
 </section>
-<section id="method-caveats" class="level2">
-<h2 class="anchored" data-anchor-id="method-caveats">7. Method caveats</h2>
+<section id="region" class="level2">
+<h2 class="anchored" data-anchor-id="region">3 · Define the region</h2>
+<p>The region can come from the YAML bounds <strong>or</strong> from a vector file. Either way the script snaps it outward to whole raw-grid cells and writes the target grid to <code>code/preprocess_utils/grid.txt</code>.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Bounding box in YAML</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Vector AOI file</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>Edit <code>code/preprocess_utils/config_resolution.yaml</code>:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>code/preprocess_utils/config_resolution.yaml</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-12" data-filename="code/preprocess_utils/config_resolution.yaml"><pre class="sourceCode yaml code-annotation-code code-with-copy code-annotated"><code class="sourceCode yaml"><a class="code-annotation-anchor" data-target-cell="annotated-cell-12" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-12-1" class="code-annotation-target"><a href="#annotated-cell-12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">domain</span><span class="kw">:</span></span>
+<span id="annotated-cell-12-2"><a href="#annotated-cell-12-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">lon_min</span><span class="kw">:</span><span class="at"> </span><span class="fl">-17.275</span></span>
+<span id="annotated-cell-12-3"><a href="#annotated-cell-12-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">lon_max</span><span class="kw">:</span><span class="at"> </span><span class="fl">-11.225</span></span>
+<span id="annotated-cell-12-4"><a href="#annotated-cell-12-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">lat_min</span><span class="kw">:</span><span class="at"> </span><span class="fl">12.225</span></span>
+<span id="annotated-cell-12-5"><a href="#annotated-cell-12-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">lat_max</span><span class="kw">:</span><span class="at"> </span><span class="fl">16.775</span></span>
+<span id="annotated-cell-12-6"><a href="#annotated-cell-12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">processing</span><span class="kw">:</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-12" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-12-7" class="code-annotation-target"><a href="#annotated-cell-12-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">parallel</span><span class="kw">:</span><span class="at"> </span><span class="dv">4</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-12" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-12-8" class="code-annotation-target"><a href="#annotated-cell-12-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">remap_method</span><span class="kw">:</span><span class="at"> bilinear</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-12" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-12-9" class="code-annotation-target"><a href="#annotated-cell-12-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">buffer</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.2</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-12" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-12" data-code-lines="1" data-code-annotation="1">Degrees (EPSG:4326). Snapped outward to raw cell edges on each run.</span>
+</dd>
+<dt data-target-cell="annotated-cell-12" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-12" data-code-lines="7" data-code-annotation="2">Files processed at the same time. <strong>This is the only place to set parallelism</strong> for preprocessing — an environment variable <code>PARALLEL=</code> is ignored.</span>
+</dd>
+<dt data-target-cell="annotated-cell-12" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-12" data-code-lines="8" data-code-annotation="3"><code>bilinear</code> for continuous fields, <code>nearest</code> for categorical ones. Applies to all non-QA variables; QA variables always use nearest neighbour.</span>
+</dd>
+<dt data-target-cell="annotated-cell-12" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-12" data-code-lines="9" data-code-annotation="4">Extra degrees cropped around the grid, so bilinear interpolation has real neighbours at the AOI edge.</span>
+</dd>
+</dl>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>Pass any GeoPandas-readable file (<code>.shp</code>, <code>.gpkg</code>, <code>.geojson</code>, <code>.parquet</code>) as the <strong>4th argument</strong> (or <code>AOI_FILE=</code>). Its total bounds become the domain:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="va">MAIN_VARIABLE</span><span class="op">=</span>METREF <span class="ex">uv</span> run bash code/02_preprocess_cdo.sh <span class="dt">\</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  0.05 data/raw/METREF data/interim/METREF data/aoi/spatial_units.geosjon</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If the file has no CRS, add <code>AOI_CRS=EPSG:xxxx</code>. The snapped rectangle is saved as <code>data/interim/METREF/aoi_aligned.gpkg</code> (change with <code>AOI_OUTPUT=</code>).</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>The script updates the YAML in place
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Each run rewrites the <code>domain:</code> and <code>grid:</code> sections of <code>config_resolution.yaml</code> with the <strong>snapped</strong> bounds (and with the AOI bounds when you pass a vector file). Commit or copy the file if you want to keep the previous region; restore the repository default with <code>git checkout code/preprocess_utils/config_resolution.yaml code/preprocess_utils/grid.txt</code>.</p>
+</div>
+</div>
+</section>
+<section id="preprocess" class="level2">
+<h2 class="anchored" data-anchor-id="preprocess">4 · Crop and remap</h2>
+<section id="run-it-1" class="level3">
+<h3 class="anchored" data-anchor-id="run-it-1">Run it</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-4"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><a class="code-annotation-anchor" data-target-cell="annotated-cell-4" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-4-1" class="code-annotation-target"><a href="#annotated-cell-4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">MAIN_VARIABLE</span><span class="op">=</span>METREF</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-4" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-4-2" class="code-annotation-target"><a href="#annotated-cell-4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">QA_VARIABLES</span><span class="op">=</span>quality_flag</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-4" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-4-3" class="code-annotation-target"><a href="#annotated-cell-4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-4" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-4" data-code-lines="1" data-code-annotation="1"><strong>Required.</strong> Must match a name from <code>cdo showname</code>; the script stops and lists the available names otherwise.</span>
+</dd>
+<dt data-target-cell="annotated-cell-4" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-4" data-code-lines="2" data-code-annotation="2">Comma-separated QA/flag variables, remapped with nearest neighbour so flag codes are never averaged. Default <code>quality_flag</code>; every name must exist in the file.</span>
+</dd>
+<dt data-target-cell="annotated-cell-4" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-4" data-code-lines="3" data-code-annotation="3"><code>uv run</code> makes <code>python3</code> inside the script use the project environment (YAML + grid helper). Arguments: <strong>resolution label</strong> (written to the log — the target grid always follows the raw grid’s cell size, 0.05° for MSG, so no false detail is created), <strong>input folder</strong> (searched recursively for <code>*.nc</code>) and <strong>output folder</strong> (use one folder <strong>per product</strong> so the cube builder never mixes products).</span>
+</dd>
+</dl>
+<p><strong>All options</strong></p>
+<div class="flag-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>How to set it</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>resolution label</td>
+<td>1st argument</td>
+<td>YAML <code>processing.resolution</code></td>
+</tr>
+<tr class="even">
+<td>input folder</td>
+<td>2nd argument</td>
+<td><code>data/raw</code></td>
+</tr>
+<tr class="odd">
+<td>output folder</td>
+<td>3rd argument</td>
+<td><code>data/interim</code></td>
+</tr>
+<tr class="even">
+<td>AOI vector file</td>
+<td>4th argument or <code>AOI_FILE=</code></td>
+<td>none → YAML <code>domain</code></td>
+</tr>
+<tr class="odd">
+<td><code>MAIN_VARIABLE</code></td>
+<td>environment variable</td>
+<td>— (required)</td>
+</tr>
+<tr class="even">
+<td><code>QA_VARIABLES</code></td>
+<td>environment variable</td>
+<td><code>quality_flag</code></td>
+</tr>
+<tr class="odd">
+<td><code>AOI_CRS</code>, <code>AOI_OUTPUT</code></td>
+<td>environment variables</td>
+<td>file CRS, <code>&lt;output&gt;/aoi_aligned.gpkg</code></td>
+</tr>
+<tr class="even">
+<td><code>CONFIG_FILE</code></td>
+<td>environment variable</td>
+<td><code>code/preprocess_utils/config_resolution.yaml</code></td>
+</tr>
+<tr class="odd">
+<td>parallel files, remap method, buffer</td>
+<td>YAML <code>processing:</code></td>
+<td><code>4</code>, <code>bilinear</code>, <code>0.2</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="example-output-1" class="level3">
+<h3 class="anchored" data-anchor-id="example-output-1">Example output</h3>
+<pre class="text"><code>Raw resolution: dx=0.05°, dy=0.05°  (121 x 91 cells)
+Aligned bounds: lon -17.275 to -11.225, lat 12.225 to 16.775
+Saved updated YAML: …/code/preprocess_utils/config_resolution.yaml
+Saved CDO target grid: …/code/preprocess_utils/grid.txt
+cdo    remapbil: Bilinear weights from lonlat (129x97) to lonlat (121x91) grid, with source mask (…)
+cdo    remapnn: Nearest neighbor weights from lonlat (129x97) to lonlat (121x91) grid
+…
+Done. Main variables: bilinear; QA variables (quality_flag): nearest-neighbour. Log: data/interim/METREF/cdo.log</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Walk through one file’s journey (<code>process_cdo</code>)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>code/02_preprocess_cdo.sh (per file)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-14" data-filename="code/02_preprocess_cdo.sh (per file)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><a class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-14-1" class="code-annotation-target"><a href="#annotated-cell-14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-sellonlatbox,</span><span class="va">$CLIP_WEST</span><span class="at">,</span><span class="va">$CLIP_EAST</span><span class="at">,</span><span class="va">$CLIP_SOUTH</span><span class="at">,</span><span class="va">$CLIP_NORTH</span>  in.nc  clip.nc</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-14-2" class="code-annotation-target"><a href="#annotated-cell-14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-delname,</span><span class="va">$QA_CSV</span>  clip.nc  main.nc</span>
+<span id="annotated-cell-14-3"><a href="#annotated-cell-14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-selname,</span><span class="va">$QA_CSV</span>  clip.nc  qa.nc</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-14-4" class="code-annotation-target"><a href="#annotated-cell-14-4" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-remapbil,grid.txt</span>  main.nc  main_remap.nc</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-14-5" class="code-annotation-target"><a href="#annotated-cell-14-5" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-remapnn,grid.txt</span>   qa.nc    qa_remap.nc</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-14-6" class="code-annotation-target"><a href="#annotated-cell-14-6" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> merge main_remap.nc qa_remap.nc merged.nc</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="6" onclick="event.preventDefault();">6</a><span id="annotated-cell-14-7" class="code-annotation-target"><a href="#annotated-cell-14-7" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> sinfo merged.nc <span class="kw">&amp;&amp;</span> <span class="fu">mv</span> merged.nc out.nc.part <span class="kw">&amp;&amp;</span> <span class="fu">mv</span> out.nc.part out_processed.nc</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-14" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-14" data-code-lines="1" data-code-annotation="1">Crop to the target grid <strong>plus the buffer</strong>, so interpolation at the edge has neighbours.</span>
+</dd>
+<dt data-target-cell="annotated-cell-14" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-14" data-code-lines="2" data-code-annotation="2">Split continuous variables from QA flags.</span>
+</dd>
+<dt data-target-cell="annotated-cell-14" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-14" data-code-lines="4" data-code-annotation="3">Continuous variables: bilinear (or nearest, from the YAML).</span>
+</dd>
+<dt data-target-cell="annotated-cell-14" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-14" data-code-lines="5" data-code-annotation="4">Flags: always nearest neighbour — a flag value is a code, not a number to average.</span>
+</dd>
+<dt data-target-cell="annotated-cell-14" data-target-annotation="5">5</dt>
+<dd>
+<span data-code-cell="annotated-cell-14" data-code-lines="6" data-code-annotation="5">Put them back together.</span>
+</dd>
+<dt data-target-cell="annotated-cell-14" data-target-annotation="6">6</dt>
+<dd>
+<span data-code-cell="annotated-cell-14" data-code-lines="7" data-code-annotation="6">Only a readable result is renamed into place; temp files are removed on any failure. Existing valid outputs are skipped, so re-running resumes.</span>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="check" class="level2">
+<h2 class="anchored" data-anchor-id="check">5 · Check the output</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> data/interim/METREF/2015/06 <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n3</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span> <span class="at">-n</span> 3 data/interim/METREF/cdo.log           <span class="co"># status=processed / failed per file</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-c</span> <span class="st">"status=processed"</span> data/interim/METREF/cdo.log</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="va">f</span><span class="op">=</span><span class="va">$(</span><span class="fu">ls</span> data/interim/METREF/2015/06/<span class="pp">*</span>_processed.nc <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n1</span><span class="va">)</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> sinfo <span class="st">"</span><span class="va">$f</span><span class="st">"</span>                                <span class="co"># 121x91 lonlat grid, METREF + quality_flag</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> infon <span class="st">"</span><span class="va">$f</span><span class="st">"</span>                                <span class="co"># compare min/mean/max with the raw file</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Check yourself
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <ul>
-<li>Regridding does not add source detail. A finer target grid interpolates the source; it does not make the measurement higher resolution.</li>
-<li>Bilinear interpolation smooths continuous fields; nearest-neighbour preserves category labels but may look blocky.</li>
-<li>Degree-based cell size changes with latitude.</li>
-<li>Preserve product QA flags and document any masks, unit conversion and temporal aggregation.</li>
-<li>Record the input product/version, AOI bounds, output grid, resolution, remapping method and software version.</li>
+<li>One <code>*_processed.nc</code> per raw file, and no <code>status=failed</code> lines in <code>cdo.log</code>.</li>
+<li>The grid matches <code>code/preprocess_utils/grid.txt</code>.</li>
+<li>Value ranges are close to the raw file’s; the number of missing values is plausible (ocean, masks).</li>
 </ul>
+</div>
+</div>
+<section id="when-output-is-mostly-missing" class="level3">
+<h3 class="anchored" data-anchor-id="when-output-is-mostly-missing">When output is mostly missing</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Likely cause</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AOI outside product coverage</td>
+<td>Compare <code>sinfo</code> ranges of raw file and <code>grid.txt</code></td>
+</tr>
+<tr class="even">
+<td>Wrong variable</td>
+<td><code>cdo showname</code> vs <code>MAIN_VARIABLE</code></td>
+</tr>
+<tr class="odd">
+<td>Fill values not decoded</td>
+<td><code>cdo infon</code> on the raw file: are huge negative values counted as data?</td>
+</tr>
+<tr class="even">
+<td>Real masks (sea, clouds, retrieval QA)</td>
+<td>Inspect <code>quality_flag</code> and the product user manual</td>
+</tr>
+<tr class="odd">
+<td><code>ModuleNotFoundError: yaml</code> / <code>xarray</code></td>
+<td>Run the script via <code>uv run bash …</code> or <code>source .venv/bin/activate</code></td>
+</tr>
+<tr class="even">
+<td><code>QA variable 'quality_flag' not found</code></td>
+<td>Set <code>QA_VARIABLES</code> to the flag name your product uses (see <code>showname</code>)</td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="next-page" class="level2">
-<h2 class="anchored" data-anchor-id="next-page">Next page</h2>
-<p>Continue to <a href="../tutorial/03-zarr-cubes.html">Build and inspect the Zarr cube</a>.</p>
+</section>
+<section id="method-notes" class="level2">
+<h2 class="anchored" data-anchor-id="method-notes">Method notes</h2>
+<ul>
+<li>Regridding never adds detail: a finer target grid only interpolates the source.</li>
+<li>Bilinear smooths continuous fields (extremes can shrink); nearest keeps categories but looks blocky.</li>
+<li>Degree cells shrink with latitude (0.05° ≈ 5.5 km at the equator, ≈ 5.3 km at 15° N in longitude).</li>
+<li>Record product version, AOI, grid, remap method and software versions with your results.</li>
+</ul>
+<p><strong>Next:</strong> <a href="../tutorial/03-zarr-cubes.html">C · Build the Zarr cube →</a></p>
 
 
 </section>
@@ -927,13 +1401,13 @@ URL=https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF</code></pre>
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../tutorial/01-setup.html" class="pagination-link" aria-label="A. Setup">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">A. Setup</span>
+      <a href="../tutorial/01-setup.html" class="pagination-link" aria-label="A · Setup">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">A · Setup</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../tutorial/03-zarr-cubes.html" class="pagination-link" aria-label="C. Build and inspect a Zarr cube">
-        <span class="nav-page-text">C. Build and inspect a Zarr cube</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../tutorial/03-zarr-cubes.html" class="pagination-link" aria-label="C · Build the Zarr cube">
+        <span class="nav-page-text">C · Build the Zarr cube</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -941,18 +1415,19 @@ URL=https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF</code></pre>
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-      &nbsp;
-    </div>   
+<p>© 2026 Khizer Zakir · Climate Data Cube Workshop</p>
+</div>   
     <div class="nav-footer-center">
-<p>© 2026 Khizer Zakir. Prepared for the Climate Data Cube Workshop.</p>
-</div>
-    <div class="nav-footer-right">
       &nbsp;
-    </div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/khizerzakir/tutorial-repo/edit/main/tutorial/02-run-code.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/khizerzakir/tutorial-repo/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>LSA SAF data © EUMETSAT, CC BY 4.0</p>
+</div>
   </div>
 </footer>
 
 
 
 
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

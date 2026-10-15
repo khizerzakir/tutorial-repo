@@ -1,47 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://khizerzakir.github.io/tutorial-repo/tutorial/03-zarr-cubes.html</loc>
-    <lastmod>2026-10-14T12:19:29.406Z</lastmod>
-  </url>
-  <url>
-    <loc>https://khizerzakir.github.io/tutorial-repo/tutorial/01-setup.html</loc>
-    <lastmod>2026-10-15T14:56:00.410Z</lastmod>
-  </url>
-  <url>
-    <loc>https://khizerzakir.github.io/tutorial-repo/index.html</loc>
-    <lastmod>2026-10-14T11:59:08.310Z</lastmod>
-  </url>
-  <url>
-    <loc>https://khizerzakir.github.io/tutorial-repo/docs/docs/slides/presentation.html</loc>
-    <lastmod>2026-10-14T10:20:30.934Z</lastmod>
-  </url>
-  <url>
-    <loc>https://khizerzakir.github.io/tutorial-repo/code/notebooks/read_validate_data.html</loc>
-    <lastmod>2026-10-15T14:57:25.126Z</lastmod>
-  </url>
-  <url>
-    <loc>https://khizerzakir.github.io/tutorial-repo/code/notebooks/application.html</loc>
-    <lastmod>2026-10-15T15:08:27.629Z</lastmod>
-  </url>
-  <url>
-    <loc>https://khizerzakir.github.io/tutorial-repo/code/notebooks/plot_data.html</loc>
-    <lastmod>2026-10-15T15:11:26.438Z</lastmod>
-  </url>
-  <url>
-    <loc>https://khizerzakir.github.io/tutorial-repo/code/plot_utils/Readme.html</loc>
-    <lastmod>2026-10-15T08:13:07.789Z</lastmod>
-  </url>
-  <url>
-    <loc>https://khizerzakir.github.io/tutorial-repo/docs/slides/presentation.html</loc>
-    <lastmod>2026-10-14T10:20:30.934Z</lastmod>
-  </url>
-  <url>
     <loc>https://khizerzakir.github.io/tutorial-repo/slides/presentation.html</loc>
-    <lastmod>2026-10-14T15:44:11.396Z</lastmod>
+    <lastmod>2026-10-15T20:47:54.154Z</lastmod>
+  </url>
+  <url>
+    <loc>https://khizerzakir.github.io/tutorial-repo/tutorial/04-explore.html</loc>
+    <lastmod>2026-10-15T20:47:54.154Z</lastmod>
   </url>
   <url>
     <loc>https://khizerzakir.github.io/tutorial-repo/tutorial/02-run-code.html</loc>
-    <lastmod>2026-10-15T15:28:59.270Z</lastmod>
+    <lastmod>2026-10-15T20:47:54.154Z</lastmod>
+  </url>
+  <url>
+    <loc>https://khizerzakir.github.io/tutorial-repo/index.html</loc>
+    <lastmod>2026-10-15T20:47:54.141Z</lastmod>
+  </url>
+  <url>
+    <loc>https://khizerzakir.github.io/tutorial-repo/tutorial/01-setup.html</loc>
+    <lastmod>2026-10-15T20:47:54.154Z</lastmod>
+  </url>
+  <url>
+    <loc>https://khizerzakir.github.io/tutorial-repo/tutorial/03-zarr-cubes.html</loc>
+    <lastmod>2026-10-15T20:47:54.154Z</lastmod>
+  </url>
+  <url>
+    <loc>https://khizerzakir.github.io/tutorial-repo/tutorial/reference.html</loc>
+    <lastmod>2026-10-15T20:47:54.155Z</lastmod>
   </url>
 </urlset>

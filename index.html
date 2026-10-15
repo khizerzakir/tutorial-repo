@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Hands-on Practical Tutorial – Climate Data Cube Workshop</title>
+<title>Climate Data Cube Workshop</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,6 +25,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -48,9 +83,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-779814d4eaa9c9e6b02b72ade1d61f9b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-c8bae1f407610881bc621976b8284e03.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-779814d4eaa9c9e6b02b72ade1d61f9b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-482e8ff703e164d7371dd0a028094024.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-d90499ef6ee6d792734ee735fd68a163.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-482e8ff703e164d7371dd0a028094024.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -78,11 +113,15 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
 
-<body class="nav-sidebar floating nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar floating nav-fixed fullcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -272,18 +311,26 @@ ul.task-list li input[type="checkbox"] {
     <ul class="dropdown-menu" aria-labelledby="nav-menu-tutorial">    
         <li>
     <a class="dropdown-item" href="./tutorial/01-setup.html">
- <span class="dropdown-text">A. Setup</span></a>
+ <span class="dropdown-text">A · Setup</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./tutorial/02-run-code.html">
- <span class="dropdown-text">B. Download and preprocess a sample</span></a>
+ <span class="dropdown-text">B · Download and preprocess</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./tutorial/03-zarr-cubes.html">
- <span class="dropdown-text">C. Build and inspect a Zarr cube</span></a>
+ <span class="dropdown-text">C · Build the Zarr cube</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorial/04-explore.html">
+ <span class="dropdown-text">D · Explore the cube</span></a>
   </li>  
     </ul>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./tutorial/reference.html"> 
+<span class="menu-text">Command builder</span></a>
+  </li>  
   <li class="nav-item">
     <a class="nav-link" href="./slides/presentation.html"> 
 <span class="menu-text">Slides</span></a>
@@ -299,6 +346,11 @@ ul.task-list li input[type="checkbox"] {
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -307,7 +359,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Hands-on Practical Tutorial</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Climate Data Cube Workshop</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -322,25 +374,48 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Hands-on Practical Tutorial</span></a>
+ <span class="menu-text">Climate Data Cube Workshop</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Walkthrough</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./tutorial/01-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">A. Setup</span></a>
+ <span class="menu-text">A · Setup</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./tutorial/02-run-code.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">B. Download and preprocess a sample</span></a>
+ <span class="menu-text">B · Download and preprocess</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./tutorial/03-zarr-cubes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">C. Build and inspect a Zarr cube</span></a>
+ <span class="menu-text">C · Build the Zarr cube</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorial/04-explore.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">D · Explore the cube</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorial/reference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Command builder &amp; reference</span></a>
   </div>
 </li>
     </ul>
@@ -348,16 +423,15 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
-    </div>
+    
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Hands-on Practical Tutorial</h1>
+<h1 class="title">Climate Data Cube Workshop</h1>
+<p class="subtitle lead">From raw EUMETSAT LSA SAF files to an analysis-ready Zarr cube — hands-on</p>
 </div>
 
 
@@ -374,18 +448,105 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><strong>Welcome!</strong> If you are here, you are likely participating in the Climate Data Cube Workshop as part of the <a href="https://it-u.at/en/events/earth-observation-and-geoai-for-climate-resilient-urban-systems-grss-school/">IEEE Autumn School 2026</a> Training.</p>
-<p>This is the hands-on tutorial is designed to introduce participants to the concepts and tools of climate data analysis, with a focus on using satellite-derived climate data from EUMETSAT LSA SAF. The tutorial will guide you through the process of setting up your environment, running example code, and analyzing the results.</p>
-<blockquote class="blockquote">
-<p><strong>Important links for this workshop</strong></p>
-</blockquote>
+<p><strong>Welcome!</strong> This is the hands-on companion to the Climate Data Cube session at the <a href="https://it-u.at/en/events/earth-observation-and-geoai-for-climate-resilient-urban-systems-grss-school/">IEEE GRSS Autumn School 2026</a>. You will download one month of a satellite climate product, crop it to a region, and turn it into a compressed, chunked <strong>Zarr v3 cube</strong> that opens in a second and plots in a few lines of Python.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A["☁️ LSA SAF&lt;br/&gt;Data Service"] --&gt;|"01_download_sample.sh"| B[("data/raw&lt;br/&gt;NetCDF disk")]
+  B --&gt;|"02_preprocess_cdo.sh&lt;br/&gt;crop · remap · QA"| C[("data/interim&lt;br/&gt;regional NetCDF")]
+  C --&gt;|"03_build_zarr_cube.py&lt;br/&gt;chunk · shard · compress"| D[("data/zarr&lt;br/&gt;cube.zarr")]
+  D --&gt;|"notebooks + plot_utils"| E["🗺️ maps&lt;br/&gt;📈 time series"]
+  classDef s fill:#0e66a9,stroke:#3ddbd9,color:#fff
+  classDef d fill:#ffb454,stroke:#d9780f,color:#10253a
+  class A,E s
+  class B,C,D d
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<section id="choose-your-route" class="level2">
+<h2 class="anchored" data-anchor-id="choose-your-route">Choose your route</h2>
+<div class="route-grid">
+<div class="route">
+<p><span class="badge-time">≈ 20 min</span></p>
+<section id="a-setup" class="level3">
+<h3 class="anchored" data-anchor-id="a-setup">A · <a href="./tutorial/01-setup.html">Setup</a></h3>
+<p>Open WSL / a terminal, clone the repository, install CDO and the Python environment, add LSA SAF credentials.</p>
+</section>
+</div>
+<div class="route">
+<p><span class="badge-time">≈ 15 min</span></p>
+<section id="b-download-preprocess" class="level3">
+<h3 class="anchored" data-anchor-id="b-download-preprocess">B · <a href="./tutorial/02-run-code.html">Download &amp; preprocess</a></h3>
+<p>Download one month, inspect it, crop and remap to your AOI with CDO.</p>
+</section>
+</div>
+<div class="route">
+<p><span class="badge-time">≈ 10 min</span></p>
+<section id="c-build-the-zarr-cube" class="level3">
+<h3 class="anchored" data-anchor-id="c-build-the-zarr-cube">C · <a href="./tutorial/03-zarr-cubes.html">Build the Zarr cube</a></h3>
+<p>Choose a chunk profile, build, validate and append to the cube.</p>
+</section>
+</div>
+<div class="route">
+<p><span class="badge-time">≈ 20 min</span></p>
+<section id="d-explore" class="level3">
+<h3 class="anchored" data-anchor-id="d-explore">D · <a href="./tutorial/04-explore.html">Explore</a></h3>
+<p>Validate every stage, plot maps and time series, and run the climate–mobility application.</p>
+</section>
+</div>
+</div>
+</section>
+<section id="already-set-up-the-whole-pipeline-in-five-commands" class="level2">
+<h2 class="anchored" data-anchor-id="already-set-up-the-whole-pipeline-in-five-commands">Already set up? The whole pipeline in five commands</h2>
+<div class="terminal">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. repository root (inside the Ubuntu / WSL window on Windows)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/projects/tutorial-repo</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. one month of raw NetCDF</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> code/01_download_sample.sh 2015 06 METREF</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. crop + remap to the AOI</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="va">MAIN_VARIABLE</span><span class="op">=</span>METREF <span class="ex">uv</span> run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. build the Zarr v3 cube</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python code/03_build_zarr_cube.py <span class="at">--input</span> data/interim/METREF</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. explore (or open code/notebooks in VS Code)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run <span class="at">--extra</span> notebook jupyter lab code/notebooks</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Not sure about a flag? The <a href="./tutorial/reference.html"><strong>command builder</strong></a> generates these commands for your product, month, AOI and machine.</p>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Workshop materials
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <ul>
-<li>📖 <strong>Tutorial</strong>: start with <a href="./tutorial/01-setup.html">Setup</a></li>
-<li>🎤 <strong>Slides</strong>: <a href="./slides/presentation.html">open the presentation</a></li>
-<li>💻 <strong>Code</strong>: everything you need to run is in the <a href="https://github.com/khizerzakir/tutorial-repo/tree/main/code"><code>code/</code></a> folder</li>
+<li>🎤 <strong>Slides:</strong> <a href="./slides/presentation.html">open the presentation</a> (press <strong>F</strong> for full screen, <strong>S</strong> for speaker view, <strong>T</strong> for light/dark)</li>
+<li>💻 <strong>Code:</strong> <a href="https://github.com/khizerzakir/tutorial-repo/tree/main/code"><code>code/</code></a> on GitHub</li>
+<li>📓 <strong>Notebooks:</strong> <code>code/notebooks/1_read_validate_data.ipynb</code>, <code>2_plot_data.ipynb</code>, <code>3_application.ipynb</code></li>
 </ul>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>This is a <strong>teaching pipeline</strong>, not an operational climate service. Start with one product, one month and a small area, validate the result, then scale.</p>
+</div>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -805,8 +966,8 @@ ul.task-list li input[type="checkbox"] {
   <div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./tutorial/01-setup.html" class="pagination-link" aria-label="A. Setup">
-        <span class="nav-page-text">A. Setup</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./tutorial/01-setup.html" class="pagination-link" aria-label="A · Setup">
+        <span class="nav-page-text">A · Setup</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -814,18 +975,19 @@ ul.task-list li input[type="checkbox"] {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-      &nbsp;
-    </div>   
+<p>© 2026 Khizer Zakir · Climate Data Cube Workshop</p>
+</div>   
     <div class="nav-footer-center">
-<p>© 2026 Khizer Zakir. Prepared for the Climate Data Cube Workshop.</p>
-</div>
-    <div class="nav-footer-right">
       &nbsp;
-    </div>
+    <div class="toc-actions"><ul><li><a href="https://github.com/khizerzakir/tutorial-repo/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/khizerzakir/tutorial-repo/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>LSA SAF data © EUMETSAT, CC BY 4.0</p>
+</div>
   </div>
 </footer>
 
 
 
 
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

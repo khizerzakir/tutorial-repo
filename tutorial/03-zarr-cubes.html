@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>C. Build and inspect a Zarr cube – Climate Data Cube Workshop</title>
+<title>C · Build the Zarr cube – Climate Data Cube Workshop</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -71,6 +71,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../tutorial/04-explore.html" rel="next">
 <link href="../tutorial/02-run-code.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -83,9 +84,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-779814d4eaa9c9e6b02b72ade1d61f9b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-c8bae1f407610881bc621976b8284e03.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-779814d4eaa9c9e6b02b72ade1d61f9b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-482e8ff703e164d7371dd0a028094024.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-d90499ef6ee6d792734ee735fd68a163.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-482e8ff703e164d7371dd0a028094024.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -113,6 +114,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<style>html{ scroll-behavior: smooth; }</style>
 
 
 </head>
@@ -307,18 +309,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="dropdown-menu" aria-labelledby="nav-menu-tutorial">    
         <li>
     <a class="dropdown-item" href="../tutorial/01-setup.html">
- <span class="dropdown-text">A. Setup</span></a>
+ <span class="dropdown-text">A · Setup</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../tutorial/02-run-code.html">
- <span class="dropdown-text">B. Download and preprocess a sample</span></a>
+ <span class="dropdown-text">B · Download and preprocess</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../tutorial/03-zarr-cubes.html">
- <span class="dropdown-text">C. Build and inspect a Zarr cube</span></a>
+ <span class="dropdown-text">C · Build the Zarr cube</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../tutorial/04-explore.html">
+ <span class="dropdown-text">D · Explore the cube</span></a>
   </li>  
     </ul>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../tutorial/reference.html"> 
+<span class="menu-text">Command builder</span></a>
+  </li>  
   <li class="nav-item">
     <a class="nav-link" href="../slides/presentation.html"> 
 <span class="menu-text">Slides</span></a>
@@ -334,6 +344,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -342,7 +357,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorial/03-zarr-cubes.html">C. Build and inspect a Zarr cube</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorial/01-setup.html">Walkthrough</a></li><li class="breadcrumb-item"><a href="../tutorial/03-zarr-cubes.html">C · Build the Zarr cube</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -357,25 +372,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Hands-on Practical Tutorial</span></a>
+ <span class="menu-text">Climate Data Cube Workshop</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Walkthrough</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorial/01-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">A. Setup</span></a>
+ <span class="menu-text">A · Setup</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorial/02-run-code.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">B. Download and preprocess a sample</span></a>
+ <span class="menu-text">B · Download and preprocess</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorial/03-zarr-cubes.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">C. Build and inspect a Zarr cube</span></a>
+ <span class="menu-text">C · Build the Zarr cube</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorial/04-explore.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">D · Explore the cube</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorial/reference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Command builder &amp; reference</span></a>
   </div>
 </li>
     </ul>
@@ -388,24 +426,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#check-the-interim-files" id="toc-check-the-interim-files" class="nav-link active" data-scroll-target="#check-the-interim-files">1. Check the interim files</a></li>
-  <li><a href="#build-the-cube" id="toc-build-the-cube" class="nav-link" data-scroll-target="#build-the-cube">2. Build the cube</a></li>
-  <li><a href="#understand-chunks-shards-and-compression" id="toc-understand-chunks-shards-and-compression" class="nav-link" data-scroll-target="#understand-chunks-shards-and-compression">3. Understand chunks, shards and compression</a></li>
-  <li><a href="#open-and-inspect" id="toc-open-and-inspect" class="nav-link" data-scroll-target="#open-and-inspect">4. Open and inspect</a></li>
-  <li><a href="#validation-after-writing" id="toc-validation-after-writing" class="nav-link" data-scroll-target="#validation-after-writing">5. Validation after writing</a></li>
-  <li><a href="#scaling-beyond-the-sample" id="toc-scaling-beyond-the-sample" class="nav-link" data-scroll-target="#scaling-beyond-the-sample">6. Scaling beyond the sample</a></li>
-  <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">Troubleshooting</a></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
+  <li><a href="#dry-run" id="toc-dry-run" class="nav-link active" data-scroll-target="#dry-run">1 · Preview the plan (dry run)</a></li>
+  <li><a href="#build" id="toc-build" class="nav-link" data-scroll-target="#build">2 · Build</a></li>
+  <li><a href="#options" id="toc-options" class="nav-link" data-scroll-target="#options">3 · Options</a></li>
+  <li><a href="#chunk-explorer" id="toc-chunk-explorer" class="nav-link" data-scroll-target="#chunk-explorer">4 · Explore the chunk layout</a></li>
+  <li><a href="#open" id="toc-open" class="nav-link" data-scroll-target="#open">5 · Open the cube</a></li>
+  <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">6 · Troubleshooting</a></li>
+  <li><a href="#scaling-beyond-the-sample" id="toc-scaling-beyond-the-sample" class="nav-link" data-scroll-target="#scaling-beyond-the-sample">7 · Scaling beyond the sample</a></li>
   </ul>
-</nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/khizerzakir/tutorial-repo/edit/main/tutorial/03-zarr-cubes.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/khizerzakir/tutorial-repo/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorial/01-setup.html">Walkthrough</a></li><li class="breadcrumb-item"><a href="../tutorial/03-zarr-cubes.html">C · Build the Zarr cube</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">C. Build and inspect a Zarr cube</h1>
+<h1 class="title">C · Build the Zarr cube</h1>
+<p class="subtitle lead">Chunk, shard, compress — and choose the layout for your questions</p>
 </div>
 
 
@@ -422,28 +460,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This page turns the remapped interim NetCDF files into a compressed, chunked and sharded Zarr v3 store, then opens a small selection for inspection.</p>
-<section id="check-the-interim-files" class="level2">
-<h2 class="anchored" data-anchor-id="check-the-interim-files">1. Check the interim files</h2>
-<p>The builder expects NetCDF files under data/interim/ and dimensions named time, lat and lon.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">find</span> data/interim <span class="at">-name</span> <span class="st">'*_processed.nc'</span> <span class="at">-type</span> f</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-s</span> sinfo data/interim/METREF/2020/06/example_processed.nc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Replace the example filename with one of your actual outputs. Confirm time and coordinate dimensions and inspect valid values before building the cube. If your files use x and y, update the dimension names and chunk configuration in code/build_zarr_cube.py.</p>
+<div class="pipeline">
+<p><span class="stage">A · Setup</span> <span class="stage">B · Download &amp; preprocess</span> <span class="here">C · Zarr cube</span> <span class="stage">D · Explore</span></p>
+</div>
+<p><code>code/03_build_zarr_cube.py</code> turns the interim NetCDF files of one product into a single <strong>Zarr v3</strong> store: one time axis, one grid, compressed chunks grouped into shards, with consolidated metadata so it opens instantly.</p>
+<section id="dry-run" class="level2">
+<h2 class="anchored" data-anchor-id="dry-run">1 · Preview the plan (dry run)</h2>
+<p>Always look before you write. <code>--dry-run</code> opens the files lazily and prints what would be built:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python code/03_build_zarr_cube.py <span class="at">--input</span> data/interim/METREF <span class="at">--dry-run</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text"><code>Profile          : map
+Files            : 30  (…201506010000_processed.nc … …201506300000_processed.nc)
+Variables        : METREF, quality_flag
+Dimensions       : {'time': 30, 'lat': 91, 'lon': 121}
+Time range       : 2015-06-01 → 2015-06-30
+Inner chunk      : {'time': 1, 'lat': 91, 'lon': 121}  (~43.0 KB raw each)
+Shard            : {'time': 10, 'lat': 91, 'lon': 121}
+Per variable     : 30 inner chunks in 3 shard object(s)
+Uncompressed size: 1.9 MB
+Output           : …/data/zarr/metref_cube.zarr
+
+Dry run: nothing written.</code></pre>
 </section>
-<section id="build-the-cube" class="level2">
-<h2 class="anchored" data-anchor-id="build-the-cube">2. Build the cube</h2>
-<p>From the repository root:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python code/03_build_zarr_cube.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The script uses xarray to open multiple files by coordinates and Dask for lazy/chunked processing. It writes to:</p>
-<pre class="text"><code>data/zarr/example.zarr/</code></pre>
-<p>The current builder requires <strong>Zarr 3</strong>. Use a Python environment that resolves Zarr 3 as required by the script. The script removes an existing output store before rebuilding; copy or rename any output you need to keep first.</p>
+<section id="build" class="level2">
+<h2 class="anchored" data-anchor-id="build">2 · Build</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python code/03_build_zarr_cube.py <span class="at">--input</span> data/interim/METREF</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text"><code>…
+Validation OK    : first/last time steps match the interim NetCDF
+Valid fraction   : METREF=95.9%, quality_flag=100.0%
+Stored size      : 841.8 KB in 15 files (compression ≈ 2.3× vs 1.9 MB in memory)
+Done in 3.3s → …/data/zarr/metref_cube.zarr</code></pre>
+<p>What happens, in order:</p>
+<div class="steps">
+<div class="step">
+<p><strong>Open lazily.</strong> All <code>*_processed.nc</code> files under <code>--input</code> are opened with xarray + Dask, concatenated along <code>time</code> in file-name order (no coordinate re-alignment — they share one grid, which is verified against the last file).</p>
+</div>
+<div class="step">
+<p><strong>Plan chunks.</strong> Inner chunks and shards come from the <code>--profile</code>; shards are rounded to whole multiples of the inner chunk (a Zarr v3 requirement) and clamped to the data size.</p>
+</div>
+<div class="step">
+<p><strong>Write safely.</strong> Dask writes whole shards in parallel to <code>&lt;output&gt;.tmp</code>. Stale NetCDF encodings are dropped; provenance (<code>zarr_cube_*</code> attributes) is added.</p>
+</div>
+<div class="step">
+<p><strong>Validate, then swap.</strong> The first and last time steps are compared value-by-value with their source files. Only then is the old cube replaced — a failed run never destroys a working cube.</p>
+</div>
+</div>
 </section>
-<section id="understand-chunks-shards-and-compression" class="level2">
-<h2 class="anchored" data-anchor-id="understand-chunks-shards-and-compression">3. Understand chunks, shards and compression</h2>
-<p>The script currently starts with:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>INNER_CHUNKS <span class="op">=</span> {<span class="st">"time"</span>: <span class="dv">1</span>, <span class="st">"lat"</span>: <span class="dv">256</span>, <span class="st">"lon"</span>: <span class="dv">256</span>}</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SHARD_CHUNKS <span class="op">=</span> {<span class="st">"time"</span>: <span class="dv">10</span>, <span class="st">"lat"</span>: <span class="dv">512</span>, <span class="st">"lon"</span>: <span class="dv">512</span>}</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>COMPRESSOR <span class="op">=</span> BloscCodec(cname<span class="op">=</span><span class="st">"zstd"</span>, clevel<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="st">"shuffle"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="options" class="level2">
+<h2 class="anchored" data-anchor-id="options">3 · Options</h2>
+<div class="flag-table">
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -452,63 +516,219 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </colgroup>
 <thead>
 <tr class="header">
-<th>Setting</th>
-<th>Role</th>
-<th>Trade-off</th>
+<th>Flag</th>
+<th>Default</th>
+<th>Use it to…</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Inner chunks</td>
-<td>Small independently readable blocks</td>
-<td>Smaller blocks help selective reads but add metadata/overhead</td>
+<td><code>--input DIR</code></td>
+<td><code>data/interim</code></td>
+<td>point at <strong>one product’s</strong> interim folder</td>
 </tr>
 <tr class="even">
-<td>Shards</td>
-<td>Group storage for multiple inner chunks</td>
-<td>Larger shards reduce object count but may make writes/updates coarser</td>
+<td><code>--pattern GLOB</code></td>
+<td><code>*_processed.nc</code></td>
+<td>select files, e.g.&nbsp;<code>'*201506*_processed.nc'</code></td>
 </tr>
 <tr class="odd">
-<td>Zstd compression</td>
-<td>Reduces stored bytes</td>
-<td>Higher compression can use more CPU</td>
+<td><code>--output PATH</code></td>
+<td><code>data/zarr/&lt;variable&gt;_cube.zarr</code></td>
+<td>name the store</td>
+</tr>
+<tr class="even">
+<td><code>--variables V …</code></td>
+<td>all</td>
+<td>keep only some variables, e.g.&nbsp;<code>--variables METREF</code></td>
+</tr>
+<tr class="odd">
+<td><code>--profile</code></td>
+<td><code>map</code></td>
+<td>pick a chunk layout: <code>map</code>, <code>balanced</code>, <code>timeseries</code></td>
+</tr>
+<tr class="even">
+<td><code>--chunks</code> / <code>--shards</code></td>
+<td>from profile</td>
+<td>fine-tune, e.g.&nbsp;<code>--chunks time=4,lat=64,lon=64</code></td>
+</tr>
+<tr class="odd">
+<td><code>--clevel 1-9</code></td>
+<td><code>5</code></td>
+<td>zstd level: higher = smaller but slower to write</td>
+</tr>
+<tr class="even">
+<td><code>--float32</code></td>
+<td>off</td>
+<td>store float64 data as float32 (half the size)</td>
+</tr>
+<tr class="odd">
+<td><code>--workers N</code></td>
+<td>all cores</td>
+<td>limit CPU threads on shared machines</td>
+</tr>
+<tr class="even">
+<td><code>--append</code></td>
+<td>off</td>
+<td>add only newer time steps to an existing cube</td>
+</tr>
+<tr class="odd">
+<td><code>--no-consolidate</code></td>
+<td>off</td>
+<td>skip consolidated metadata (portability over speed)</td>
+</tr>
+<tr class="even">
+<td><code>--dry-run</code></td>
+<td>off</td>
+<td>print the plan and exit</td>
 </tr>
 </tbody>
 </table>
-<p>These are initial values, not universal optima. Benchmark common access patterns: a map at one time, a point/area time series, and a small regional subset.</p>
+</div>
+<p>Grow the cube month by month without rebuilding:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> code/01_download_sample.sh 2015 07 METREF</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="va">MAIN_VARIABLE</span><span class="op">=</span>METREF <span class="ex">uv</span> run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python code/03_build_zarr_cube.py <span class="at">--input</span> data/interim/METREF <span class="at">--append</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="open-and-inspect" class="level2">
-<h2 class="anchored" data-anchor-id="open-and-inspect">4. Open and inspect</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> xr.open_zarr(<span class="st">"data/zarr/metref_sample_1month.zarr"</span>, consolidated<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ds)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">list</span>(ds.data_vars))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Select a time slice and a point time series:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>variable <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(ds.data_vars))</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>map_at_time <span class="op">=</span> ds[variable].isel(time<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>point_series <span class="op">=</span> ds[variable].isel(lat<span class="op">=</span><span class="dv">100</span>, lon<span class="op">=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>These indices are examples only. Check the coordinates at the selected indices, dimension ordering, variable units, and timestamp before interpreting a plot. The project plotting utilities are in code/plot_utils/; see their README for import and usage examples.</p>
-</section>
-<section id="validation-after-writing" class="level2">
-<h2 class="anchored" data-anchor-id="validation-after-writing">5. Validation after writing</h2>
-<p>The builder reopens the output store and computes a small sample statistic. Also check:</p>
+<section id="chunk-explorer" class="level2">
+<h2 class="anchored" data-anchor-id="chunk-explorer">4 · Explore the chunk layout</h2>
+<p>Chunks decide <strong>which questions are cheap</strong>. A single-date map should touch few chunks; a long time series at one pixel should too — but one layout cannot make both minimal. Change the cube size and profile and watch what each query has to read.</p>
+<!-- Chunk explorer: plain JS, no external libraries (works offline). Mirrors plan_chunks() in code/03_build_zarr_cube.py -->
+<div class="chunk-explorer" data-ce="">
+  <style>
+    .chunk-explorer{--ce-a:#0a7f8f;--ce-w:#d9780f;font-size:.92em;margin:1rem 0}
+    .chunk-explorer .ce-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.4rem 1.2rem;margin-bottom:.6rem}
+    .chunk-explorer label{display:flex;flex-direction:column;font-size:.85em;opacity:.9}
+    .chunk-explorer input[type=range]{width:100%;accent-color:var(--ce-a)}
+    .chunk-explorer .ce-prof{display:flex;gap:.4rem;flex-wrap:wrap;margin:.2rem 0 .6rem}
+    .chunk-explorer .ce-prof button{border:1px solid var(--ce-a);background:transparent;color:inherit;border-radius:999px;padding:.15rem .8rem;cursor:pointer;font:inherit}
+    .chunk-explorer .ce-prof button.on{background:var(--ce-a);color:#fff}
+    .chunk-explorer .ce-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;margin:.4rem 0 .8rem}
+    .chunk-explorer .ce-card{border:1px solid color-mix(in srgb,var(--ce-a) 40%,transparent);border-left:5px solid var(--ce-w);border-radius:10px;padding:.45rem .75rem}
+    .chunk-explorer .ce-card small{display:block;opacity:.72;font-size:.78em}
+    .chunk-explorer .ce-card b{display:block;font-size:1.15em;line-height:1.3}
+    .chunk-explorer svg{width:100%;max-width:720px;height:auto;display:block}
+    .chunk-explorer svg rect{transition:all .35s ease}
+    .chunk-explorer .ce-cmd{font-family:var(--bs-font-monospace,monospace);font-size:.82em;padding:.35rem .6rem;border-radius:8px;background:color-mix(in srgb,var(--ce-a) 10%,transparent);overflow-x:auto;white-space:nowrap}
+  </style>
+  <div class="ce-prof" role="group" aria-label="profile">
+    <span style="align-self:center;opacity:.8">--profile</span>
+    <button data-p="map" class="on">map</button><button data-p="balanced">balanced</button><button data-p="timeseries">timeseries</button>
+  </div>
+  <div class="ce-controls">
+    <label>time steps: <output data-o="t">365</output><input data-i="t" type="range" min="1" max="3650" value="365"></label>
+    <label>lat cells: <output data-o="y">300</output><input data-i="y" type="range" min="10" max="2000" step="10" value="300"></label>
+    <label>lon cells: <output data-o="x">400</output><input data-i="x" type="range" min="10" max="2000" step="10" value="400"></label>
+  </div>
+  <div class="ce-cards"></div>
+  <svg viewbox="0 0 720 250" aria-label="chunk layout"></svg>
+  <div class="ce-cmd"></div>
+</div>
+<script>
+(() => {
+  const P = {
+    map:        {inner: {time: 1,  lat: 256, lon: 256}, shard: {time: 10,  lat: 512, lon: 512}},
+    balanced:   {inner: {time: 8,  lat: 128, lon: 128}, shard: {time: 32,  lat: 512, lon: 512}},
+    timeseries: {inner: {time: 64, lat: 32,  lon: 32},  shard: {time: 256, lat: 256, lon: 256}}
+  };
+  const NS = "http://www.w3.org/2000/svg";
+  document.querySelectorAll("[data-ce]").forEach(root => {
+    if (root.dataset.ready) return; root.dataset.ready = 1;
+    let prof = "map";
+    const $ = s => root.querySelector(s), svg = $("svg");
+    const rect = (x, y, w, h, a) => { const r = document.createElementNS(NS, "rect");
+      Object.entries({x, y, width: Math.max(w, .5), height: Math.max(h, .5), ...a}).forEach(([k, v]) => r.setAttribute(k, v)); return r; };
+    const text = (x, y, s, a = {}) => { const t = document.createElementNS(NS, "text");
+      Object.entries({x, y, fill: "currentColor", "font-size": 12, ...a}).forEach(([k, v]) => t.setAttribute(k, v)); t.textContent = s; return t; };
+    function plan(size) {
+      const p = P[prof], inner = {}, shard = {};
+      for (const d of ["time", "lat", "lon"]) {
+        const c = Math.max(1, Math.min(p.inner[d], size[d])), n = Math.ceil(size[d] / c);
+        const k = Math.max(1, Math.min(Math.round(p.shard[d] / c), n));
+        inner[d] = c; shard[d] = c * k;
+      }
+      return {inner, shard};
+    }
+    function draw() {
+      const size = {time: +$("[data-i=t]").value, lat: +$("[data-i=y]").value, lon: +$("[data-i=x]").value};
+      $("[data-o=t]").value = size.time; $("[data-o=y]").value = size.lat; $("[data-o=x]").value = size.lon;
+      const {inner, shard} = plan(size), n = d => Math.ceil(size[d] / inner[d]);
+      const kb = inner.time * inner.lat * inner.lon * 4 / 1024;
+      const mapC = n("lat") * n("lon"), tsC = n("time");
+      const shards = ["time", "lat", "lon"].reduce((a, d) => a * Math.ceil(size[d] / shard[d]), 1);
+      const card = (t, v, s) => `<div class="ce-card"><small>${t}</small><b>${v}</b><small>${s}</small></div>`;
+      $(".ce-cards").innerHTML =
+        card("Inner chunk (t × lat × lon)", `${inner.time} × ${inner.lat} × ${inner.lon}`, `${kb < 1024 ? kb.toFixed(0) + " KB" : (kb / 1024).toFixed(1) + " MB"} float32`) +
+        card("Shard objects / variable", shards, `shard ${shard.time} × ${shard.lat} × ${shard.lon}`) +
+        card("🗺️ Map of one date reads", `${mapC} chunk${mapC > 1 ? "s" : ""}`, `${(mapC * kb / 1024).toFixed(2)} MB decompressed`) +
+        card("📈 Series at one pixel reads", `${tsC} chunk${tsC > 1 ? "s" : ""}`, `${(tsC * kb / 1024).toFixed(2)} MB decompressed`);
+      $(".ce-cmd").textContent = `uv run python code/03_build_zarr_cube.py --input data/interim/METREF --profile ${prof}`;
+      svg.replaceChildren();
+      const gx = n("lon"), gy = n("lat"), cw = Math.min(300 / gx, 190 / gy);
+      const sx = shard.lon / inner.lon, sy = shard.lat / inner.lat;
+      svg.append(text(10, 18, "Map of one date: teal = chunks read · orange = shard files"));
+      for (let j = 0; j < gy; j++) for (let i = 0; i < gx; i++)
+        svg.append(rect(10 + i * cw, 32 + j * cw, cw - (cw > 4 ? 1.2 : 0), cw - (cw > 4 ? 1.2 : 0), {fill: "#0a7f8f", opacity: .8}));
+      for (let j = 0; j < gy; j += sy) for (let i = 0; i < gx; i += sx)
+        svg.append(rect(10 + i * cw, 32 + j * cw, Math.min(sx, gx - i) * cw - 1, Math.min(sy, gy - j) * cw - 1, {fill: "none", stroke: "#d9780f", "stroke-width": 2.5}));
+      const nT = n("time"), shown = Math.min(nT, 240), bw = 330 / shown;
+      svg.append(text(370, 18, "Series at one pixel: one bar per chunk read"));
+      for (let k = 0; k < shown; k++) svg.append(rect(370 + k * bw, 100, bw - (bw > 3 ? 1 : 0), 34, {fill: "#d9780f", opacity: .85}));
+      svg.append(text(370, 156, `${nT} chunk(s) along time${nT > shown ? ` (first ${shown} drawn)` : ""}`, {opacity: .75}));
+    }
+    root.querySelectorAll("[data-i]").forEach(i => i.addEventListener("input", draw));
+    root.querySelectorAll("[data-p]").forEach(b => b.addEventListener("click", () => {
+      prof = b.dataset.p; root.querySelectorAll("[data-p]").forEach(x => x.classList.toggle("on", x === b)); draw(); }));
+    draw();
+  });
+})();
+</script>
+<p><strong>Rules of thumb</strong></p>
 <ul>
-<li>expected dimensions, coordinate ranges and time count;</li>
-<li>data-variable names and attributes/units;</li>
-<li>valid-value coverage in a few known maps and time slices;</li>
-<li>representative values against the interim NetCDF source;</li>
-<li>whether map/time-series reads perform acceptably for your use case.</li>
+<li>Aim for inner chunks of roughly <strong>100 KB – a few MB</strong> (uncompressed). Tiny chunks mean many requests; huge chunks mean reading data you do not need.</li>
+<li><strong>Map-heavy work</strong> (daily maps, animations): <code>--profile map</code>. <strong>Time-series-heavy work</strong> (pixel/zone trends, anomalies): <code>--profile timeseries</code>. Unsure: <code>balanced</code>.</li>
+<li>Shards reduce the number of files/objects (important on laptops, HPC and object storage); they do not change what is decompressed.</li>
+<li>Benchmark your real queries before scaling up — these profiles are starting points, not optima.</li>
 </ul>
-<p>A successful Zarr write checks storage/readability, not the scientific correctness of source values or remapping.</p>
 </section>
-<section id="scaling-beyond-the-sample" class="level2">
-<h2 class="anchored" data-anchor-id="scaling-beyond-the-sample">6. Scaling beyond the sample</h2>
-<p>For a priority subset, measure runtime, peak memory, interim and Zarr sizes, valid coverage and read speed. Expand to a larger region or a 2,000 km corridor by processing grid-aligned spatial tiles and time batches. Add a remapping margin at tile boundaries, then remove duplicate edge cells from the final grid.</p>
-<p>Parallelize independent NetCDF files or tiles up to the measured CPU, memory, storage and network limits of the available workstation/VM. Use isolated temporary stores or non-overlapping Zarr regions; avoid concurrent writes to the same chunk/shard. Keep a manifest and rerun only failed batches. Re-benchmark chunks and shards on the larger workload.</p>
+<section id="open" class="level2">
+<h2 class="anchored" data-anchor-id="open">5 · Open the cube</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-6"><pre class="sourceCode python code-annotation-code code-with-copy code-annotated"><code class="sourceCode python"><span id="annotated-cell-6-1"><a href="#annotated-cell-6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
+<span id="annotated-cell-6-2"><a href="#annotated-cell-6-2" aria-hidden="true" tabindex="-1"></a></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-6" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-6-3" class="code-annotation-target"><a href="#annotated-cell-6-3" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> xr.open_zarr(<span class="st">"data/zarr/metref_cube.zarr"</span>)</span>
+<span id="annotated-cell-6-4"><a href="#annotated-cell-6-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ds)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-6" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-6-5" class="code-annotation-target"><a href="#annotated-cell-6-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ds.METREF.encoding[<span class="st">"chunks"</span>], ds.METREF.encoding[<span class="st">"shards"</span>])</span>
+<span id="annotated-cell-6-6"><a href="#annotated-cell-6-6" aria-hidden="true" tabindex="-1"></a></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-6" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-6-7" class="code-annotation-target"><a href="#annotated-cell-6-7" aria-hidden="true" tabindex="-1"></a>day_map <span class="op">=</span> ds.METREF.sel(time<span class="op">=</span><span class="st">"2015-06-15"</span>)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-6" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-6-8" class="code-annotation-target"><a href="#annotated-cell-6-8" aria-hidden="true" tabindex="-1"></a>series  <span class="op">=</span> ds.METREF.sel(lon<span class="op">=-</span><span class="fl">16.4</span>, lat<span class="op">=</span><span class="fl">14.5</span>, method<span class="op">=</span><span class="st">"nearest"</span>)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-6" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-6-9" class="code-annotation-target"><a href="#annotated-cell-6-9" aria-hidden="true" tabindex="-1"></a>monthly <span class="op">=</span> ds.METREF.resample(time<span class="op">=</span><span class="st">"1MS"</span>).<span class="bu">sum</span>()</span>
+<span id="annotated-cell-6-10"><a href="#annotated-cell-6-10" aria-hidden="true" tabindex="-1"></a>day_map.plot()<span class="op">;</span> series.plot()</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-6" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-6" data-code-lines="3" data-code-annotation="1">Consolidated metadata → a single read, whatever the number of chunks. Nothing is loaded yet.</span>
+</dd>
+<dt data-target-cell="annotated-cell-6" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-6" data-code-lines="5" data-code-annotation="2">The layout you chose, stored with the data.</span>
+</dd>
+<dt data-target-cell="annotated-cell-6" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-6" data-code-lines="7" data-code-annotation="3">Select by <strong>label</strong> (date), not by file.</span>
+</dd>
+<dt data-target-cell="annotated-cell-6" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-6" data-code-lines="8" data-code-annotation="4">Nearest grid cell to a coordinate — check that it is the cell you expect.</span>
+</dd>
+<dt data-target-cell="annotated-cell-6" data-target-annotation="5">5</dt>
+<dd>
+<span data-code-cell="annotated-cell-6" data-code-lines="9" data-code-annotation="5">Any xarray operation works lazily; only the touched chunks are read when you plot or <code>.compute()</code>.</span>
+</dd>
+</dl>
+<p>The notebooks in <a href="../tutorial/04-explore.html">D · Explore</a> build on this with validation, comparison plots and the reusable <code>code/plot_utils</code> functions.</p>
 </section>
 <section id="troubleshooting" class="level2">
-<h2 class="anchored" data-anchor-id="troubleshooting">Troubleshooting</h2>
+<h2 class="anchored" data-anchor-id="troubleshooting">6 · Troubleshooting</h2>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 50%">
@@ -517,40 +737,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <thead>
 <tr class="header">
 <th>Symptom</th>
-<th>Checks</th>
+<th>Fix</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>No interim files</td>
-<td>Check downloader output, input path and CDO log</td>
+<td><code>No files matching '*_processed.nc'</code></td>
+<td>Run step B, or point <code>--input</code> at the right folder</td>
 </tr>
 <tr class="even">
-<td>Many NaNs after remapping</td>
-<td>Compare raw AOI, crop bounds and target-grid bounds; inspect fill values and source QA</td>
+<td><code>Duplicate timestamps found</code></td>
+<td>Two products or two runs in one folder — use <code>--input data/interim/&lt;PRODUCT&gt;</code></td>
 </tr>
 <tr class="odd">
-<td>Zarr dimension error</td>
-<td>Print ds.sizes; rename coordinates or change chunk dimensions</td>
+<td><code>Expected dimensions ('time','lat','lon')</code></td>
+<td>Your files use other names; <code>latitude/longitude/x/y</code> are renamed automatically, others need preprocessing</td>
 </tr>
 <tr class="even">
-<td>Zarr version error</td>
-<td>Check uv run python -c “import zarr; print(zarr.__version__)“; script needs version 3 or newer</td>
+<td><code>Zarr &gt;= 3.0 is required</code></td>
+<td>Run through <code>uv run …</code> (project environment)</td>
 </tr>
 <tr class="odd">
-<td>Slow writes or reads</td>
-<td>Check RAM/disk I/O, chunk and shard sizes, and number of parallel tasks</td>
+<td><code>different lat grid than …</code></td>
+<td>Files were processed with different AOIs — delete the folder and rerun step B</td>
 </tr>
 <tr class="even">
-<td>Output already exists</td>
-<td>Builder replaces its output; back up the store or change OUTPUT in the script</td>
+<td>Slow on WSL</td>
+<td>Keep the repository in <code>~/…</code>, not <code>/mnt/c/…</code>; limit <code>--workers</code> if RAM is tight</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="next-steps" class="level2">
-<h2 class="anchored" data-anchor-id="next-steps">Next steps</h2>
-<p>After the pilot is validated, add quality-aware masks, explicit coverage thresholds, provenance metadata, reproducible configuration records, and automated tests for representative source files.</p>
+<section id="scaling-beyond-the-sample" class="level2">
+<h2 class="anchored" data-anchor-id="scaling-beyond-the-sample">7 · Scaling beyond the sample</h2>
+<p>For a larger region or many years: benchmark a representative subset (runtime, peak memory, stored size, read speed of your real queries), then process in <strong>time batches</strong> and grow the cube with <code>--append</code>. For very large areas split into grid-aligned tiles with a remapping margin, write each to its own store or to non-overlapping Zarr regions, and keep a manifest so only failed batches are re-run.</p>
+<p><strong>Next:</strong> <a href="../tutorial/04-explore.html">D · Explore the cube →</a></p>
 
 
 </section>
@@ -971,29 +1192,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../tutorial/02-run-code.html" class="pagination-link" aria-label="B. Download and preprocess a sample">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">B. Download and preprocess a sample</span>
+      <a href="../tutorial/02-run-code.html" class="pagination-link" aria-label="B · Download and preprocess">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">B · Download and preprocess</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../tutorial/04-explore.html" class="pagination-link" aria-label="D · Explore the cube">
+        <span class="nav-page-text">D · Explore the cube</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-      &nbsp;
-    </div>   
+<p>© 2026 Khizer Zakir · Climate Data Cube Workshop</p>
+</div>   
     <div class="nav-footer-center">
-<p>© 2026 Khizer Zakir. Prepared for the Climate Data Cube Workshop.</p>
-</div>
-    <div class="nav-footer-right">
       &nbsp;
-    </div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/khizerzakir/tutorial-repo/edit/main/tutorial/03-zarr-cubes.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/khizerzakir/tutorial-repo/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>LSA SAF data © EUMETSAT, CC BY 4.0</p>
+</div>
   </div>
 </footer>
 
 
 
 
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

@@ -105,10 +105,12 @@
     code span.vs { color: #abe338; } /* VerbatimString */
     code span.wa { color: #dcc6e0; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-c028f4bca6d58b9ce79bb5b4b88fa823.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-903a5dad2436470a1b5c7197079c91d3.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
@@ -198,61 +200,36 @@
     }
   </style>
   <script>
-
   document.addEventListener("DOMContentLoaded", () => {
-
     const root = document.documentElement;
-
     const apply = (m) => {
-
       root.classList.toggle("light", m === "light");
-
       try { localStorage.setItem("slides-mode", m); } catch (e) {}
-
     };
-
     let saved = "dark";
-
     try { saved = localStorage.getItem("slides-mode") || "dark"; } catch (e) {}
-
     apply(saved);
 
-  
-
     const btn = document.createElement("button");
-
     btn.id = "mode-toggle";
-
     btn.textContent = "◐";
-
     btn.title = "Toggle light/dark (T)";
-
     btn.onclick = () => apply(root.classList.contains("light") ? "dark" : "light");
-
     document.body.appendChild(btn);
 
-  
-
     document.addEventListener("keydown", (e) => {
-
       if (e.key === "t" || e.key === "T") btn.click();
-
     });
-
   });
-
   </script>
-  <script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
-  <script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
-  <link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 </head>
 <body class="quarto-dark">
   <div class="reveal">
     <div class="slides">
 
-<section id="title-slide" data-background-image="none" data-background-opacity="0.9" data-background-position="250% 50%" data-background-size="38%" class="quarto-title-block center">
+<section id="title-slide" data-background-color="#0b1f33" class="quarto-title-block center">
   <h1 class="title">Climate Data Cubes</h1>
-  <p class="subtitle">Raw data to a regional analysis-ready cube</p>
+  <p class="subtitle">Raw satellite files → a regional, analysis-ready Zarr cube</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -264,82 +241,137 @@ Khizer Zakir
 
   <p class="date">2026-10-15</p>
 </section>
-<section id="agenda" class="title-slide slide level1 center" data-background-color="#0b1f33">
-<h1>Agenda</h1>
-<ol type="1">
-<li>What is a climate cube?</li>
-<li>Why are we here, and why use a cube?</li>
-<li>Our approach</li>
-<li>Tutorial walkthrough</li>
-<li>Limitations and caveats</li>
-<li>Key message</li>
-<li>Links and references</li>
-</ol>
+<section id="section" class="slide level2 hero">
+<h2></h2>
+<div class="hero-grid">
+<div class="cube-3d">
+<div class="cube-3d-inner">
+<p><span class="f front"></span> <span class="f back"></span> <span class="f right"></span> <span class="f left"></span> <span class="f top"></span> <span class="f bottom"></span></p>
+</div>
+</div>
+<div class="hero-text">
+<p><span class="kicker">One month · one region · one cube</span></p>
+<div class="fragment fade-up">
+<p><span class="stat">30</span> daily NetCDF files</p>
+</div>
+<div class="fragment fade-up">
+<p><span class="stat">1</span> Zarr store, compressed and chunked</p>
+</div>
+<div class="fragment fade-up">
+<p><span class="stat">1 line</span> to open it and select by date and place</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>Press F for full screen, S for speaker notes, T toggles light/dark, C opens the chalkboard, M the menu.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="agenda" class="slide level2 agenda">
+<h2>Agenda</h2>
+<div class="agenda-grid">
+<div class="agenda-item fragment fade-up">
+<p><span class="num">1</span> <strong>What is a climate cube?</strong></p>
+</div>
+<div class="agenda-item fragment fade-up">
+<p><span class="num">2</span> <strong>Why build one?</strong></p>
+</div>
+<div class="agenda-item fragment fade-up">
+<p><span class="num">3</span> <strong>Our approach</strong></p>
+</div>
+<div class="agenda-item fragment fade-up">
+<p><span class="num">4</span> <strong>Hands-on walkthrough</strong> — WSL → download → CDO → Zarr → notebooks</p>
+</div>
+<div class="agenda-item fragment fade-up">
+<p><span class="num">5</span> <strong>Caveats &amp; scaling</strong></p>
+</div>
+<div class="agenda-item fragment fade-up">
+<p><span class="num">6</span> <strong>Key message &amp; links</strong></p>
+</div>
+</div>
 <!-- ======================================================= -->
 </section>
-
 <section>
 <section id="what-is-a-climate-cube" class="title-slide slide level1 center" data-background-color="#0b1f33">
 <h1>1 · What is a climate cube?</h1>
 <p>Dimensions, variables and the idea behind the cube</p>
 </section>
+<section id="many-files" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Many files…</h2>
+<div class="file-stage">
+<p><span class="file" data-id="f1" style="left:4%;top:8%;transform:rotate(-6deg)">NETCDF4_…20150601.nc</span> <span class="file" data-id="f2" style="left:52%;top:3%;transform:rotate(4deg)">NETCDF4_…20150602.nc</span> <span class="file" data-id="f3" style="left:28%;top:30%;transform:rotate(-2deg)">NETCDF4_…20150603.nc</span> <span class="file" data-id="f4" style="left:66%;top:38%;transform:rotate(7deg)">NETCDF4_…20150604.nc</span> <span class="file" data-id="f5" style="left:8%;top:56%;transform:rotate(3deg)">NETCDF4_…20150605.nc</span> <span class="file" data-id="f6" style="left:44%;top:64%;transform:rotate(-5deg)">NETCDF4_…20150606.nc</span></p>
+</div>
+<div class="caption-bottom">
+<p>Each file: one date, the full MSG disk (3201 × 3201), packed integers, its own metadata.</p>
+</div>
+</section>
+<section id="one-cube" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">… one cube</h2>
+<div class="file-stage">
+<p><span class="file layer" data-id="f1" style="left:30%;top:58%">2015-06-01</span> <span class="file layer" data-id="f2" style="left:32.5%;top:50%">2015-06-02</span> <span class="file layer" data-id="f3" style="left:35%;top:42%">2015-06-03</span> <span class="file layer" data-id="f4" style="left:37.5%;top:34%">2015-06-04</span> <span class="file layer" data-id="f5" style="left:40%;top:26%">2015-06-05</span> <span class="file layer" data-id="f6" style="left:42.5%;top:18%">2015-06-06</span> <span class="axis" style="left:66%;top:16%">time →</span> <span class="axis" style="left:36%;top:84%">lon →</span> <span class="axis" style="left:18%;top:62%">lat ↑</span></p>
+</div>
+<div class="caption-bottom">
+<p><strong>A data cube</strong> = one grid, one time axis, named variables: <code>METREF(time, lat, lon)</code>, <code>quality_flag(time, lat, lon)</code>.</p>
+</div>
+</section>
 <section id="what-is-a-climate-data-cube" class="slide level2">
 <h2>What is a climate data cube?</h2>
 <div class="columns">
-<div class="column" style="width:68%;">
-<p>A <strong>data cube</strong> is a multidimensional way to organize data. A climate data cube applies this idea to climate or Earth observation variables, commonly indexed by: <!-- align the text center --></p>
-<pre><code>time
-latitude
-longitude
-variable</code></pre>
+<div class="column" style="width:62%;">
+<p>A <strong>data cube</strong> organises data along shared dimensions. For climate/EO variables, typically:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a aria-label="1"></a>variable(time, latitude, longitude)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="fragment fade-up">
 <ul>
-<li><strong>Climate cube:</strong> gives climate/EO data meaningful arrangement of variables, coordinates and time steps - that allows a harmonized, analysis-ready view of the data.</li>
-<li>It is a <strong>domain-focused data organization</strong>, not a separate file format. Here, <code>NetCDF</code> is the input and <code>Zarr</code> is the output.</li>
+<li><strong>Harmonised:</strong> one grid, one calendar, consistent units and metadata.</li>
+<li><strong>Analysis-ready:</strong> select by label (<code>time="2015-06-15"</code>), not by file.</li>
+<li><strong>Not a file format:</strong> the <em>organisation</em> is the cube; here NetCDF is the input and <strong>Zarr</strong> the storage.</li>
 </ul>
-</div></div>
-<div class="positioned-image" style="--img-x: 70%; --img-y: 40%; --img-w: 35%; pointer-events: auto;">
+</div>
+</div><div class="column" style="width:38%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><a href="https://tmap.geocompx.org/geodata.html#fig-raster-data-cubes"><img data-src="img/fig-raster-data-cubes-1.png" style="width:100.0%"></a></p>
-<figcaption>A cube example-multidimensional data structure</figcaption>
+<figcaption>Raster data cube</figcaption>
 </figure>
 </div>
-<p><small>Image reference: <a href="https://tmap.geocompx.org/geodata.html#fig-raster-data-cubes">Tmap examples</a></small></p>
-</div>
+<p><small>Image: <a href="https://tmap.geocompx.org/geodata.html#fig-raster-data-cubes">tmap — geocompx</a></small></p>
+</div></div>
 </section>
-<section id="cube-not-file-format" class="slide level2">
-<h2>Cube, not file format</h2>
-<div id="fig-elephants" class="quarto-layout-panel">
-<figure class="quarto-float quarto-float-fig">
-<div aria-describedby="fig-elephants-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-elephants" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-surus" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-subfloat-fig">
-<div aria-describedby="fig-surus-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img data-src="img/plots/metref.png" style="width:75.0%" data-ref-parent="fig-elephants">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-surus-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(a) Surus
-</figcaption>
+<section id="from-a-disk-image-to-a-regional-cube" class="slide level2">
+<h2>From a disk image to a regional cube</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/plots/metref.png" height="500"></p>
+<figcaption>Raw METREF, one day, full MSG disk</figcaption>
 </figure>
 </div>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<p><img data-src="img/plots/Sahel_cube.png" id="fig-hanno" style="width:75.0%"> <img data-src="img/plots/Sahel_cube.png" id="fig-hanno" style="width:75.0%"></p>
-</div>
-</div>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-elephants-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Famous Elephants
-</figcaption>
+</div><div class="column fragment fade-left" style="width:60%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/plots/Sahel_cube.png" style="width:100.0%"></p>
+<figcaption>A Sahel cube (NDVI, 50 time steps) viewed in Lexcube</figcaption>
 </figure>
 </div>
+<div class="small-note">
+<p>Left: what the provider delivers — one file per day. Right: what analysis wants — a region, stacked in time.</p>
+</div>
+</div></div>
 </section>
 <section id="cubes-in-practice" class="slide level2">
 <h2>Cubes in practice</h2>
 <div class="cube-grid">
-<div class="cube-card">
+<div class="cube-card fragment fade-up">
 <div class="quarto-figure quarto-figure-center" style="background:#fff;padding:5px;border-radius:12px;">
 <figure>
 <p><img data-src="img/logos/esdc.png" style="width:100.0%"></p>
@@ -349,7 +381,7 @@ Figure&nbsp;1: Famous Elephants
 <p>Harmonised Earth-system variables on a common grid.</p>
 <p><a href="https://viewer.earthsystemdatalab.net/">Open the viewer</a></p>
 </div>
-<div class="cube-card">
+<div class="cube-card fragment fade-up">
 <div class="quarto-figure quarto-figure-center" style="background:#fff;padding:5px;border-radius:12px;">
 <figure>
 <p><img data-src="img/logos/odc.png" style="width:100.0%"></p>
@@ -359,7 +391,7 @@ Figure&nbsp;1: Famous Elephants
 <p>Open-source software to manage and analyse EO data cubes.</p>
 <p><a href="https://www.opendatacube.org/">ODC website</a></p>
 </div>
-<div class="cube-card">
+<div class="cube-card fragment fade-up">
 <div class="quarto-figure quarto-figure-center" style="background:#fff;padding:5px;border-radius:12px;">
 <figure>
 <p><img data-src="img/logos/pangeo.png" style="width:100.0%"></p>
@@ -369,7 +401,7 @@ Figure&nbsp;1: Famous Elephants
 <p>Community stack for cloud-native geoscience: Xarray, Dask and Zarr.</p>
 <p><a href="https://pangeo.io/">Pangeo Ecosystem</a></p>
 </div>
-<div class="cube-card">
+<div class="cube-card fragment fade-up">
 <div class="quarto-figure quarto-figure-center" style="background:#fff;padding:5px;border-radius:12px;">
 <figure>
 <p><img data-src="img/logos/xcube.png" style="width:100.0%"></p>
@@ -381,7 +413,7 @@ Figure&nbsp;1: Famous Elephants
 </div>
 </div>
 <aside class="notes">
-<p>Different communities, same idea: a consistent, labelled, multidimensional structure. Add your own example if you have one.</p>
+<p>Different communities, same idea: a consistent, labelled, multidimensional structure.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -396,50 +428,31 @@ Figure&nbsp;1: Famous Elephants
 <!-- ======================================================= -->
 </section></section>
 <section>
-<section id="why-are-we-here" class="title-slide slide level1 center" data-background-color="#0b1f33">
-<h1>2 · Why are we here?</h1>
+<section id="why-build-one" class="title-slide slide level1 center" data-background-color="#0b1f33">
+<h1>2 · Why build one?</h1>
 <p>And why use a cube at all?</p>
 </section>
-<section id="why-are-we-here-1" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">Why are we here?</h2>
+<section id="why-are-we-here" class="slide level2">
+<h2>Why are we here?</h2>
 <div class="fragment fade-down">
 <div class="card">
-<p>Climate products are useful, but their files can arrive with different grids, time steps, metadata and quality information.</p>
+<p>Climate products are useful, but files arrive with different grids, time steps, packing, metadata and quality flags.</p>
 </div>
 </div>
 <div class="fragment fade-up">
 <div class="card">
-<p>Today we make one small, transparent processing path from EUMETSAT source files to a regional data cube.</p>
+<p>Today we build one small, transparent path from EUMETSAT LSA SAF files to a regional data cube.</p>
 </div>
 </div>
 <div class="fragment fade-down">
 <div class="card">
-<p>We will learn how to work with data cubes in a practical setting, using real-world examples and tools.</p>
+<p>Every step leaves an output you can open and check — and every choice is written down.</p>
 </div>
 </div>
 </section>
-<section id="what-will-we-learn" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">What will we learn?</h2>
-<div class="fragment fade-down">
-<div class="card">
-<p>Find and download a selected LSA SAF product safely.</p>
-</div>
-</div>
-<div class="fragment fade-up">
-<div class="card">
-<p>Crop and remap a sample to an explicitly defined regional grid.</p>
-</div>
-</div>
-<div class="fragment fade-down">
-<div class="card">
-<p>Build and inspect a chunked, compressed Zarr cube.</p>
-</div>
-</div>
-<!-- ======================================================= -->
-</section>
-<section id="why-use-a-cube" class="slide level2">
-<h2>Why use a cube?</h2>
-<table class="caption-top">
+<section id="many-files-vs-one-cube" class="slide level2">
+<h2>Many files vs one cube</h2>
+<table class="table-striped table-hover caption-top">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
@@ -465,7 +478,7 @@ Figure&nbsp;1: Famous Elephants
 </tr>
 <tr class="even">
 <td>Processing choices live in scripts and memory</td>
-<td>Choices can be documented with the data</td>
+<td>Choices stored with the data (<code>zarr_cube_*</code> attributes)</td>
 </tr>
 </tbody>
 </table>
@@ -480,8 +493,7 @@ Figure&nbsp;1: Famous Elephants
 <figcaption>STAC</figcaption>
 </figure>
 </div>
-<p><strong>Describe</strong><br>
-Standardise metadata for discovering geospatial assets.</p>
+<p><strong>Describe</strong> Standardise metadata for discovering geospatial assets.</p>
 </div>
 <div class="cube-card">
 <div class="quarto-figure quarto-figure-center">
@@ -490,8 +502,7 @@ Standardise metadata for discovering geospatial assets.</p>
 <figcaption>Microsoft Planetary Computer</figcaption>
 </figure>
 </div>
-<p><strong>Discover and process</strong><br>
-Access open datasets through STAC and use hosted compute.</p>
+<p><strong>Discover and process</strong> Access open datasets through STAC and use hosted compute.</p>
 </div>
 <div class="cube-card">
 <div class="quarto-figure quarto-figure-center">
@@ -500,8 +511,7 @@ Access open datasets through STAC and use hosted compute.</p>
 <figcaption>Google Earth Engine</figcaption>
 </figure>
 </div>
-<p><strong>Analyse</strong><br>
-Use a managed platform for large-scale geospatial analysis.</p>
+<p><strong>Analyse</strong> Use a managed platform for large-scale geospatial analysis.</p>
 </div>
 <div class="cube-card">
 <div class="quarto-figure quarto-figure-center">
@@ -510,8 +520,7 @@ Use a managed platform for large-scale geospatial analysis.</p>
 <figcaption>Zarr</figcaption>
 </figure>
 </div>
-<p><strong>Store</strong><br>
-Save chunked, compressed multidimensional arrays.</p>
+<p><strong>Store</strong> Save chunked, compressed multidimensional arrays.</p>
 </div>
 <div class="cube-card">
 <div class="quarto-figure quarto-figure-center">
@@ -520,12 +529,11 @@ Save chunked, compressed multidimensional arrays.</p>
 <figcaption>Xarray</figcaption>
 </figure>
 </div>
-<p><strong>Work with data</strong><br>
-Select, transform and analyse labelled arrays in Python.</p>
+<p><strong>Work with data</strong> Select, transform and analyse labelled arrays in Python.</p>
 </div>
 </div>
 <aside class="notes">
-<p>These tools have different roles and can be combined in different workflows. STAC describes and helps discover assets; it is not a data cube format. Planetary Computer and Earth Engine are hosted platforms with different data catalogues and processing models. Zarr is a storage format, while Xarray is a Python library for working with labelled arrays.</p>
+<p>STAC describes and helps discover assets; it is not a data cube format. Planetary Computer and Earth Engine are hosted platforms. Zarr is a storage format, Xarray a Python library.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -538,10 +546,10 @@ Select, transform and analyse labelled arrays in Python.</p>
           display:block!important;
       }</style></aside>
 </section>
-<section id="where-does-our-data-come-from" class="slide level2">
+<section id="where-does-our-data-come-from" class="slide level2 smaller">
 <h2>Where does our data come from?</h2>
 <div class="columns">
-<div class="column" style="width:30%;">
+<div class="column" style="width:25%;">
 <div class="quarto-figure quarto-figure-center" style="background:#fff;padding:5px;border-radius:5px;">
 <figure>
 <p><img data-src="img/logos/lsasaf.png" style="width:100.0%"></p>
@@ -554,7 +562,7 @@ Select, transform and analyse labelled arrays in Python.</p>
 <figcaption>EUMETSAT</figcaption>
 </figure>
 </div>
-</div><div class="column" style="width:70%;">
+</div><div class="column" style="width:75%;">
 <table class="caption-top">
 <colgroup>
 <col style="width: 33%">
@@ -571,17 +579,17 @@ Select, transform and analyse labelled arrays in Python.</p>
 <tbody>
 <tr class="odd">
 <td><strong>METREF</strong></td>
-<td>Reference evapotranspiration</td>
-<td>Default configured download sample</td>
+<td>Reference evapotranspiration (mm/day)</td>
+<td>Default sample</td>
 </tr>
 <tr class="even">
-<td><strong>FVC / MDFVC</strong></td>
+<td><strong>MDFVC</strong></td>
 <td>Fractional vegetation cover</td>
-<td>Additional product example; configure its own URL and metadata</td>
+<td>Second product: own URL, own folder</td>
 </tr>
 </tbody>
 </table>
-<p>Data are accessed from the authenticated <a href="https://datalsasaf.lsasvcs.ipma.pt/">LSA SAF Data Service</a>. Availability, versions, units, coverage and quality depend on the product; check its product page before analysis.</p>
+<p>Authenticated <a href="https://datalsasaf.lsasvcs.ipma.pt/">LSA SAF Data Service</a>. Versions, units, coverage and QA differ by product — read the product page first.</p>
 </div></div>
 <!-- ======================================================= -->
 </section></section>
@@ -590,77 +598,36 @@ Select, transform and analyse labelled arrays in Python.</p>
 <h1>3 · Our approach</h1>
 <p>Small, explicit, checkable</p>
 </section>
-<section id="from-source-file-to-cube" class="slide level2">
-<h2>From source file to cube</h2>
-<div class="cell" data-reveal="true" data-layout-align="center">
-<div class="cell-output-display">
-<div>
-<p></p><figure class=""><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart LR
-    classDef step fill:#0e66a9,stroke:#3ddbd9,color:#ffffff,stroke-width:1px
-    classDef out  fill:#ffb454,stroke:#d9780f,color:#10253a,stroke-width:1px
-
-    subgraph S1["① Download"]
-        direction TB
-        A1["LSA SAF&lt;br/&gt;NetCDF + credentials"]:::step
-        A2["List month's files"]:::step
-        A3["Download in parallel&lt;br/&gt;.part, then rename"]:::step
-        A4[("data/raw&lt;br/&gt;YYYY/MM")]:::out
-        A1 --&gt; A2 --&gt; A3 --&gt; A4
-    end
-
-    subgraph S2["② Inspect"]
-        direction TB
-        B1["Read metadata"]:::step
-        B2["Valid values&lt;br/&gt;+ QA flags"]:::step
-        B3["Units, time,&lt;br/&gt;variable names"]:::step
-        B1 --&gt; B2 --&gt; B3
-    end
-
-    subgraph S3["③ Crop and remap"]
-        direction TB
-        C1["Crop to AOI&lt;br/&gt;sellonlatbox"]:::step
-        C2["Build target grid&lt;br/&gt;config_resolution"]:::step
-        C3["Remap&lt;br/&gt;remapbil"]:::step
-        C4[("data/interim")]:::out
-        C1 --&gt; C2 --&gt; C3 --&gt; C4
-    end
-
-    subgraph S4["④ Validate"]
-        direction TB
-        D1["Coordinates&lt;br/&gt;+ timestamps"]:::step
-        D2["Valid-cell fraction&lt;br/&gt;+ fill values"]:::step
-        D3["Coverage map&lt;br/&gt;+ summary statistics"]:::step
-        D1 --&gt; D2 --&gt; D3
-    end
-
-    subgraph S5["⑤ Zarr cube"]
-        direction TB
-        E1["Open with xarray&lt;br/&gt;+ Dask"]:::step
-        E2["Chunk + shard&lt;br/&gt;time, lat, lon"]:::step
-        E3["Compress&lt;br/&gt;Blosc zstd"]:::step
-        E4[("data/zarr&lt;br/&gt;cube.zarr")]:::out
-        E1 --&gt; E2 --&gt; E3 --&gt; E4
-    end
-
-    subgraph S6["⑥ Analyse"]
-        direction TB
-        F1["Maps"]:::step
-        F2["Time series"]:::step
-        F3["Regional&lt;br/&gt;indicators"]:::step
-        F1 --&gt; F2 --&gt; F3
-    end
-
-    S1 --&gt; S2 --&gt; S3 --&gt; S4 --&gt; S5 --&gt; S6
-</pre>
+<section id="three-scripts-three-folders" class="slide level2">
+<h2>Three scripts, three folders</h2>
+<div class="pipe">
+<div class="pipe-stage fragment fade-up">
+<p><span class="ico">☁️</span> <strong>LSA SAF</strong></p>
+<p>credentials in <code>code/.env</code></p>
 </div>
-<p></p></figure><p></p>
+<p><span class="pipe-arrow fragment fade-in">→</span></p>
+<div class="pipe-stage fragment fade-up">
+<p><span class="ico">①</span> <strong><code>01_download_sample.sh</code></strong></p>
+<p><code>data/raw/METREF/2015/06/</code></p>
+</div>
+<p><span class="pipe-arrow fragment fade-in">→</span></p>
+<div class="pipe-stage fragment fade-up">
+<p><span class="ico">②</span> <strong><code>02_preprocess_cdo.sh</code></strong></p>
+<p><code>data/interim/METREF/…</code></p>
+</div>
+<p><span class="pipe-arrow fragment fade-in">→</span></p>
+<div class="pipe-stage fragment fade-up">
+<p><span class="ico">③</span> <strong><code>03_build_zarr_cube.py</code></strong></p>
+<p><code>data/zarr/metref_cube.zarr</code></p>
+</div>
+<p><span class="pipe-arrow fragment fade-in">→</span></p>
+<div class="pipe-stage fragment fade-up">
+<p><span class="ico">④</span> <strong>notebooks + <code>plot_utils</code></strong></p>
+<p>maps · time series · zones</p>
 </div>
 </div>
-</div>
-<div class="fragment fade-up">
-<p>Each step leaves a checkable output. If a stage fails, diagnose that stage before moving on.</p>
+<div class="fragment fade-up center-note">
+<p>Each stage writes <strong>its own folder</strong>. If something looks wrong, open the previous folder and check there.</p>
 </div>
 </section>
 <section id="three-principles" class="slide level2">
@@ -682,65 +649,120 @@ Select, transform and analyse labelled arrays in Python.</p>
 <p>Every stage leaves an output you can inspect.</p>
 </div>
 </div></div>
-</section>
-<section id="apis-cloud-platforms-and-this-workflow" class="slide level2">
-<h2>APIs, cloud platforms and this workflow</h2>
-<p>APIs, Microsoft Planetary Computer and Google Earth Engine are useful for discovering, accessing and analyzing many datasets.</p>
-<p>This tutorial demonstrates a local, explicit path for selected authenticated LSA SAF data when we need to document a regional crop, target grid and processing choices. The two approaches can complement each other; this workflow does not assume hosted platforms lack the required data.</p>
+<div class="fragment fade-up" style="margin-top:1em">
+<p>APIs and hosted platforms (Planetary Computer, Earth Engine) are great for discovery and analysis. This workflow is the local, fully documented path for authenticated LSA SAF data — the two complement each other.</p>
+</div>
 <!-- ======================================================= -->
 </section></section>
 <section>
-<section id="tutorial-walkthrough" class="title-slide slide level1 center" data-background-color="#0b1f33">
-<h1>4 · Tutorial walkthrough</h1>
-<p>Now we will run the pipeline - Please follow the instructions in the tutorial page.</p>
+<section id="hands-on-walkthrough" class="title-slide slide level1 center" data-background-color="#0b1f33">
+<h1>4 · Hands-on walkthrough</h1>
+<p>Follow along on the <a href="https://khizerzakir.github.io/tutorial-repo/">tutorial site</a> — or generate your commands with the <a href="https://khizerzakir.github.io/tutorial-repo/tutorial/reference.html">command builder</a></p>
 </section>
-<section id="step-1-download-a-small-sample" class="slide level2">
-<h2>Step 1 · Download a small sample</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a aria-label="1"></a><span class="fu">cp</span> code/.env.example code/.env   <span class="co"># add credentials; keep local</span></span>
-<span id="cb2-2"><a aria-label="2"></a><span class="fu">bash</span> code/01_download_sample.sh 2020 06</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="step-0-open-a-linux-shell" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Step 0 · Open a Linux shell</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><strong>Windows → WSL2 (once, admin PowerShell)</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource powershell number-lines code-with-copy"><code class="sourceCode powershell"><span id="cb2-1"><a aria-label="1"></a>wsl <span class="op">--</span>install <span class="op">-</span>d Ubuntu</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Every session</strong></p>
 <ul>
-<li>The downloader reads a product URL, year and month from settings.</li>
-<li>Raw files go under <code>data/raw/YYYY/MM/</code>.</li>
-<li>It downloads to a temporary <code>.part</code> file, then renames on success.</li>
+<li>Start menu → <strong>Ubuntu</strong>, or</li>
+<li>Windows Terminal → ⌄ → <strong>Ubuntu</strong></li>
 </ul>
-<p><strong>Start with one month and one product.</strong> It makes troubleshooting and validation manageable.</p>
+<p><span class="small-note">Keep the project in <code>~/</code>, not <code>/mnt/c/</code> — much faster.</span></p>
+</div><div class="column" style="width:60%;">
+<div class="terminal">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-code-line-numbers="1-2|3-4|5-7|8"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a aria-label="1"></a><span class="fu">sudo</span> apt update</span>
+<span id="cb3-2"><a aria-label="2"></a><span class="fu">sudo</span> apt install <span class="at">-y</span> git wget cdo</span>
+<span id="cb3-3"><a aria-label="3"></a><span class="ex">curl</span> <span class="at">-LsSf</span> https://astral.sh/uv/install.sh <span class="kw">|</span> <span class="fu">sh</span></span>
+<span id="cb3-4"><a aria-label="4"></a><span class="bu">source</span> <span class="st">"</span><span class="va">$HOME</span><span class="st">/.local/bin/env"</span></span>
+<span id="cb3-5"><a aria-label="5"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/projects <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/projects</span>
+<span id="cb3-6"><a aria-label="6"></a><span class="fu">git</span> clone https://github.com/khizerzakir/tutorial-repo.git</span>
+<span id="cb3-7"><a aria-label="7"></a><span class="bu">cd</span> tutorial-repo</span>
+<span id="cb3-8"><a aria-label="8"></a><span class="ex">uv</span> sync <span class="at">--locked</span> <span class="at">--extra</span> notebook</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div></div>
 </section>
-<section id="download-keep-credentials-private" class="slide level2">
-<h2>Download · keep credentials private</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-code-line-numbers="1-2|3-5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a aria-label="1"></a><span class="va">ENV_FILE</span><span class="op">=</span><span class="st">"</span><span class="va">${ENV_FILE</span><span class="op">:-</span><span class="va">$PWD</span>/code/.env<span class="va">}</span><span class="st">"</span></span>
-<span id="cb3-2"><a aria-label="2"></a><span class="bu">[</span> <span class="ot">-f</span> <span class="st">"</span><span class="va">$ENV_FILE</span><span class="st">"</span> <span class="bu">]</span> <span class="kw">&amp;&amp;</span> <span class="kw">{</span> <span class="bu">set</span> <span class="at">-a</span><span class="kw">;</span> <span class="bu">.</span> <span class="st">"</span><span class="va">$ENV_FILE</span><span class="st">"</span><span class="kw">;</span> <span class="bu">set</span> +a<span class="kw">;</span> <span class="kw">}</span></span>
-<span id="cb3-3"><a aria-label="3"></a><span class="va">WGETRC</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="fu">mktemp</span><span class="va">)</span><span class="st">"</span><span class="kw">;</span> <span class="bu">export</span> <span class="va">WGETRC</span><span class="kw">;</span> <span class="bu">trap</span> <span class="st">'rm -f "$WGETRC"'</span> EXIT</span>
-<span id="cb3-4"><a aria-label="4"></a><span class="bu">printf</span> <span class="st">'http_user=%s\nhttp_password=%s\n'</span> <span class="dt">\</span></span>
-<span id="cb3-5"><a aria-label="5"></a>  <span class="st">"</span><span class="va">$LSASAF_USERNAME</span><span class="st">"</span> <span class="st">"</span><span class="va">$LSASAF_PASSWORD</span><span class="st">"</span> <span class="op">&gt;</span> <span class="st">"</span><span class="va">$WGETRC</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<ul>
-<li>Credentials come from a local <code>.env</code>, never from the repository.</li>
-<li><code>wget</code> reads them from a private temporary file, so the password never appears in the process list.</li>
-</ul>
+<section id="step-0-credentials-stay-local" class="slide level2">
+<h2>Step 0 · Credentials stay local</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a aria-label="1"></a><span class="fu">cp</span> code/.env.example code/.env</span>
+<span id="cb4-2"><a aria-label="2"></a><span class="fu">nano</span> code/.env</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-code-line-numbers="1-2|3-4|5-6"><pre class="sourceCode numberSource dotenv number-lines code-with-copy"><code class="sourceCode"><span id="cb5-1"><a aria-label="1"></a>LSASAF_USERNAME="your_username"</span>
+<span id="cb5-2"><a aria-label="2"></a>LSASAF_PASSWORD="your_password"</span>
+<span id="cb5-3"><a aria-label="3"></a>SAMPLE_YEAR=2015</span>
+<span id="cb5-4"><a aria-label="4"></a>SAMPLE_MONTH=06</span>
+<span id="cb5-5"><a aria-label="5"></a>VARIABLE_NAME=METREF</span>
+<span id="cb5-6"><a aria-label="6"></a>URL="https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF"</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment fade-left" style="width:50%;">
+<div class="card">
+<p><code>code/.env</code> is in <code>.gitignore</code>.</p>
+<p>The downloader writes the password to a <strong>temporary wgetrc</strong> that is deleted on exit — it never appears in the process list or shell history.</p>
+</div>
+<div class="checkpoint">
+<p>✅ <strong>Checkpoint:</strong> <code>uv run python -c "import zarr; print(zarr.__version__)"</code> → <code>3.x</code></p>
+</div>
+</div></div>
 </section>
-<section id="download-find-the-months-files" class="slide level2">
-<h2>Download · find the month’s files</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-code-line-numbers="1|2-3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a aria-label="1"></a><span class="cf">for</span> d <span class="kw">in</span> <span class="va">$(</span><span class="fu">seq</span> <span class="at">-w</span> 1 31<span class="va">)</span><span class="kw">;</span> <span class="cf">do</span></span>
-<span id="cb4-2"><a aria-label="2"></a>  <span class="va">list</span><span class="op">+=</span><span class="va">$(</span><span class="kw">{</span> <span class="fu">wget</span> <span class="at">-q</span> <span class="at">-O-</span> <span class="st">"</span><span class="va">$SRC</span><span class="st">/</span><span class="va">$YEAR</span><span class="st">/</span><span class="va">$MONTH</span><span class="st">/</span><span class="va">$d</span><span class="st">/"</span> <span class="kw">||</span> <span class="fu">true</span><span class="kw">;</span> <span class="kw">}</span> <span class="dt">\</span></span>
-<span id="cb4-3"><a aria-label="3"></a>          <span class="kw">|</span> <span class="fu">tr</span> <span class="st">'"'</span> <span class="st">'\n'</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'\.nc$'</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">"s|^|</span><span class="va">$HOST</span><span class="st">|"</span> <span class="kw">||</span> <span class="fu">true</span><span class="va">)</span><span class="st">$'</span><span class="dt">\n</span><span class="st">'</span></span>
-<span id="cb4-4"><a aria-label="4"></a><span class="cf">done</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<ul>
-<li>Loop over possible days; days that do not exist return no listing and are skipped.</li>
-<li>Keep only <code>.nc</code> links and turn them into full URLs.</li>
-</ul>
+<section id="step-1-download" class="slide level2 big-code" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Step 1 · Download</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode bash hljs"><span id="cb6-1" class="hljs-ln-code"><a aria-label="1"></a><span class="fu">bash</span> code/01_download_sample.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="small-note">
+<p>Uses month, product and URL from <code>code/.env</code>.</p>
+</div>
 </section>
-<section id="download-safe-parallel-with-a-time-estimate" class="slide level2">
-<h2>Download · safe, parallel, with a time estimate</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-code-line-numbers="1-2|3|4-5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a aria-label="1"></a><span class="fu">get()</span> <span class="kw">{</span> <span class="bu">local</span> <span class="va">f</span><span class="op">=</span><span class="st">"</span><span class="va">$2</span><span class="st">/</span><span class="va">${1</span><span class="op">##</span><span class="pp">*</span>/<span class="va">}</span><span class="st">"</span></span>
-<span id="cb5-2"><a aria-label="2"></a>        <span class="fu">wget</span> <span class="at">-q</span> <span class="at">-O</span> <span class="st">"</span><span class="va">$f</span><span class="st">.part"</span> <span class="st">"</span><span class="va">$1</span><span class="st">"</span> <span class="kw">&amp;&amp;</span> <span class="fu">mv</span> <span class="st">"</span><span class="va">$f</span><span class="st">.part"</span> <span class="st">"</span><span class="va">$f</span><span class="st">"</span><span class="kw">;</span> <span class="kw">}</span></span>
-<span id="cb5-3"><a aria-label="3"></a><span class="va">t0</span><span class="op">=</span><span class="va">$SECONDS</span><span class="kw">;</span> <span class="ex">get</span> <span class="st">"</span><span class="va">$(</span><span class="fu">head</span> <span class="at">-n1</span> <span class="op">&lt;&lt;&lt;</span> <span class="st">"</span><span class="va">$pending</span><span class="st">"</span><span class="va">)</span><span class="st">"</span> <span class="st">"</span><span class="va">$DEST</span><span class="st">"</span></span>
-<span id="cb5-4"><a aria-label="4"></a><span class="fu">tail</span> <span class="at">-n</span> +2 <span class="op">&lt;&lt;&lt;</span> <span class="st">"</span><span class="va">$pending</span><span class="st">"</span> <span class="dt">\</span></span>
-<span id="cb5-5"><a aria-label="5"></a>  <span class="kw">|</span> <span class="fu">xargs</span> <span class="at">-P</span> <span class="st">"</span><span class="va">$JOBS</span><span class="st">"</span> <span class="at">-I{}</span> bash <span class="at">-c</span> <span class="st">'get "$1" "$2"'</span> _ {} <span class="st">"</span><span class="va">$DEST</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<ul>
-<li>A file only gets its final name when the download is complete; interrupted runs never leave half-files that look finished.</li>
-<li>Timing the first file gives an estimate for the rest; <code>JOBS</code> sets parallel downloads.</li>
-</ul>
+<section id="step-1-download-1" class="slide level2 big-code" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Step 1 · Download</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode bash hljs"><span id="cb7-1" class="hljs-ln-code"><a aria-label="1"></a><span class="fu">bash</span> code/01_download_sample.sh 2015 06</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="small-note">
+<p>Arguments <strong>override</strong> <code>.env</code>: year and month first …</p>
+</div>
+</section>
+<section id="step-1-download-2" class="slide level2 big-code" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Step 1 · Download</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource bash number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode bash hljs"><span id="cb8-1" class="hljs-ln-code"><a aria-label="1"></a><span class="fu">bash</span> code/01_download_sample.sh 2015 06 MDFVC <span class="dt">\</span></span>
+<span id="cb8-2" class="hljs-ln-code"><a aria-label="2"></a>  <span class="st">"https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/MDFVC/NETCDF"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="small-note">
+<p>… then folder name and product URL — a second product without editing <code>.env</code>.</p>
+</div>
+</section>
+<section id="step-1-download-3" class="slide level2 big-code" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Step 1 · Download</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource bash number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode bash hljs"><span id="cb9-1" class="hljs-ln-code"><a aria-label="1"></a><span class="va">JOBS</span><span class="op">=</span>8 <span class="fu">bash</span> code/01_download_sample.sh 2015 06 MDFVC <span class="dt">\</span></span>
+<span id="cb9-2" class="hljs-ln-code"><a aria-label="2"></a>  <span class="st">"https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/MDFVC/NETCDF"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="terminal-out">
+<div class="fragment">
+<p><code>2015-06: 30 file(s) on server, 30 to download -&gt; data/raw/MDFVC/2015/06</code></p>
+</div>
+<div class="fragment">
+<p><code>First file: ~6s. Estimated remaining: ~0m22s with 8 parallel jobs</code></p>
+</div>
+<div class="fragment">
+<p><code>Done: 30 file(s) in 0m29s</code></p>
+</div>
+</div>
+<div class="small-note fragment">
+<p><code>JOBS</code> = parallel downloads. Re-run any time: existing files are skipped, failed ones retried.</p>
+</div>
+</section>
+<section id="download-inside-the-script" class="slide level2">
+<h2>Download · inside the script</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" data-code-line-numbers="1-2|3-4|6-8|10-11|12"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a aria-label="1"></a><span class="va">ENV_FILE</span><span class="op">=</span><span class="st">"</span><span class="va">${ENV_FILE</span><span class="op">:-</span><span class="va">$PWD</span>/code/.env<span class="va">}</span><span class="st">"</span></span>
+<span id="cb10-2"><a aria-label="2"></a><span class="bu">set</span> <span class="at">-a</span><span class="kw">;</span> <span class="bu">.</span> <span class="st">"</span><span class="va">$ENV_FILE</span><span class="st">"</span><span class="kw">;</span> <span class="bu">set</span> +a</span>
+<span id="cb10-3"><a aria-label="3"></a><span class="va">WGETRC</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="fu">mktemp</span><span class="va">)</span><span class="st">"</span><span class="kw">;</span> <span class="bu">export</span> <span class="va">WGETRC</span><span class="kw">;</span> <span class="bu">trap</span> <span class="st">'rm -f "$WGETRC"'</span> EXIT</span>
+<span id="cb10-4"><a aria-label="4"></a><span class="bu">printf</span> <span class="st">'http_user=%s\nhttp_password=%s\n'</span> <span class="st">"</span><span class="va">$LSASAF_USERNAME</span><span class="st">"</span> <span class="st">"</span><span class="va">$LSASAF_PASSWORD</span><span class="st">"</span> <span class="op">&gt;</span> <span class="st">"</span><span class="va">$WGETRC</span><span class="st">"</span></span>
+<span id="cb10-5"><a aria-label="5"></a></span>
+<span id="cb10-6"><a aria-label="6"></a><span class="cf">for</span> d <span class="kw">in</span> <span class="va">$(</span><span class="fu">seq</span> <span class="at">-w</span> 1 31<span class="va">)</span><span class="kw">;</span> <span class="cf">do</span>                         <span class="co"># list every day folder of the month</span></span>
+<span id="cb10-7"><a aria-label="7"></a>  <span class="va">list</span><span class="op">+=</span><span class="va">$(</span><span class="fu">wget</span> <span class="at">-q</span> <span class="at">-O-</span> <span class="st">"</span><span class="va">$SRC</span><span class="st">/</span><span class="va">$YEAR</span><span class="st">/</span><span class="va">$MONTH</span><span class="st">/</span><span class="va">$d</span><span class="st">/"</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'\.nc$'</span> …<span class="va">)</span></span>
+<span id="cb10-8"><a aria-label="8"></a><span class="cf">done</span></span>
+<span id="cb10-9"><a aria-label="9"></a></span>
+<span id="cb10-10"><a aria-label="10"></a><span class="fu">get()</span> <span class="kw">{</span> <span class="fu">wget</span> <span class="at">-q</span> <span class="at">-O</span> <span class="st">"</span><span class="va">$f</span><span class="st">.part"</span> <span class="st">"</span><span class="va">$1</span><span class="st">"</span> <span class="kw">&amp;&amp;</span> <span class="fu">mv</span> <span class="st">"</span><span class="va">$f</span><span class="st">.part"</span> <span class="st">"</span><span class="va">$f</span><span class="st">"</span><span class="kw">;</span> <span class="kw">}</span>    <span class="co"># .part → rename when complete</span></span>
+<span id="cb10-11"><a aria-label="11"></a><span class="va">t0</span><span class="op">=</span><span class="va">$SECONDS</span><span class="kw">;</span> <span class="ex">get</span> <span class="st">"</span><span class="va">$(</span><span class="fu">head</span> <span class="at">-n1</span> <span class="op">&lt;&lt;&lt;</span> <span class="st">"</span><span class="va">$pending</span><span class="st">"</span><span class="va">)</span><span class="st">"</span> <span class="st">"</span><span class="va">$DEST</span><span class="st">"</span>        <span class="co"># time one file → estimate</span></span>
+<span id="cb10-12"><a aria-label="12"></a><span class="fu">tail</span> <span class="at">-n</span> +2 <span class="op">&lt;&lt;&lt;</span> <span class="st">"</span><span class="va">$pending</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">xargs</span> <span class="at">-P</span> <span class="st">"</span><span class="va">$JOBS</span><span class="st">"</span> <span class="at">-I{}</span> bash <span class="at">-c</span> <span class="st">'get "$1" "$2"'</span> _ {} <span class="st">"</span><span class="va">$DEST</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
-<p>Simplified excerpt: the real script also sets retries and timeouts and reports failed files.</p>
+<p>Simplified excerpt; the real script adds retries, timeouts and reports failures. Walk through with the arrow keys: credentials → listing → safe download → parallel.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -753,39 +775,96 @@ Select, transform and analyse labelled arrays in Python.</p>
           display:block!important;
       }</style></aside>
 </section>
-<section id="step-2-crop-and-remap" class="slide level2">
-<h2>Step 2 · Crop and remap</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a aria-label="1"></a><span class="fu">bash</span> code/02_preprocess_cdo.sh 0.05</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The script clips source files using bounds in <code>code/preprocess_utils/config.txt</code>, then remaps using the grid generated from <code>config_resolution.yaml</code>.</p>
-<div class="callout callout-warning callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<section id="step-1b-look-before-you-remap" class="slide level2">
+<h2>Step 1b · Look before you remap</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" data-code-line-numbers="1|2|3|4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a aria-label="1"></a><span class="ex">cdo</span> <span class="at">-s</span> showname data/raw/METREF/2015/06/<span class="pp">*</span>0601<span class="pp">*</span>.nc   <span class="co"># METREF quality_flag</span></span>
+<span id="cb11-2"><a aria-label="2"></a><span class="ex">cdo</span> <span class="at">-s</span> sinfo    data/raw/METREF/2015/06/<span class="pp">*</span>0601<span class="pp">*</span>.nc   <span class="co"># lonlat 3201x3201, -80…80 by 0.05</span></span>
+<span id="cb11-3"><a aria-label="3"></a><span class="ex">cdo</span> <span class="at">-s</span> showtimestamp data/raw/METREF/2015/06/<span class="pp">*</span>0601<span class="pp">*</span>.nc</span>
+<span id="cb11-4"><a aria-label="4"></a><span class="ex">cdo</span> <span class="at">-s</span> infon    data/raw/METREF/2015/06/<span class="pp">*</span>0601<span class="pp">*</span>.nc   <span class="co"># min / mean / max, missing count</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="columns">
+<div class="column fragment" style="width:50%;">
+<div class="card">
+<p><code>showname</code> gives you <strong><code>MAIN_VARIABLE</code></strong> and <strong><code>QA_VARIABLES</code></strong> for the next step.</p>
 </div>
-<p><strong>Warning</strong></p>
+</div><div class="column fragment" style="width:50%;">
+<div class="card">
+<p>Raw values are <strong>packed</strong> (<code>int16</code> × <code>scale_factor</code>, <code>_FillValue</code>). xarray and CDO decode them — check that they do.</p>
 </div>
-<div class="callout-content">
-<p>Make the clip bounds and target-grid extent describe the same area. In the current examples they differ; a target grid extending beyond the clipped source can create large missing-value regions.</p>
-</div>
-</div>
-</div>
+</div></div>
 </section>
-<section id="processing-key-code" class="slide level2">
-<h2>Processing · key code</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-code-line-numbers="1|2|3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a aria-label="1"></a><span class="bu">command</span> <span class="at">-v</span> cdo <span class="op">&gt;</span>/dev/null <span class="kw">||</span> <span class="kw">{</span> <span class="bu">echo</span> <span class="st">"cdo not found"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span><span class="kw">;</span> <span class="bu">exit</span> 1<span class="kw">;</span> <span class="kw">}</span></span>
-<span id="cb7-2"><a aria-label="2"></a><span class="bu">[</span> <span class="ot">-n</span> <span class="st">"</span><span class="va">$(</span><span class="fu">find</span> <span class="st">"</span><span class="va">$RAW_DIR</span><span class="st">"</span> <span class="at">-name</span> <span class="st">'*.nc'</span> <span class="at">-print</span> <span class="at">-quit</span><span class="va">)</span><span class="st">"</span> <span class="bu">]</span> <span class="kw">||</span> <span class="bu">exit</span> 1</span>
-<span id="cb7-3"><a aria-label="3"></a><span class="fu">bash</span> <span class="st">"</span><span class="va">$SCRIPT_DIR</span><span class="st">/cdo_preprocess.sh"</span> <span class="st">"</span><span class="va">$RESOLUTION</span><span class="st">"</span> <span class="st">"</span><span class="va">$RAW_DIR</span><span class="st">"</span> <span class="st">"</span><span class="va">$INTERIM_DIR</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="step-2-snap-the-region-to-the-source-grid" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Step 2 · Snap the region to the source grid</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<div class="grid-demo">
+<p><span class="aoi" data-id="aoi" style="left:23%;top:17%;width:47%;height:51%"></span></p>
+</div>
+</div><div class="column" style="width:45%;">
+<p>Your AOI comes from the YAML <code>domain:</code> <strong>or</strong> a vector file (<code>.geojson</code>, <code>.gpkg</code>, <code>.shp</code>, <code>.parquet</code>).</p>
+<p>Its bounds rarely fall on cell edges …</p>
+</div></div>
+</section>
+<section id="step-2-snap-the-region-to-the-source-grid-1" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Step 2 · Snap the region to the source grid</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<div class="grid-demo">
+<p><span class="aoi snapped" data-id="aoi" style="left:20%;top:10%;width:50%;height:60%"></span></p>
+</div>
+</div><div class="column" style="width:45%;">
+<p>… so <code>snap_aoi_to_netcdf_grid.py</code> expands them <strong>outward to whole raw cells</strong>, writes <code>grid.txt</code> and updates the YAML.</p>
+<div class="fragment">
 <ul>
-<li>Fail early: check the tool and the input before doing any work.</li>
-<li>One call does the work: resolution in, raw files in, interim files out.</li>
+<li>Target cell size <strong>= raw cell size</strong> (0.05°): no invented detail.</li>
+<li>Crop = grid + <code>buffer</code> (0.2°) so bilinear has neighbours at the edge.</li>
 </ul>
+</div>
+</div></div>
 </section>
-<section id="processing-the-two-cdo-operations" class="slide level2">
-<h2>Processing · the two CDO operations</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-code-line-numbers="1|2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a aria-label="1"></a><span class="ex">cdo</span> sellonlatbox,LON1,LON2,LAT1,LAT2 in.nc cropped.nc   <span class="co"># 1. crop to the area of interest</span></span>
-<span id="cb8-2"><a aria-label="2"></a><span class="ex">cdo</span> remapbil,target_grid.txt cropped.nc remapped.nc      <span class="co"># 2. remap to the target grid</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Conceptual view of what the pipeline does; the exact calls are in <code>cdo_preprocess.sh</code>.</p>
+<section id="step-2-crop-and-remap" class="slide level2 big-code" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Step 2 · Crop and remap</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource bash number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode bash hljs"><span id="cb12-1" class="hljs-ln-code"><a aria-label="1"></a><span class="va">MAIN_VARIABLE</span><span class="op">=</span>METREF <span class="ex">uv</span> run bash code/02_preprocess_cdo.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="small-note">
+<p><code>MAIN_VARIABLE</code> is required and checked against <code>cdo showname</code>. <code>uv run</code> gives the script’s internal <code>python3</code> the project packages.</p>
+</div>
+</section>
+<section id="step-2-crop-and-remap-1" class="slide level2 big-code" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Step 2 · Crop and remap</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource bash number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode bash hljs"><span id="cb13-1" class="hljs-ln-code"><a aria-label="1"></a><span class="va">MAIN_VARIABLE</span><span class="op">=</span>METREF <span class="va">QA_VARIABLES</span><span class="op">=</span>quality_flag <span class="dt">\</span></span>
+<span id="cb13-2" class="hljs-ln-code"><a aria-label="2"></a>  <span class="ex">uv</span> run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="small-note">
+<p>Arguments: resolution label (log) · input folder · <strong>output folder per product</strong>.</p>
+</div>
+</section>
+<section id="step-2-crop-and-remap-2" class="slide level2 big-code" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Step 2 · Crop and remap</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a aria-label="1"></a><span class="va">MAIN_VARIABLE</span><span class="op">=</span>METREF <span class="va">QA_VARIABLES</span><span class="op">=</span>quality_flag <span class="dt">\</span></span>
+<span id="cb14-2"><a aria-label="2"></a>  <span class="ex">uv</span> run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF <span class="dt">\</span></span>
+<span id="cb14-3"><a aria-label="3"></a>  data/aoi/spatial_units.geosjon</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="small-note">
+<p>4th argument: a vector AOI instead of the YAML box. The snapped rectangle is saved as <code>aoi_aligned.gpkg</code>.</p>
+</div>
+</div><div class="column fragment" style="width:50%;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb15-1"><a aria-label="1"></a><span class="fu">processing</span><span class="kw">:</span></span>
+<span id="cb15-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">parallel</span><span class="kw">:</span><span class="at"> </span><span class="dv">4</span><span class="co">            # files at once (not an env var)</span></span>
+<span id="cb15-3"><a aria-label="3"></a><span class="at">  </span><span class="fu">remap_method</span><span class="kw">:</span><span class="at"> bilinear</span><span class="co"> # or nearest</span></span>
+<span id="cb15-4"><a aria-label="4"></a><span class="at">  </span><span class="fu">buffer</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></div>
+</section>
+<section id="processing-one-files-journey" class="slide level2">
+<h2>Processing · one file’s journey</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" data-code-line-numbers="1|2-3|4|5|6|7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a aria-label="1"></a><span class="ex">cdo</span> <span class="at">-sellonlatbox,</span><span class="va">$W</span><span class="at">,</span><span class="va">$E</span><span class="at">,</span><span class="va">$S</span><span class="at">,</span><span class="va">$N</span>          in.nc    clip.nc        <span class="co"># crop (+ buffer)</span></span>
+<span id="cb16-2"><a aria-label="2"></a><span class="ex">cdo</span> <span class="at">-delname,</span><span class="va">$QA_CSV</span>                   clip.nc  main.nc        <span class="co"># continuous variables</span></span>
+<span id="cb16-3"><a aria-label="3"></a><span class="ex">cdo</span> <span class="at">-selname,</span><span class="va">$QA_CSV</span>                   clip.nc  qa.nc          <span class="co"># flags</span></span>
+<span id="cb16-4"><a aria-label="4"></a><span class="ex">cdo</span> <span class="at">-remapbil,grid.txt</span>                 main.nc  main_r.nc      <span class="co"># smooth → bilinear</span></span>
+<span id="cb16-5"><a aria-label="5"></a><span class="ex">cdo</span> <span class="at">-remapnn,grid.txt</span>                  qa.nc    qa_r.nc        <span class="co"># codes → nearest, never averaged</span></span>
+<span id="cb16-6"><a aria-label="6"></a><span class="ex">cdo</span> merge main_r.nc qa_r.nc merged.nc                          <span class="co"># back together</span></span>
+<span id="cb16-7"><a aria-label="7"></a><span class="ex">cdo</span> <span class="at">-s</span> sinfo merged.nc <span class="kw">&amp;&amp;</span> <span class="fu">mv</span> merged.nc out.part <span class="kw">&amp;&amp;</span> <span class="fu">mv</span> out.part out_processed.nc  <span class="co"># only valid output lands</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="small-note fragment">
+<p><code>processing.parallel</code> files run at once through <code>xargs -P</code>; results and failures go to <code>data/interim/METREF/cdo.log</code>.</p>
+</div>
 </section>
 <section id="resampling-is-a-decision" class="slide level2">
 <h2>Resampling is a decision</h2>
@@ -805,115 +884,253 @@ Select, transform and analyse labelled arrays in Python.</p>
 <tbody>
 <tr class="odd">
 <td>Bilinear</td>
-<td>Continuous fields such as many climate variables</td>
-<td>Smooths values; can modify extremes</td>
+<td>Continuous fields (ETo, temperature, FVC)</td>
+<td>Smooths; can shrink extremes</td>
 </tr>
 <tr class="even">
 <td>Nearest neighbour</td>
-<td>Categories and QA flags</td>
-<td>Preserves classes; can look blocky</td>
+<td>Categories, QA flags</td>
+<td>Preserves classes; looks blocky</td>
 </tr>
 </tbody>
 </table>
-<p>Neither method creates finer source detail. For each product, choose a method that matches its values and intended use; retain and apply quality flags where available.</p>
+<div class="fragment fade-up">
+<p>Neither creates finer detail than the source. Choose per product, keep the QA flags, and <strong>record the choice</strong>.</p>
+</div>
+<div class="checkpoint fragment">
+<p>✅ <strong>Checkpoint:</strong> one <code>*_processed.nc</code> per raw file · no <code>status=failed</code> in <code>cdo.log</code> · <code>cdo sinfo</code> shows the <code>grid.txt</code> size</p>
+</div>
 </section>
-<section id="step-3-store-for-analysis" class="slide level2">
-<h2>Step 3 · Store for analysis</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-code-line-numbers="1|2|3|4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a aria-label="1"></a><span class="im">from</span> zarr.codecs <span class="im">import</span> BloscCodec</span>
-<span id="cb9-2"><a aria-label="2"></a>INNER_CHUNKS <span class="op">=</span> {<span class="st">"time"</span>: <span class="dv">1</span>, <span class="st">"lat"</span>: <span class="dv">256</span>, <span class="st">"lon"</span>: <span class="dv">256</span>}</span>
-<span id="cb9-3"><a aria-label="3"></a>SHARD_CHUNKS <span class="op">=</span> {<span class="st">"time"</span>: <span class="dv">10</span>, <span class="st">"lat"</span>: <span class="dv">512</span>, <span class="st">"lon"</span>: <span class="dv">512</span>}</span>
-<span id="cb9-4"><a aria-label="4"></a>COMPRESSOR <span class="op">=</span> BloscCodec(cname<span class="op">=</span><span class="st">"zstd"</span>, clevel<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="st">"shuffle"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="step-3-build-the-cube" class="slide level2 big-code" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Step 3 · Build the cube</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a aria-label="1"></a><span class="ex">uv</span> run python code/03_build_zarr_cube.py <span class="at">--input</span> data/interim/METREF <span class="at">--dry-run</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="terminal-out">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb18-1"><a aria-label="1"></a>Profile          : map</span>
+<span id="cb18-2"><a aria-label="2"></a>Files            : 30  (…201506010000_processed.nc … …201506300000_processed.nc)</span>
+<span id="cb18-3"><a aria-label="3"></a>Variables        : METREF, quality_flag</span>
+<span id="cb18-4"><a aria-label="4"></a>Dimensions       : {'time': 30, 'lat': 91, 'lon': 121}</span>
+<span id="cb18-5"><a aria-label="5"></a>Inner chunk      : {'time': 1, 'lat': 91, 'lon': 121}  (~43.0 KB raw each)</span>
+<span id="cb18-6"><a aria-label="6"></a>Shard            : {'time': 10, 'lat': 91, 'lon': 121}</span>
+<span id="cb18-7"><a aria-label="7"></a>Per variable     : 30 inner chunks in 3 shard object(s)</span>
+<span id="cb18-8"><a aria-label="8"></a>Dry run: nothing written.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="step-3-build-the-cube-1" class="slide level2 big-code" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Step 3 · Build the cube</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource bash number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode bash hljs"><span id="cb19-1" class="hljs-ln-code"><a aria-label="1"></a><span class="ex">uv</span> run python code/03_build_zarr_cube.py <span class="at">--input</span> data/interim/METREF</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="terminal-out">
+<div class="fragment">
+<p><code>Validation OK    : first/last time steps match the interim NetCDF</code></p>
+</div>
+<div class="fragment">
+<p><code>Valid fraction   : METREF=95.9%, quality_flag=100.0%</code></p>
+</div>
+<div class="fragment">
+<p><code>Stored size      : 841.8 KB in 15 files (compression ≈ 2.3× vs 1.9 MB in memory)</code></p>
+</div>
+</div>
+<div class="fragment fade-up">
+<p>Written to <code>metref_cube.zarr.tmp</code>, validated, <strong>then</strong> swapped in — a failed run never destroys a working cube.</p>
+</div>
+</section>
+<section id="step-3-flags-you-will-actually-use" class="slide level2">
+<h2>Step 3 · Flags you will actually use</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20" data-code-line-numbers="1|2|3|4|5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a aria-label="1"></a><span class="ex">uv</span> run python code/03_build_zarr_cube.py <span class="at">--input</span> data/interim/METREF <span class="at">--profile</span> timeseries</span>
+<span id="cb20-2"><a aria-label="2"></a><span class="ex">uv</span> run python code/03_build_zarr_cube.py <span class="at">--input</span> data/interim/METREF <span class="at">--append</span></span>
+<span id="cb20-3"><a aria-label="3"></a><span class="ex">uv</span> run python code/03_build_zarr_cube.py <span class="at">--input</span> data/interim/METREF <span class="at">--variables</span> METREF <span class="at">--float32</span></span>
+<span id="cb20-4"><a aria-label="4"></a><span class="ex">uv</span> run python code/03_build_zarr_cube.py <span class="at">--input</span> data/interim/METREF <span class="at">--chunks</span> time=4,lat=64,lon=64</span>
+<span id="cb20-5"><a aria-label="5"></a><span class="ex">uv</span> run python code/03_build_zarr_cube.py <span class="at">--input</span> data/interim/METREF <span class="at">--workers</span> 2 <span class="at">--clevel</span> 7</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="small-note">
+<p>1 layout for point time series · 2 add next month without rebuilding · 3 keep one variable, halve float64 · 4 custom chunks · 5 limit CPU, compress harder.</p>
+</div>
+</section>
+<section id="chunks-shards-compression" class="slide level2">
+<h2>Chunks · shards · compression</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21" data-code-line-numbers="1-5|7-9|11-14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a aria-label="1"></a>PROFILES <span class="op">=</span> {   <span class="co"># inner chunk                              shard</span></span>
+<span id="cb21-2"><a aria-label="2"></a>  <span class="st">"map"</span>:        ({<span class="st">"time"</span>: <span class="dv">1</span>,  <span class="st">"lat"</span>: <span class="dv">256</span>, <span class="st">"lon"</span>: <span class="dv">256</span>}, {<span class="st">"time"</span>: <span class="dv">10</span>,  <span class="st">"lat"</span>: <span class="dv">512</span>, <span class="st">"lon"</span>: <span class="dv">512</span>}),</span>
+<span id="cb21-3"><a aria-label="3"></a>  <span class="st">"balanced"</span>:   ({<span class="st">"time"</span>: <span class="dv">8</span>,  <span class="st">"lat"</span>: <span class="dv">128</span>, <span class="st">"lon"</span>: <span class="dv">128</span>}, {<span class="st">"time"</span>: <span class="dv">32</span>,  <span class="st">"lat"</span>: <span class="dv">512</span>, <span class="st">"lon"</span>: <span class="dv">512</span>}),</span>
+<span id="cb21-4"><a aria-label="4"></a>  <span class="st">"timeseries"</span>: ({<span class="st">"time"</span>: <span class="dv">64</span>, <span class="st">"lat"</span>: <span class="dv">32</span>,  <span class="st">"lon"</span>: <span class="dv">32</span>},  {<span class="st">"time"</span>: <span class="dv">256</span>, <span class="st">"lat"</span>: <span class="dv">256</span>, <span class="st">"lon"</span>: <span class="dv">256</span>}),</span>
+<span id="cb21-5"><a aria-label="5"></a>}</span>
+<span id="cb21-6"><a aria-label="6"></a></span>
+<span id="cb21-7"><a aria-label="7"></a>c <span class="op">=</span> <span class="bu">min</span>(inner[dim], size)                          <span class="co"># clamp chunk to the data</span></span>
+<span id="cb21-8"><a aria-label="8"></a>k <span class="op">=</span> <span class="bu">min</span>(<span class="bu">round</span>(shard[dim] <span class="op">/</span> c), ceil(size <span class="op">/</span> c))     <span class="co"># shard = whole number of chunks</span></span>
+<span id="cb21-9"><a aria-label="9"></a>inner[dim], shard[dim] <span class="op">=</span> c, c <span class="op">*</span> k                  <span class="co"># (Zarr v3 sharding requires this)</span></span>
+<span id="cb21-10"><a aria-label="10"></a></span>
+<span id="cb21-11"><a aria-label="11"></a>ds <span class="op">=</span> ds.chunk(shard)                               <span class="co"># one Dask task = one whole shard</span></span>
+<span id="cb21-12"><a aria-label="12"></a>encoding[var] <span class="op">=</span> {<span class="st">"chunks"</span>: inner, <span class="st">"shards"</span>: shard,</span>
+<span id="cb21-13"><a aria-label="13"></a>                 <span class="st">"compressors"</span>: [BloscCodec(cname<span class="op">=</span><span class="st">"zstd"</span>, clevel<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="st">"shuffle"</span>)]}</span>
+<span id="cb21-14"><a aria-label="14"></a>ds.to_zarr(tmp, zarr_format<span class="op">=</span><span class="dv">3</span>, encoding<span class="op">=</span>encoding, consolidated<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<aside class="notes">
+<p>The rounding fixes a real failure: a 300 × 400 AOI with 256-cell chunks and 512 shards would otherwise produce a shard that is not divisible by the chunk and Zarr refuses to write.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="try-it-which-queries-are-cheap" class="slide level2 explorer-slide">
+<h2>Try it · which queries are cheap?</h2>
+<!-- Chunk explorer: plain JS, no external libraries (works offline). Mirrors plan_chunks() in code/03_build_zarr_cube.py -->
+<div class="chunk-explorer" data-ce="">
+  <style>
+    .chunk-explorer{--ce-a:#0a7f8f;--ce-w:#d9780f;font-size:.92em;margin:1rem 0}
+    .chunk-explorer .ce-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.4rem 1.2rem;margin-bottom:.6rem}
+    .chunk-explorer label{display:flex;flex-direction:column;font-size:.85em;opacity:.9}
+    .chunk-explorer input[type=range]{width:100%;accent-color:var(--ce-a)}
+    .chunk-explorer .ce-prof{display:flex;gap:.4rem;flex-wrap:wrap;margin:.2rem 0 .6rem}
+    .chunk-explorer .ce-prof button{border:1px solid var(--ce-a);background:transparent;color:inherit;border-radius:999px;padding:.15rem .8rem;cursor:pointer;font:inherit}
+    .chunk-explorer .ce-prof button.on{background:var(--ce-a);color:#fff}
+    .chunk-explorer .ce-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;margin:.4rem 0 .8rem}
+    .chunk-explorer .ce-card{border:1px solid color-mix(in srgb,var(--ce-a) 40%,transparent);border-left:5px solid var(--ce-w);border-radius:10px;padding:.45rem .75rem}
+    .chunk-explorer .ce-card small{display:block;opacity:.72;font-size:.78em}
+    .chunk-explorer .ce-card b{display:block;font-size:1.15em;line-height:1.3}
+    .chunk-explorer svg{width:100%;max-width:720px;height:auto;display:block}
+    .chunk-explorer svg rect{transition:all .35s ease}
+    .chunk-explorer .ce-cmd{font-family:var(--bs-font-monospace,monospace);font-size:.82em;padding:.35rem .6rem;border-radius:8px;background:color-mix(in srgb,var(--ce-a) 10%,transparent);overflow-x:auto;white-space:nowrap}
+  </style>
+  <div class="ce-prof" role="group" aria-label="profile">
+    <span style="align-self:center;opacity:.8">--profile</span>
+    <button data-p="map" class="on">map</button><button data-p="balanced">balanced</button><button data-p="timeseries">timeseries</button>
+  </div>
+  <div class="ce-controls">
+    <label>time steps: <output data-o="t">365</output><input data-i="t" type="range" min="1" max="3650" value="365"></label>
+    <label>lat cells: <output data-o="y">300</output><input data-i="y" type="range" min="10" max="2000" step="10" value="300"></label>
+    <label>lon cells: <output data-o="x">400</output><input data-i="x" type="range" min="10" max="2000" step="10" value="400"></label>
+  </div>
+  <div class="ce-cards"></div>
+  <svg viewbox="0 0 720 250" aria-label="chunk layout"></svg>
+  <div class="ce-cmd"></div>
+</div>
+<script>
+(() => {
+  const P = {
+    map:        {inner: {time: 1,  lat: 256, lon: 256}, shard: {time: 10,  lat: 512, lon: 512}},
+    balanced:   {inner: {time: 8,  lat: 128, lon: 128}, shard: {time: 32,  lat: 512, lon: 512}},
+    timeseries: {inner: {time: 64, lat: 32,  lon: 32},  shard: {time: 256, lat: 256, lon: 256}}
+  };
+  const NS = "http://www.w3.org/2000/svg";
+  document.querySelectorAll("[data-ce]").forEach(root => {
+    if (root.dataset.ready) return; root.dataset.ready = 1;
+    let prof = "map";
+    const $ = s => root.querySelector(s), svg = $("svg");
+    const rect = (x, y, w, h, a) => { const r = document.createElementNS(NS, "rect");
+      Object.entries({x, y, width: Math.max(w, .5), height: Math.max(h, .5), ...a}).forEach(([k, v]) => r.setAttribute(k, v)); return r; };
+    const text = (x, y, s, a = {}) => { const t = document.createElementNS(NS, "text");
+      Object.entries({x, y, fill: "currentColor", "font-size": 12, ...a}).forEach(([k, v]) => t.setAttribute(k, v)); t.textContent = s; return t; };
+    function plan(size) {
+      const p = P[prof], inner = {}, shard = {};
+      for (const d of ["time", "lat", "lon"]) {
+        const c = Math.max(1, Math.min(p.inner[d], size[d])), n = Math.ceil(size[d] / c);
+        const k = Math.max(1, Math.min(Math.round(p.shard[d] / c), n));
+        inner[d] = c; shard[d] = c * k;
+      }
+      return {inner, shard};
+    }
+    function draw() {
+      const size = {time: +$("[data-i=t]").value, lat: +$("[data-i=y]").value, lon: +$("[data-i=x]").value};
+      $("[data-o=t]").value = size.time; $("[data-o=y]").value = size.lat; $("[data-o=x]").value = size.lon;
+      const {inner, shard} = plan(size), n = d => Math.ceil(size[d] / inner[d]);
+      const kb = inner.time * inner.lat * inner.lon * 4 / 1024;
+      const mapC = n("lat") * n("lon"), tsC = n("time");
+      const shards = ["time", "lat", "lon"].reduce((a, d) => a * Math.ceil(size[d] / shard[d]), 1);
+      const card = (t, v, s) => `<div class="ce-card"><small>${t}</small><b>${v}</b><small>${s}</small></div>`;
+      $(".ce-cards").innerHTML =
+        card("Inner chunk (t × lat × lon)", `${inner.time} × ${inner.lat} × ${inner.lon}`, `${kb < 1024 ? kb.toFixed(0) + " KB" : (kb / 1024).toFixed(1) + " MB"} float32`) +
+        card("Shard objects / variable", shards, `shard ${shard.time} × ${shard.lat} × ${shard.lon}`) +
+        card("🗺️ Map of one date reads", `${mapC} chunk${mapC > 1 ? "s" : ""}`, `${(mapC * kb / 1024).toFixed(2)} MB decompressed`) +
+        card("📈 Series at one pixel reads", `${tsC} chunk${tsC > 1 ? "s" : ""}`, `${(tsC * kb / 1024).toFixed(2)} MB decompressed`);
+      $(".ce-cmd").textContent = `uv run python code/03_build_zarr_cube.py --input data/interim/METREF --profile ${prof}`;
+      svg.replaceChildren();
+      const gx = n("lon"), gy = n("lat"), cw = Math.min(300 / gx, 190 / gy);
+      const sx = shard.lon / inner.lon, sy = shard.lat / inner.lat;
+      svg.append(text(10, 18, "Map of one date: teal = chunks read · orange = shard files"));
+      for (let j = 0; j < gy; j++) for (let i = 0; i < gx; i++)
+        svg.append(rect(10 + i * cw, 32 + j * cw, cw - (cw > 4 ? 1.2 : 0), cw - (cw > 4 ? 1.2 : 0), {fill: "#0a7f8f", opacity: .8}));
+      for (let j = 0; j < gy; j += sy) for (let i = 0; i < gx; i += sx)
+        svg.append(rect(10 + i * cw, 32 + j * cw, Math.min(sx, gx - i) * cw - 1, Math.min(sy, gy - j) * cw - 1, {fill: "none", stroke: "#d9780f", "stroke-width": 2.5}));
+      const nT = n("time"), shown = Math.min(nT, 240), bw = 330 / shown;
+      svg.append(text(370, 18, "Series at one pixel: one bar per chunk read"));
+      for (let k = 0; k < shown; k++) svg.append(rect(370 + k * bw, 100, bw - (bw > 3 ? 1 : 0), 34, {fill: "#d9780f", opacity: .85}));
+      svg.append(text(370, 156, `${nT} chunk(s) along time${nT > shown ? ` (first ${shown} drawn)` : ""}`, {opacity: .75}));
+    }
+    root.querySelectorAll("[data-i]").forEach(i => i.addEventListener("input", draw));
+    root.querySelectorAll("[data-p]").forEach(b => b.addEventListener("click", () => {
+      prof = b.dataset.p; root.querySelectorAll("[data-p]").forEach(x => x.classList.toggle("on", x === b)); draw(); }));
+    draw();
+  });
+})();
+</script>
+</section>
+<section id="step-4-open-and-explore" class="slide level2">
+<h2>Step 4 · Open and explore</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22" data-code-line-numbers="1-2|4|5|6|8-11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a aria-label="1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
+<span id="cb22-2"><a aria-label="2"></a>ds <span class="op">=</span> xr.open_zarr(<span class="st">"data/zarr/metref_cube.zarr"</span>)      <span class="co"># consolidated: one metadata read</span></span>
+<span id="cb22-3"><a aria-label="3"></a></span>
+<span id="cb22-4"><a aria-label="4"></a>day_map <span class="op">=</span> ds.METREF.sel(time<span class="op">=</span><span class="st">"2015-06-15"</span>)                       <span class="co"># by label, not by file</span></span>
+<span id="cb22-5"><a aria-label="5"></a>series  <span class="op">=</span> ds.METREF.sel(lon<span class="op">=-</span><span class="fl">16.4</span>, lat<span class="op">=</span><span class="fl">14.5</span>, method<span class="op">=</span><span class="st">"nearest"</span>)   <span class="co"># one pixel, all dates</span></span>
+<span id="cb22-6"><a aria-label="6"></a>monthly <span class="op">=</span> ds.METREF.resample(time<span class="op">=</span><span class="st">"1MS"</span>).<span class="bu">sum</span>()                    <span class="co"># lazy until plotted</span></span>
+<span id="cb22-7"><a aria-label="7"></a></span>
+<span id="cb22-8"><a aria-label="8"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">"code/plot_utils"</span>)</span>
+<span id="cb22-9"><a aria-label="9"></a><span class="im">from</span> adaptive_cube_plot <span class="im">import</span> plot_time_slices, plot_spatial_timeseries</span>
+<span id="cb22-10"><a aria-label="10"></a>plot_time_slices(ds, var<span class="op">=</span><span class="st">"METREF"</span>, time_index<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">14</span>, <span class="dv">29</span>], boundaries<span class="op">=</span>units, robust<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb22-11"><a aria-label="11"></a>plot_spatial_timeseries(ds, var<span class="op">=</span><span class="st">"METREF"</span>, points<span class="op">=</span>{<span class="st">"Dakar"</span>: (<span class="op">-</span><span class="fl">17.19</span>, <span class="fl">14.75</span>)}, show_area_spread<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="step-4-three-notebooks" class="slide level2">
+<h2>Step 4 · Three notebooks</h2>
+<div class="columns">
+<div class="column fragment fade-up" style="width:33%;">
+<div class="card">
+<p><strong>1 · Validate</strong></p>
+<p>Packed vs decoded raw · AOI coverage per date · interim <strong>==</strong> Zarr · remap effect — in one <code>dask.compute</code>.</p>
+</div>
+</div><div class="column fragment fade-up" style="width:33%;">
+<div class="card">
+<p><strong>2 · Plot</strong></p>
+<p>Raw disk (strided) with AOI · raw / interim / cube on one colour scale · missing-data footprint.</p>
+</div>
+</div><div class="column fragment fade-up" style="width:33%;">
+<div class="card">
+<p><strong>3 · Application</strong></p>
+<p><code>plot_utils</code> maps &amp; time series · half-month ETo · zonal stats · climate ↔︎ mobility · co-occurrence classes.</p>
+</div>
+</div></div>
+<div class="fragment fade-up center-note">
+<p>17 million mobility rows → <strong>one half-month read</strong> with Parquet <code>filters=</code> (predicate push-down).</p>
+</div>
+</section>
+<section id="qa-what-should-we-check" class="slide level2">
+<h2>QA · what should we check?</h2>
 <ul>
-<li><strong>Inner chunks</strong> are the read units: one date and a spatial window.</li>
-<li><strong>Shards</strong> group chunks to reduce the number of storage objects.</li>
-<li><strong>Compression</strong> makes the store smaller; these settings are starting points.</li>
+<li>Source vs output: coordinates, timestamps, units, variable names.</li>
+<li>Decoded fill values and valid-cell fraction — per date, not just overall.</li>
+<li>Missing-data footprint vs the product mask and QA flags.</li>
+<li>A few known values and summary statistics, raw → interim → cube.</li>
 </ul>
-<p>Run the builder with <code>uv run python code/build_zarr_cube.py</code>. It expects interim dimensions named <code>time</code>, <code>lat</code>, and <code>lon</code>; it replaces its existing output store when rebuilding.</p>
-</section>
-<section id="zarr-chunks-decide-which-queries-are-fast" class="slide level2">
-<h2>Zarr · chunks decide which queries are fast</h2>
-<table class="caption-top">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Query</th>
-<th>What it reads with <code>time=1</code> chunks</th>
-<th>Cost</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Map for one date</td>
-<td>A few spatial chunks of one time step</td>
-<td>Low</td>
-</tr>
-<tr class="even">
-<td>Time series at one cell</td>
-<td>One chunk per time step</td>
-<td>More, smaller reads</td>
-</tr>
-</tbody>
-</table>
-<p>Benchmark the actual map and time-series queries before choosing final chunk and shard sizes.</p>
-</section>
-<section id="inspect-a-cube" class="slide level2">
-<h2>Inspect a cube</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" data-code-line-numbers="1-2|3|4-5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a aria-label="1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
-<span id="cb10-2"><a aria-label="2"></a>ds <span class="op">=</span> xr.open_zarr(<span class="st">"data/zarr/metref_sample_1month.zarr"</span>)</span>
-<span id="cb10-3"><a aria-label="3"></a>field <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(ds.data_vars))</span>
-<span id="cb10-4"><a aria-label="4"></a>map_for_date <span class="op">=</span> ds[field].isel(time<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb10-5"><a aria-label="5"></a>series_at_cell <span class="op">=</span> ds[field].isel(lat<span class="op">=</span><span class="dv">100</span>, lon<span class="op">=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The cell indices are illustrative. Check coordinate names, coordinate direction, units and timestamps before interpreting values. Use the reusable functions in <code>code/plot_utils/</code> for maps and temporal plots.</p>
-<!-- ## Result · a map
-
-![Replace with your own map](img/plots/map.png){width="80%" fig-align="center"}
-
-## Result · a time series
-
-![Replace with your own time series](img/plots/timeseries.png){width="80%" fig-align="center"}
-
-## QA · what should we check?
-
-- Compare source and output coordinates, timestamps, units and variable names.
-- Check decoded fill values and valid-cell count/fraction.
-- Plot the missing-data footprint; compare it with the source mask and QA flags.
-- Compare a few known source/output values and summary statistics.
-- Reopen Zarr and compute a small selection before processing more data.
-
-**A file that opens is not automatically fit for analysis.** Non-zero valid values do not by themselves prove sufficient spatial coverage.
-
-## QA · coverage
-
-![Replace with your coverage / missing-data map](img/plots/coverage.png){width="80%" fig-align="center"}
-
-## What can the cube support?
-
-- Regional and seasonal climate maps.
-- Spatial summaries and time series for locations or zones.
-- Evapotranspiration and vegetation monitoring.
-- Inputs to climate-impact or resilience indicators after domain validation.
-
-The cube makes data access more consistent; scientific interpretation still depends on product quality, aggregation choices and validation. -->
+<div class="fragment fade-up">
+<p><strong>A file that opens is not automatically fit for analysis.</strong></p>
+</div>
 <!-- ======================================================= -->
 </section></section>
 <section>
-<section id="limitations-and-caveats" class="title-slide slide level1 center" data-background-color="#0b1f33">
-<h1>5 · Limitations and caveats</h1>
+<section id="caveats-scaling" class="title-slide slide level1 center" data-background-color="#0b1f33">
+<h1>5 · Caveats &amp; scaling</h1>
 <p>What the cube does not solve</p>
 </section>
 <section id="caveats-and-uncertainty" class="slide level2">
 <h2>Caveats and uncertainty</h2>
 <ul>
-<li>Missing values may be real masks/quality exclusions or processing/configuration problems.</li>
-<li>A crop/grid mismatch, wrong variable, coordinate issue or fill-value handling can cause extensive NaNs.</li>
-<li>Bilinear remapping smooths; nearest-neighbour can be blocky. Different choices can change statistics.</li>
-<li>Degree grids have latitude-dependent ground dimensions.</li>
-<li>Product versions, temporal support, units and quality systems may differ.</li>
-<li>The example is a regional teaching workflow, not a validated operational climate product.</li>
+<li>Missing values may be real masks/QA exclusions — or configuration problems.</li>
+<li>A crop/grid mismatch, wrong variable or undecoded fill value can create extensive NaNs.</li>
+<li>Bilinear smooths; nearest is blocky. Different choices change statistics.</li>
+<li>Degree grids have latitude-dependent ground size.</li>
+<li>Product versions, temporal support, units and QA systems differ.</li>
+<li>This is a <strong>teaching workflow</strong>, not a validated operational product.</li>
 </ul>
 </section>
 <section id="on-the-fly-processing-vs-a-pre-built-cube" class="slide level2">
@@ -933,9 +1150,9 @@ The cube makes data access more consistent; scientific interpretation still depe
 </thead>
 <tbody>
 <tr class="odd">
-<td>Regridding / resampling</td>
-<td>Done at read time; settings are easy to overlook</td>
-<td>Fixed once and documented in the pipeline</td>
+<td>Regridding</td>
+<td>At read time; settings easy to overlook</td>
+<td>Fixed once and documented</td>
 </tr>
 <tr class="even">
 <td>Compute cost</td>
@@ -948,41 +1165,30 @@ The cube makes data access more consistent; scientific interpretation still depe
 <td>Creates a derived copy</td>
 </tr>
 <tr class="even">
-<td>Changing area, grid or method</td>
+<td>Change area/grid/method</td>
 <td>Change the query</td>
 <td>Re-run the pipeline</td>
 </tr>
 <tr class="odd">
-<td>Following provider updates</td>
+<td>Provider updates</td>
 <td>Automatic</td>
-<td>Needs a rebuild</td>
+<td><code>--append</code> / rebuild</td>
 </tr>
 </tbody>
 </table>
-<p>Neither is better in general. Choose by use case, and always record the resampling choice.</p>
+<p>Neither is better in general — choose by use case and always record the resampling choice.</p>
 </section>
 <section id="scale-the-pilot-carefully" class="slide level2">
 <h2>Scale the pilot carefully</h2>
-<p>For a large domain (for example, a 2,000 km corridor), first benchmark a representative priority subset:</p>
 <ul>
-<li>Record runtime, peak memory, file size, valid coverage and output read speed.</li>
-<li>Split work into grid-aligned spatial tiles and/or time batches.</li>
-<li>Parallelize independent files within measured CPU, memory and I/O limits.</li>
-<li>Add remapping margins at tile edges and trim duplicate target cells.</li>
-<li>Write non-overlapping Zarr regions or isolated stores; track and retry failures.</li>
+<li>Benchmark a representative subset: runtime, peak memory, size, valid coverage, <strong>read speed of your real queries</strong>.</li>
+<li>Grow in <strong>time batches</strong> with <code>--append</code>; split very large areas into grid-aligned tiles with a remap margin.</li>
+<li>Parallelise within measured CPU, memory and disk limits (<code>processing.parallel</code>, <code>JOBS</code>, <code>--workers</code>).</li>
+<li>Choose the chunk profile for the dominant question; re-benchmark at scale.</li>
 </ul>
-<p>Do not scale only by multiplying worker count. Disk throughput, memory, output object counts and safe Zarr writes can become the bottleneck.</p>
-</section>
-<section id="possible-next-updates" class="slide level2">
-<h2>Possible next updates</h2>
-<ul>
-<li>Harmonize clip and target-grid bounds; add a coverage map and threshold.</li>
-<li>Apply product-specific quality flags and test decoded no-data values.</li>
-<li>Record provenance, product versions, units, grid and resampling settings.</li>
-<li>Benchmark chunk/shard sizes for intended queries and available compute/storage.</li>
-<li>Add more products only after documenting their spatial and temporal semantics.</li>
-<li>Add automated tests for sample input files and failed/partial outputs.</li>
-</ul>
+<div class="fragment fade-up">
+<p>Do not scale only by adding workers — disk throughput, memory and object counts become the bottleneck.</p>
+</div>
 <!-- ======================================================= -->
 </section></section>
 <section>
@@ -992,12 +1198,13 @@ The cube makes data access more consistent; scientific interpretation still depe
 </section>
 <section id="what-we-learned" class="slide level2 center">
 <h2>What we learned</h2>
-<p><strong>A useful climate cube starts with consistent, documented choices and honest checks on missing data and resolution.</strong></p>
-<!-- ======================================================= -->
+<div class="big-message fragment zoom-in">
+<p>A useful climate cube starts with <strong>consistent, documented choices</strong> and <strong>honest checks</strong> on missing data and resolution.</p>
+</div>
 </section></section>
 <section>
-<section id="links" class="title-slide slide level1 center" data-background-color="#0b1f33  ">
-<h1>7 · Links</h1>
+<section id="links" class="title-slide slide level1 center" data-background-color="#0b1f33">
+<h1>Links</h1>
 
 </section>
 <section id="scan-and-explore" class="slide level2">
@@ -1028,11 +1235,6 @@ The cube makes data access more consistent; scientific interpretation still depe
 </div>
 <p><a href="https://khizerzakir.github.io/tutorial-repo/slides/presentation.html">Slides</a></p>
 </div></div>
-</section></section>
-<section>
-<section id="references" class="title-slide slide level1 center" data-background-color="#0b1f33">
-<h1>References</h1>
-
 </section>
 <section id="references-papers" class="slide level2 smaller">
 <h2>References · papers</h2>
@@ -1047,10 +1249,10 @@ The cube makes data access more consistent; scientific interpretation still depe
 <h2>References · data and software</h2>
 <ul>
 <li>LSA SAF Data Service: <a href="https://datalsasaf.lsasvcs.ipma.pt/" class="uri">https://datalsasaf.lsasvcs.ipma.pt/</a></li>
-<li>Zarr: <a href="https://zarr.dev/" class="uri">https://zarr.dev/</a></li>
-<li>Xarray: <a href="https://xarray.dev/" class="uri">https://xarray.dev/</a></li>
+<li>Zarr: <a href="https://zarr.dev/" class="uri">https://zarr.dev/</a> · Xarray: <a href="https://xarray.dev/" class="uri">https://xarray.dev/</a> · Dask: <a href="https://dask.org/" class="uri">https://dask.org/</a></li>
 <li>CDO: <a href="https://code.mpimet.mpg.de/projects/cdo" class="uri">https://code.mpimet.mpg.de/projects/cdo</a></li>
-<li>STAC: <a href="https://stacspec.org/" class="uri">https://stacspec.org/</a></li>
+<li>uv: <a href="https://docs.astral.sh/uv/" class="uri">https://docs.astral.sh/uv/</a> · WSL: <a href="https://learn.microsoft.com/windows/wsl/" class="uri">https://learn.microsoft.com/windows/wsl/</a></li>
+<li>Lexcube: <a href="https://www.lexcube.org/" class="uri">https://www.lexcube.org/</a> · STAC: <a href="https://stacspec.org/" class="uri">https://stacspec.org/</a></li>
 <li>If you use LSA SAF data in publications, follow the LSA SAF attribution guidance.</li>
 </ul>
 
@@ -1074,7 +1276,7 @@ The cube makes data access more consistent; scientific interpretation still depe
   <div class="quarto-auto-generated-content" style="display: none;">
 <p><img src="img/GRSSAustrian-600x450-1.jpg" class="slide-logo"></p>
 <div class="footer footer-default">
-<p><a href="https://khizerzakir.github.io/tutorial-repo/">Tutorial</a></p>
+<p><a href="https://khizerzakir.github.io/tutorial-repo/">Tutorial</a> · <a href="https://khizerzakir.github.io/tutorial-repo/tutorial/reference.html">Command builder</a></p>
 </div>
 </div></div>
 
@@ -1085,6 +1287,7 @@ The cube makes data access more consistent; scientific interpretation still depe
   <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
   <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
   <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
   <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
@@ -1102,11 +1305,12 @@ The cube makes data access more consistent; scientific interpretation still depe
 'controlsAuto': false,
 'previewLinksAuto': true,
 'pdfSeparateFragments': false,
-'autoAnimateEasing': "ease",
-'autoAnimateDuration': 1,
+'autoAnimateEasing': "ease-in-out",
+'autoAnimateDuration': 0.9,
 'autoAnimateUnmatched': true,
 'jumpToSlide': true,
-'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true,"numbers":true},
+'chalkboard': {"buttons":false,"theme":"whiteboard"},
 'smaller': false,
  
         // Display controls in the bottom right corner
@@ -1277,7 +1481,7 @@ The cube makes data access more consistent; scientific interpretation still depe
         },
 
         // reveal.js plugins
-        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
 
           RevealMath,
           RevealNotes,

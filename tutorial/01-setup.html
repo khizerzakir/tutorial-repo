@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>A. Setup – Climate Data Cube Workshop</title>
+<title>A · Setup – Climate Data Cube Workshop</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -84,9 +84,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-779814d4eaa9c9e6b02b72ade1d61f9b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-c8bae1f407610881bc621976b8284e03.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-779814d4eaa9c9e6b02b72ade1d61f9b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-482e8ff703e164d7371dd0a028094024.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-d90499ef6ee6d792734ee735fd68a163.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-482e8ff703e164d7371dd0a028094024.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -114,6 +114,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<style>html{ scroll-behavior: smooth; }</style>
 
 
 </head>
@@ -308,18 +309,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="dropdown-menu" aria-labelledby="nav-menu-tutorial">    
         <li>
     <a class="dropdown-item" href="../tutorial/01-setup.html">
- <span class="dropdown-text">A. Setup</span></a>
+ <span class="dropdown-text">A · Setup</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../tutorial/02-run-code.html">
- <span class="dropdown-text">B. Download and preprocess a sample</span></a>
+ <span class="dropdown-text">B · Download and preprocess</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../tutorial/03-zarr-cubes.html">
- <span class="dropdown-text">C. Build and inspect a Zarr cube</span></a>
+ <span class="dropdown-text">C · Build the Zarr cube</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../tutorial/04-explore.html">
+ <span class="dropdown-text">D · Explore the cube</span></a>
   </li>  
     </ul>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../tutorial/reference.html"> 
+<span class="menu-text">Command builder</span></a>
+  </li>  
   <li class="nav-item">
     <a class="nav-link" href="../slides/presentation.html"> 
 <span class="menu-text">Slides</span></a>
@@ -335,6 +344,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -343,7 +357,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorial/01-setup.html">A. Setup</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorial/01-setup.html">Walkthrough</a></li><li class="breadcrumb-item"><a href="../tutorial/01-setup.html">A · Setup</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -358,25 +372,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Hands-on Practical Tutorial</span></a>
+ <span class="menu-text">Climate Data Cube Workshop</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Walkthrough</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorial/01-setup.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">A. Setup</span></a>
+ <span class="menu-text">A · Setup</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorial/02-run-code.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">B. Download and preprocess a sample</span></a>
+ <span class="menu-text">B · Download and preprocess</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorial/03-zarr-cubes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">C. Build and inspect a Zarr cube</span></a>
+ <span class="menu-text">C · Build the Zarr cube</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorial/04-explore.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">D · Explore the cube</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorial/reference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Command builder &amp; reference</span></a>
   </div>
 </li>
     </ul>
@@ -389,27 +426,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#install-wsl2-and-ubuntu" id="toc-install-wsl2-and-ubuntu" class="nav-link active" data-scroll-target="#install-wsl2-and-ubuntu">1. Install WSL2 and Ubuntu</a></li>
-  <li><a href="#install-visual-studio-code" id="toc-install-visual-studio-code" class="nav-link" data-scroll-target="#install-visual-studio-code">2. Install Visual Studio Code</a></li>
-  <li><a href="#get-the-repository" id="toc-get-the-repository" class="nav-link" data-scroll-target="#get-the-repository">3. Get the repository</a></li>
-  <li><a href="#check-your-tools" id="toc-check-your-tools" class="nav-link" data-scroll-target="#check-your-tools">4. Check your tools</a></li>
-  <li><a href="#install-python-dependencies" id="toc-install-python-dependencies" class="nav-link" data-scroll-target="#install-python-dependencies">5. Install Python dependencies</a>
-  <ul class="collapse">
-  <li><a href="#option-a-uv" id="toc-option-a-uv" class="nav-link" data-scroll-target="#option-a-uv">Option A: uv</a></li>
-  <li><a href="#option-b-pip" id="toc-option-b-pip" class="nav-link" data-scroll-target="#option-b-pip">Option B: pip</a></li>
-  </ul></li>
-  <li><a href="#configure-lsa-saf-access" id="toc-configure-lsa-saf-access" class="nav-link" data-scroll-target="#configure-lsa-saf-access">6. Configure LSA SAF access</a></li>
-  <li><a href="#continue" id="toc-continue" class="nav-link" data-scroll-target="#continue">7. Continue</a></li>
+  <li><a href="#terminal" id="toc-terminal" class="nav-link active" data-scroll-target="#terminal">1 · Get a Linux terminal</a></li>
+  <li><a href="#tools" id="toc-tools" class="nav-link" data-scroll-target="#tools">2 · Install system tools</a></li>
+  <li><a href="#clone" id="toc-clone" class="nav-link" data-scroll-target="#clone">3 · Clone the repository</a></li>
+  <li><a href="#python" id="toc-python" class="nav-link" data-scroll-target="#python">4 · Create the Python environment</a></li>
+  <li><a href="#vscode" id="toc-vscode" class="nav-link" data-scroll-target="#vscode">5 · Open the project in VS Code (optional, recommended)</a></li>
+  <li><a href="#credentials" id="toc-credentials" class="nav-link" data-scroll-target="#credentials">6 · LSA SAF credentials</a></li>
+  <li><a href="#checklist" id="toc-checklist" class="nav-link" data-scroll-target="#checklist">✅ Setup checklist</a></li>
   </ul>
-</nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/khizerzakir/tutorial-repo/edit/main/tutorial/01-setup.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/khizerzakir/tutorial-repo/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorial/01-setup.html">Walkthrough</a></li><li class="breadcrumb-item"><a href="../tutorial/01-setup.html">A · Setup</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">A. Setup</h1>
+<h1 class="title">A · Setup</h1>
+<p class="subtitle lead">Terminal, repository, tools, Python environment and credentials</p>
 </div>
 
 
@@ -426,119 +460,264 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This setup guide will help you install the necessary tools and dependencies to follow and run this workshop code on your local machine unless you are using a cloud-based environment. The workshop code is designed to run in a Linux environment, so if you are using Windows, we recommend installing <strong>Windows Subsystem for Linux (WSL2)</strong>. If you are using macOS or Linux, you can skip the WSL installation and use your native terminal.</p>
-<section id="install-wsl2-and-ubuntu" class="level2">
-<h2 class="anchored" data-anchor-id="install-wsl2-and-ubuntu">1. Install WSL2 and Ubuntu</h2>
-<ol type="1">
-<li>Open the Windows <strong>Start</strong> menu, search for <strong>PowerShell</strong>, and choose <strong>Run as administrator</strong>.</li>
-<li>Run the following command <strong>in Windows PowerShell</strong>:</li>
-</ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">--</span>install <span class="op">-</span>d Ubuntu</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<ol start="3" type="1">
-<li>Restart Windows if prompted.</li>
-<li>Launch <strong>Ubuntu</strong> from the Start menu and wait for first-time initialization.</li>
-<li>Create your Ubuntu username and password when prompted. Password characters are not displayed while typing.</li>
-</ol>
-<p>Check installation in <strong>Windows PowerShell</strong>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">--</span>list <span class="op">--</span>verbose</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You should see <code>Ubuntu</code> with <code>VERSION</code> equal to <code>2</code>. If Ubuntu is version 1, use:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">--</span>set-version Ubuntu <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>If <code>wsl --install</code> displays help instead of installing, try <code>wsl --list --online</code>, then <code>wsl --install -d Ubuntu</code>. If installation is blocked by policy or virtualization, contact your IT administrator. Do not attempt to bypass institutional restrictions.</p>
-<p><strong>Official guide:</strong> <a href="https://learn.microsoft.com/en-us/windows/wsl/install" class="uri">https://learn.microsoft.com/en-us/windows/wsl/install</a></p>
-</section>
-<section id="install-visual-studio-code" class="level2">
-<h2 class="anchored" data-anchor-id="install-visual-studio-code">2. Install Visual Studio Code</h2>
-<p>If you do not have <strong>VS Code</strong> installed, follow these steps:</p>
-<ol type="1">
-<li>Download VS Code for Windows: <a href="https://code.visualstudio.com/download" class="uri">https://code.visualstudio.com/download</a>.</li>
-<li>Install VS Code <strong>on Windows</strong> (not inside Ubuntu).</li>
-<li>Open VS Code → <strong>Extensions</strong> (<code>Ctrl+Shift+X</code>). Install:
+<div class="pipeline">
+<p><span class="here">A · Setup</span> <span class="stage">B · Download &amp; preprocess</span> <span class="stage">C · Zarr cube</span> <span class="stage">D · Explore</span></p>
+</div>
+<p>The pipeline uses Bash, CDO and Python, so it runs in a <strong>Linux shell</strong>. On Windows that shell is <strong>WSL2 (Ubuntu)</strong>; on macOS and Linux it is your normal terminal. Pick your system once — the tabs on this page stay in sync.</p>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Before you start
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <ul>
-<li><strong>WSL</strong> (Microsoft)</li>
-<li><strong>Python</strong> (Microsoft)</li>
-<li><strong>Jupyter</strong> (Microsoft)</li>
-</ul></li>
-</ol>
-<p><strong>Official WSL + VS Code guide:</strong> <a href="https://code.visualstudio.com/docs/remote/wsl" class="uri">https://code.visualstudio.com/docs/remote/wsl</a></p>
+<li>~5 GB free disk (one month of raw METREF disk files is ~1–2 GB).</li>
+<li>An <strong>LSA SAF account</strong> (free) — registration can take a while to be activated, so do step 6 first if you have not registered yet.</li>
+<li>Admin rights on Windows for installing WSL (once).</li>
+</ul>
+</div>
+</div>
+<section id="terminal" class="level2">
+<h2 class="anchored" data-anchor-id="terminal">1 · Get a Linux terminal</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="os">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Windows (WSL2)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Linux</a></li></ul>
+<div class="tab-content" data-group="os">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="steps">
+<div class="step">
+<p><strong>Install WSL2 + Ubuntu (once).</strong> Start menu → type <strong>PowerShell</strong> → right-click → <strong>Run as administrator</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">--</span>install <span class="op">-</span>d Ubuntu</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Restart Windows when asked. If the command prints help text instead of installing, run <code>wsl --list --online</code> and then <code>wsl --install -d Ubuntu</code> again.</p>
+</div>
+<div class="step">
+<p><strong>First launch.</strong> Open <strong>Ubuntu</strong> from the Start menu and wait for the initialisation. Choose a Linux username and password (the password is not echoed while you type — that is normal).</p>
+</div>
+<div class="step">
+<p><strong>Check it is WSL 2.</strong> In PowerShell:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">--</span>list <span class="op">--</span>verbose          <span class="co"># Ubuntu ... VERSION 2</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">--</span>set-version Ubuntu <span class="dv">2</span>    <span class="co"># only if it shows VERSION 1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="step">
+<p><strong>Open WSL every time you work on the tutorial</strong> — any of these gives you the same Ubuntu shell:</p>
+<ul>
+<li>Start menu → <strong>Ubuntu</strong>, or</li>
+<li><strong>Windows Terminal</strong> → ⌄ dropdown → <strong>Ubuntu</strong>, or</li>
+<li>type <code>wsl</code> in PowerShell / <code>cmd</code>, then <code>cd ~</code>.</li>
+</ul>
+<p>Your prompt now looks like <code>yourname@PC:~$</code>. Everything below runs <strong>in this window</strong>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Work inside the Linux file system
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Keep the project under <code>~/</code> (e.g.&nbsp;<code>~/projects/tutorial-repo</code>), <strong>not</strong> under <code>/mnt/c/...</code>. Windows drives mounted in WSL are 5–10× slower for thousands of small files (raw NetCDF, Zarr chunks). To see the files from Windows, run <code>explorer.exe .</code> inside the folder or open <code>\\wsl$\Ubuntu\home\&lt;you&gt;\projects</code> in File Explorer.</p>
+</div>
+</div>
+<p>Official guide: <a href="https://learn.microsoft.com/en-us/windows/wsl/install" class="uri">https://learn.microsoft.com/en-us/windows/wsl/install</a></p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Open <strong>Terminal</strong> (⌘ + Space → “Terminal”). Install <a href="https://brew.sh">Homebrew</a> if you do not have it.</p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p>Open your terminal (Ubuntu/Debian: <code>Ctrl + Alt + T</code>). Commands below use <code>apt</code>; use your distribution’s package manager otherwise.</p>
+</div>
+</div>
+</div>
 </section>
-<section id="get-the-repository" class="level2">
-<h2 class="anchored" data-anchor-id="get-the-repository">3. Get the repository</h2>
-<p>On Windows, open WSL2, On Linux or macOS, use a terminal and install Git, wget, CDO and Python 3.11+ using your operating system’s package manager,</p>
-<p>Then run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install <span class="at">-y</span> git wget curl ca-certificates cdo python3 python3-venv python3-pip</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Keep the project inside the Linux filesystem on WSL | in your home directory (for Linux and macOS), for example:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/projects</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/projects</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/khizerzakir/tutorial-repo.git</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> tutorial-repo</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Open the repository from Ubuntu/terminal with the command code dot.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">code</span> .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="tools" class="level2">
+<h2 class="anchored" data-anchor-id="tools">2 · Install system tools</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="os">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Windows (WSL2)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Linux</a></li></ul>
+<div class="tab-content" data-group="os">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>In the <strong>Ubuntu</strong> window:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install <span class="at">-y</span> git wget curl ca-certificates cdo</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install git wget cdo</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install <span class="at">-y</span> git wget curl ca-certificates cdo</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p>Then install <strong>uv</strong>, the Python package and environment manager used by this project (it also downloads the right Python version for you):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-LsSf</span> https://astral.sh/uv/install.sh <span class="kw">|</span> <span class="fu">sh</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> <span class="st">"</span><span class="va">$HOME</span><span class="st">/.local/bin/env"</span>      <span class="co"># or open a new terminal</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Check everything in one go:</p>
+<div class="terminal">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> <span class="at">--version</span> <span class="kw">&amp;&amp;</span> <span class="fu">wget</span> <span class="at">--version</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n1</span> <span class="kw">&amp;&amp;</span> <span class="ex">cdo</span> <span class="at">-V</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n1</span> <span class="kw">&amp;&amp;</span> <span class="ex">uv</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>CDO is not a Python package
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><code>pip</code>/<code>uv</code> cannot install CDO. If <code>apt</code>/<code>brew</code> is not an option, use a conda-forge environment: <code>conda install -c conda-forge cdo</code> and make sure <code>cdo</code> is on your <code>PATH</code>.</p>
+</div>
+</div>
+</div>
 </section>
-<section id="check-your-tools" class="level2">
-<h2 class="anchored" data-anchor-id="check-your-tools">4. Check your tools</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cdo</span> <span class="at">-V</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> <span class="at">--version</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">--version</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> <span class="at">--version</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>If you use uv, also run uv –version. If CDO is missing, install it through your OS package manager or a conda-forge environment; CDO is not installed by uv or pip.</p>
+<section id="clone" class="level2">
+<h2 class="anchored" data-anchor-id="clone">3 · Clone the repository</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/projects <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/projects</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/khizerzakir/tutorial-repo.git</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> tutorial-repo</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>All commands in this tutorial run from the repository root</strong> (<code>~/projects/tutorial-repo</code>). If you get lost: <code>cd ~/projects/tutorial-repo</code>. Already cloned earlier? Update with <code>git pull</code>.</p>
+</div>
+</div>
+</div>
 </section>
-<section id="install-python-dependencies" class="level2">
-<h2 class="anchored" data-anchor-id="install-python-dependencies">5. Install Python dependencies</h2>
-<p>The Zarr builder in this repository requires Zarr 3; use Python 3.12 or newer.</p>
-<section id="option-a-uv" class="level3">
-<h3 class="anchored" data-anchor-id="option-a-uv">Option A: uv</h3>
-<p>Install uv using the <a href="https://docs.astral.sh/uv/getting-started/installation/">official instructions</a>, then from the repository root run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync <span class="at">--locked</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Check the core packages and Zarr major version:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-c</span> <span class="st">"import xarray, zarr; print(xarray.__version__, zarr.__version__)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="python" class="level2">
+<h2 class="anchored" data-anchor-id="python">4 · Create the Python environment</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-3"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-3-1" class="code-annotation-target"><a href="#annotated-cell-3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync <span class="at">--locked</span> <span class="at">--extra</span> notebook</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-3-2" class="code-annotation-target"><a href="#annotated-cell-3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-c</span> <span class="st">"import xarray, zarr; print('xarray', xarray.__version__, '| zarr', zarr.__version__)"</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-3" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-3" data-code-lines="1" data-code-annotation="1">Creates <code>.venv/</code> with the exact versions from <code>uv.lock</code>, including JupyterLab for the notebooks.</span>
+</dd>
+<dt data-target-cell="annotated-cell-3" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-3" data-code-lines="2" data-code-annotation="2">Must print <strong>zarr 3.x</strong>. The cube builder refuses to run with Zarr 2.</span>
+</dd>
+</dl>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Always run project commands through <code>uv run</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>02_preprocess_cdo.sh</code> calls <code>python3</code> internally (YAML + grid helper). Starting it as <code>uv run bash code/02_preprocess_cdo.sh …</code> puts the project environment first on <code>PATH</code>, so those imports work. Alternatively activate the environment once per terminal: <code>source .venv/bin/activate</code>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Prefer plain pip?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> venv .venv</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install <span class="at">--upgrade</span> pip</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install <span class="at">-r</span> requirements.txt jupyterlab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Python ≥ 3.12 is required (Ubuntu 24.04 ships 3.12; on 22.04 use uv). Never use <code>sudo pip</code>. In this mode drop the <code>uv run</code> prefix from the commands in this tutorial.</p>
+</div>
+</div>
+</div>
 </section>
-<section id="option-b-pip" class="level3">
-<h3 class="anchored" data-anchor-id="option-b-pip">Option B: pip</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> venv .venv</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install <span class="at">--upgrade</span> pip</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install <span class="at">-r</span> requirements.txt</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">"import xarray, zarr; print(xarray.__version__, zarr.__version__)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Confirm that the printed Zarr version is 3 or newer before running the cube builder. If the environment resolves Zarr 2, use Python 3.12+ and reinstall the project dependencies.</p>
-<blockquote class="blockquote">
-<p><strong>Important:</strong> Keep the virtual environment activated for subsequent terminal commands. When you open a new Ubuntu terminal, run <code>source .venv/bin/activate</code> again. Do <strong>not</strong> use <code>sudo pip install</code>. The <code>requirements.txt</code> must be committed to github and kept consistent with the tested <code>uv.lock</code>; pip does not read <code>uv.lock</code> automatically.</p>
-</blockquote>
-</section>
-</section>
-<section id="configure-lsa-saf-access" class="level2">
-<h2 class="anchored" data-anchor-id="configure-lsa-saf-access">6. Configure LSA SAF access</h2>
+<section id="vscode" class="level2">
+<h2 class="anchored" data-anchor-id="vscode">5 · Open the project in VS Code (optional, recommended)</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="os">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Windows (WSL2)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false" href="">Linux</a></li></ul>
+<div class="tab-content" data-group="os">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <ol type="1">
-<li><p>Register on the <a href="https://datalsasaf.lsasvcs.ipma.pt/">LSA SAF data portal</a> and activate your account.</p>
+<li><p>Install <a href="https://code.visualstudio.com/download">VS Code</a> <strong>on Windows</strong> (not inside Ubuntu).</p></li>
+<li><p>Extensions (<code>Ctrl+Shift+X</code>): <strong>WSL</strong>, <strong>Python</strong>, <strong>Jupyter</strong> (all by Microsoft).</p></li>
+<li><p>In the Ubuntu window, from the repository root:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">code</span> .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The first run installs the VS Code server inside WSL. The bottom-left corner must show <strong>WSL: Ubuntu</strong>. Open a terminal inside VS Code with <code>Ctrl+`</code> — it is already in the repository root.</p></li>
+<li><p>When you open a notebook, pick the kernel <strong><code>.venv/bin/python</code></strong> (top-right “Select Kernel”).</p></li>
+</ol>
+<p>Guide: <a href="https://code.visualstudio.com/docs/remote/wsl" class="uri">https://code.visualstudio.com/docs/remote/wsl</a></p>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<p>Install <a href="https://code.visualstudio.com/download">VS Code</a> with the <strong>Python</strong> and <strong>Jupyter</strong> extensions, then from the repository root run <code>code .</code> (enable it via <em>Command Palette → Shell Command: Install ‘code’ command in PATH</em>). Select the <strong><code>.venv/bin/python</code></strong> kernel for notebooks.</p>
+</div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<p>Install <a href="https://code.visualstudio.com/download">VS Code</a> with the <strong>Python</strong> and <strong>Jupyter</strong> extensions and run <code>code .</code> from the repository root. Select the <strong><code>.venv/bin/python</code></strong> kernel for notebooks.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="credentials" class="level2">
+<h2 class="anchored" data-anchor-id="credentials">6 · LSA SAF credentials</h2>
+<div class="steps">
+<div class="step">
+<p>Register on the <a href="https://datalsasaf.lsasvcs.ipma.pt/">LSA SAF Data Service</a> and activate your account.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="imgs/portal_reg.png" class="img-fluid figure-img"></p>
+<p><img src="imgs/portal_reg.png" class="img-fluid figure-img" style="width:85.0%"></p>
 <figcaption>Data portal registration</figcaption>
 </figure>
-</div></li>
-<li><p>Add your credentials to a <code>.env</code> file in <code>code/</code>:</p></li>
-</ol>
-<p>Edit <code>code/.env</code> with your account credentials. The downloader expects the names <code>LSASAF_USERNAME</code> and <code>LSASAF_PASSWORD</code>. Do not commit this file or include it in screenshots.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>   <span class="fu">cp</span> code/.env.example code/.env</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<pre><code>   LSASAF_USERNAME="username"
-   LSASAF_PASSWORD="password"</code></pre>
-<ol start="3" type="1">
-<li>Choose the products for this tutorial:
+</div>
+</div>
+<div class="step">
+<p>Create your private settings file and open it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> code/.env.example code/.env</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nano</span> code/.env          <span class="co"># or: code code/.env</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="step">
+<p>Fill in your account and the product you want. The download script reads exactly these names:</p>
+<pre class="dotenv"><code>LSASAF_USERNAME="your_username"
+LSASAF_PASSWORD="your_password"
+SAMPLE_YEAR=2015
+SAMPLE_MONTH=06
+VARIABLE_NAME=METREF
+URL="https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF"</code></pre>
+<p><code>code/.env</code> is listed in <code>.gitignore</code> — never commit it, never paste it in screenshots or chats.</p>
+</div>
+<div class="step">
+<p>Browse the product folders to confirm the URL and that your month exists:</p>
 <ul>
-<li><a href="https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/">METREF: Reference Evapotranspiration</a></li>
-<li><a href="https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/MDFVC/">FVC: Fractional Vegetation Cover</a></li>
+<li><a href="https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/">METREF — reference evapotranspiration</a></li>
+<li><a href="https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/MDFVC/">MDFVC — fractional vegetation cover</a></li>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="imgs/browse.png" class="img-fluid figure-img"></p>
+<p><img src="imgs/browse.png" class="img-fluid figure-img" style="width:85.0%"></p>
 <figcaption>Browse the products</figcaption>
 </figure>
-</div></li>
-</ol>
+</div>
+</div>
+</div>
 </section>
-<section id="continue" class="level2">
-<h2 class="anchored" data-anchor-id="continue">7. Continue</h2>
-<p>Go to <a href="../tutorial/02-run-code.html">Download and preprocess a sample</a>. Run all project commands from the repository root unless the command says otherwise.</p>
+<section id="checklist" class="level2">
+<h2 class="anchored" data-anchor-id="checklist">✅ Setup checklist</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">A Linux shell is open (Ubuntu/WSL on Windows) and <code>pwd</code> ends in <code>/tutorial-repo</code></label></li>
+<li><label><input type="checkbox"><code>cdo -V</code>, <code>wget --version</code>, <code>git --version</code>, <code>uv --version</code> all work</label></li>
+<li><label><input type="checkbox"><code>uv run python -c "import zarr; print(zarr.__version__)"</code> prints 3.x</label></li>
+<li><label><input type="checkbox"><code>code/.env</code> exists with your username, password and product <code>URL</code></label></li>
+</ul>
+<p><strong>Next:</strong> <a href="../tutorial/02-run-code.html">B · Download and preprocess →</a></p>
 
 
 </section>
@@ -959,13 +1138,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../index.html" class="pagination-link" aria-label="Hands-on Practical Tutorial">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Hands-on Practical Tutorial</span>
+      <a href="../index.html" class="pagination-link" aria-label="Climate Data Cube Workshop">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Climate Data Cube Workshop</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../tutorial/02-run-code.html" class="pagination-link" aria-label="B. Download and preprocess a sample">
-        <span class="nav-page-text">B. Download and preprocess a sample</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../tutorial/02-run-code.html" class="pagination-link" aria-label="B · Download and preprocess">
+        <span class="nav-page-text">B · Download and preprocess</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -973,18 +1152,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-      &nbsp;
-    </div>   
+<p>© 2026 Khizer Zakir · Climate Data Cube Workshop</p>
+</div>   
     <div class="nav-footer-center">
-<p>© 2026 Khizer Zakir. Prepared for the Climate Data Cube Workshop.</p>
-</div>
-    <div class="nav-footer-right">
       &nbsp;
-    </div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/khizerzakir/tutorial-repo/edit/main/tutorial/01-setup.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/khizerzakir/tutorial-repo/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>LSA SAF data © EUMETSAT, CC BY 4.0</p>
+</div>
   </div>
 </footer>
 
 
 
 
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>
