@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.19">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -79,14 +79,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b626d73c4c936ccc3cb08be7d45d1df6.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-482e8ff703e164d7371dd0a028094024.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-d90499ef6ee6d792734ee735fd68a163.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-482e8ff703e164d7371dd0a028094024.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-62a012297dcbdfd982d2712aa1289b1f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-942dbf059f93ce3f838e6c02cd01178b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-62a012297dcbdfd982d2712aa1289b1f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -736,7 +736,6 @@ Done: 30 file(s) in 0m52s</code></pre>
 <p>Pass any GeoPandas-readable file (<code>.shp</code>, <code>.gpkg</code>, <code>.geojson</code>, <code>.parquet</code>) as the <strong>4th argument</strong> (or <code>AOI_FILE=</code>). Its total bounds become the domain:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="va">MAIN_VARIABLE</span><span class="op">=</span>METREF <span class="ex">uv</span> run bash code/02_preprocess_cdo.sh <span class="dt">\</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  0.05 data/raw/METREF data/interim/METREF data/aoi/spatial_units.geosjon</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>If the file has no CRS, add <code>AOI_CRS=EPSG:xxxx</code>. The snapped rectangle is saved as <code>data/interim/METREF/aoi_aligned.gpkg</code> (change with <code>AOI_OUTPUT=</code>).</p>
 </div>
 </div>
 </div>
@@ -822,16 +821,11 @@ Done: 30 file(s) in 0m52s</code></pre>
 <td><code>quality_flag</code></td>
 </tr>
 <tr class="odd">
-<td><code>AOI_CRS</code>, <code>AOI_OUTPUT</code></td>
-<td>environment variables</td>
-<td>file CRS, <code>&lt;output&gt;/aoi_aligned.gpkg</code></td>
-</tr>
-<tr class="even">
 <td><code>CONFIG_FILE</code></td>
 <td>environment variable</td>
 <td><code>code/preprocess_utils/config_resolution.yaml</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>parallel files, remap method, buffer</td>
 <td>YAML <code>processing:</code></td>
 <td><code>4</code>, <code>bilinear</code>, <code>0.2</code></td>

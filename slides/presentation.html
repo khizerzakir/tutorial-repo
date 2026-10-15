@@ -6,15 +6,15 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b626d73c4c936ccc3cb08be7d45d1df6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/quarto-contrib/reveal-header-1.0.0/add_header.js" defer="true"></script>
 <link href="../site_libs/quarto-contrib/reveal-header-1.0.0/add_header.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/grid-htext-1.0.0/grid_htext.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.10.19">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Khizer Zakir">
-  <meta name="dcterms.date" content="2026-10-15">
-  <title>Climate Data Cube Workshop – Climate Data Cubes</title>
+  <meta name="dcterms.date" content="2026-10-16">
+  <title>Climate Data Cube Workshop – Climate Data Cube</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -228,8 +228,8 @@
     <div class="slides">
 
 <section id="title-slide" data-background-color="#0b1f33" class="quarto-title-block center">
-  <h1 class="title">Climate Data Cubes</h1>
-  <p class="subtitle">Raw satellite files → a regional, analysis-ready Zarr cube</p>
+  <h1 class="title">Climate Data Cube</h1>
+  <p class="subtitle">A simple workflow to download, preprocess and store LSA SAF products in a Zarr cube</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -239,7 +239,7 @@ Khizer Zakir
 </div>
 </div>
 
-  <p class="date">2026-10-15</p>
+  <p class="date">2026-10-16</p>
 </section>
 <section id="section" class="slide level2 hero">
 <h2></h2>
@@ -289,13 +289,13 @@ Khizer Zakir
 <p><span class="num">3</span> <strong>Our approach</strong></p>
 </div>
 <div class="agenda-item fragment fade-up">
-<p><span class="num">4</span> <strong>Hands-on walkthrough</strong> — WSL → download → CDO → Zarr → notebooks</p>
+<p><span class="num">4</span> <strong>Hands-on walkthrough</strong> - WSL → download → CDO → Zarr → notebooks</p>
 </div>
 <div class="agenda-item fragment fade-up">
 <p><span class="num">5</span> <strong>Caveats &amp; scaling</strong></p>
 </div>
 <div class="agenda-item fragment fade-up">
-<p><span class="num">6</span> <strong>Key message &amp; links</strong></p>
+<p><span class="num">6</span> <strong>Wrap-up &amp; resources</strong></p>
 </div>
 </div>
 <!-- ======================================================= -->
@@ -364,7 +364,8 @@ Khizer Zakir
 </figure>
 </div>
 <div class="small-note">
-<p>Left: what the provider delivers — one file per day. Right: what analysis wants — a region, stacked in time.</p>
+<p>Left: what the provider delivers — one file per day.</p>
+<p>Right: what analysis wants — a region, stacked in time.</p>
 </div>
 </div></div>
 </section>
@@ -446,42 +447,20 @@ Khizer Zakir
 </div>
 <div class="fragment fade-down">
 <div class="card">
-<p>Every step leaves an output you can open and check — and every choice is written down.</p>
+<p>Every step leaves an output you can open and check</p>
+<p>and every choice is written down.</p>
 </div>
 </div>
-</section>
-<section id="many-files-vs-one-cube" class="slide level2">
-<h2>Many files vs one cube</h2>
-<table class="table-striped table-hover caption-top">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Many separate files</th>
-<th>One cube</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Different grids, time steps and naming</td>
-<td>One grid, one time axis, named variables</td>
-</tr>
-<tr class="even">
-<td>Open and loop over files</td>
-<td>Open once, select by label (<code>time</code>, <code>lat</code>, <code>lon</code>)</td>
-</tr>
-<tr class="odd">
-<td>Read whole files</td>
-<td>Read only the chunks you need</td>
-</tr>
-<tr class="even">
-<td>Processing choices live in scripts and memory</td>
-<td>Choices stored with the data (<code>zarr_cube_*</code> attributes)</td>
-</tr>
-</tbody>
-</table>
+<!-- ## Many files vs one cube
+
+| Many separate files | One cube |
+|---|---|
+| Different grids, time steps and naming | One grid, one time axis, named variables |
+| Open and loop over files | Open once, select by label (`time`, `lat`, `lon`) |
+| Read whole files | Read only the chunks you need |
+| Processing choices live in scripts and memory | Choices stored with the data (`zarr_cube_*` attributes) |
+
+: {.striped .hover} -->
 </section>
 <section id="where-a-cube-fits-in-the-ecosystem" class="slide level2">
 <h2>Where a cube fits in the ecosystem</h2>
@@ -596,7 +575,7 @@ Khizer Zakir
 <section>
 <section id="our-approach" class="title-slide slide level1 center" data-background-color="#0b1f33">
 <h1>3 · Our approach</h1>
-<p>Small, explicit, checkable</p>
+<p>What we will follow in this tutorial</p>
 </section>
 <section id="three-scripts-three-folders" class="slide level2">
 <h2>Three scripts, three folders</h2>
@@ -650,7 +629,7 @@ Khizer Zakir
 </div>
 </div></div>
 <div class="fragment fade-up" style="margin-top:1em">
-<p>APIs and hosted platforms (Planetary Computer, Earth Engine) are great for discovery and analysis. This workflow is the local, fully documented path for authenticated LSA SAF data — the two complement each other.</p>
+<p>APIs and hosted platforms (Planetary Computer, Earth Engine) are great for discovery and analysis. This workflow is the local, fully documented path for authenticated LSA SAF data — the two complement each other rather than competing.</p>
 </div>
 <!-- ======================================================= -->
 </section></section>
@@ -702,7 +681,7 @@ Khizer Zakir
 <p>The downloader writes the password to a <strong>temporary wgetrc</strong> that is deleted on exit — it never appears in the process list or shell history.</p>
 </div>
 <div class="checkpoint">
-<p>✅ <strong>Checkpoint:</strong> <code>uv run python -c "import zarr; print(zarr.__version__)"</code> → <code>3.x</code></p>
+<p><strong>Checkpoint:</strong> <code>uv run python -c "import zarr; print(zarr.__version__)"</code> → <code>3.x</code></p>
 </div>
 </div></div>
 </section>
@@ -844,7 +823,7 @@ Khizer Zakir
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="small-note">
-<p>4th argument: a vector AOI instead of the YAML box. The snapped rectangle is saved as <code>aoi_aligned.gpkg</code>.</p>
+<p>4th argument: a vector AOI instead of the YAML box.</p>
 </div>
 </div><div class="column fragment" style="width:50%;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb15-1"><a aria-label="1"></a><span class="fu">processing</span><span class="kw">:</span></span>
@@ -898,7 +877,7 @@ Khizer Zakir
 <p>Neither creates finer detail than the source. Choose per product, keep the QA flags, and <strong>record the choice</strong>.</p>
 </div>
 <div class="checkpoint fragment">
-<p>✅ <strong>Checkpoint:</strong> one <code>*_processed.nc</code> per raw file · no <code>status=failed</code> in <code>cdo.log</code> · <code>cdo sinfo</code> shows the <code>grid.txt</code> size</p>
+<p><strong>Checkpoint:</strong> one <code>*_processed.nc</code> per raw file · no <code>status=failed</code> in <code>cdo.log</code> · <code>cdo sinfo</code> shows the <code>grid.txt</code> size</p>
 </div>
 </section>
 <section id="step-3-build-the-cube" class="slide level2 big-code" data-auto-animate="true">
@@ -928,9 +907,6 @@ Khizer Zakir
 <div class="fragment">
 <p><code>Stored size      : 841.8 KB in 15 files (compression ≈ 2.3× vs 1.9 MB in memory)</code></p>
 </div>
-</div>
-<div class="fragment fade-up">
-<p>Written to <code>metref_cube.zarr.tmp</code>, validated, <strong>then</strong> swapped in — a failed run never destroys a working cube.</p>
 </div>
 </section>
 <section id="step-3-flags-you-will-actually-use" class="slide level2">
@@ -1087,17 +1063,17 @@ Khizer Zakir
 <div class="column fragment fade-up" style="width:33%;">
 <div class="card">
 <p><strong>1 · Validate</strong></p>
-<p>Packed vs decoded raw · AOI coverage per date · interim <strong>==</strong> Zarr · remap effect — in one <code>dask.compute</code>.</p>
+<p>Quick data validation at convenience.</p>
 </div>
 </div><div class="column fragment fade-up" style="width:33%;">
 <div class="card">
 <p><strong>2 · Plot</strong></p>
-<p>Raw disk (strided) with AOI · raw / interim / cube on one colour scale · missing-data footprint.</p>
+<p>Some quick visualisations of the cube: maps, time series, zonal stats.</p>
 </div>
 </div><div class="column fragment fade-up" style="width:33%;">
 <div class="card">
 <p><strong>3 · Application</strong></p>
-<p><code>plot_utils</code> maps &amp; time series · half-month ETo · zonal stats · climate ↔︎ mobility · co-occurrence classes.</p>
+<p>A specific use case, if time allows, we can explore this in detail.</p>
 </div>
 </div></div>
 <div class="fragment fade-up center-note">
@@ -1130,7 +1106,7 @@ Khizer Zakir
 <li>Bilinear smooths; nearest is blocky. Different choices change statistics.</li>
 <li>Degree grids have latitude-dependent ground size.</li>
 <li>Product versions, temporal support, units and QA systems differ.</li>
-<li>This is a <strong>teaching workflow</strong>, not a validated operational product.</li>
+<li>This is a <strong>training/small-scale workflow</strong>, not a validated operational product.</li>
 </ul>
 </section>
 <section id="on-the-fly-processing-vs-a-pre-built-cube" class="slide level2">
@@ -1199,41 +1175,39 @@ Khizer Zakir
 <section id="what-we-learned" class="slide level2 center">
 <h2>What we learned</h2>
 <div class="big-message fragment zoom-in">
-<p>A useful climate cube starts with <strong>consistent, documented choices</strong> and <strong>honest checks</strong> on missing data and resolution.</p>
+<p>A useful climate cube starts with <strong>consistent, documented choices</strong> and <strong>honest checks</strong> on missing data and resolution AND the resources.</p>
 </div>
+</section>
+<section id="thank-you" class="slide level2 center">
+<h2>Thank you</h2>
+<ul>
+<li>I hope this tutorial has been helpful in understanding the process of creating a climate cube from raw data. You can find the code and slides on GitHub,</li>
+<li>and I encourage you to explore further and apply these techniques to your own data.</li>
+<li>Also, if you have any questions or feedback, please feel free to reach out to me. Thank you for your attention!</li>
+</ul>
 </section></section>
 <section>
 <section id="links" class="title-slide slide level1 center" data-background-color="#0b1f33">
 <h1>Links</h1>
 
 </section>
-<section id="scan-and-explore" class="slide level2">
-<h2>Scan and explore</h2>
+<section id="scan-and-connect" class="slide level2">
+<h2>Scan and Connect</h2>
 <div class="columns">
-<div class="column" style="width:33%;">
+<div class="column" data-align="center" style="width:45%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/qr/tutorial.png" style="width:85.0%"></p>
-<figcaption>Tutorial site</figcaption>
+<p><img data-src="img/qr/email.png" style="width:85.0%"></p>
+<figcaption>Email</figcaption>
 </figure>
 </div>
-<p><a href="https://khizerzakir.github.io/tutorial-repo/">Tutorial</a></p>
-</div><div class="column" style="width:33%;">
+</div><div class="column" style="width:45%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/qr/code.png" style="width:85.0%"></p>
-<figcaption>Code</figcaption>
+<p><img data-src="img/qr/linkedin.png" style="width:85.0%"></p>
+<figcaption>Linkedin</figcaption>
 </figure>
 </div>
-<p><a href="https://github.com/khizerzakir/tutorial-repo">Code</a></p>
-</div><div class="column" style="width:33%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="img/qr/slides.png" style="width:85.0%"></p>
-<figcaption>Slides</figcaption>
-</figure>
-</div>
-<p><a href="https://khizerzakir.github.io/tutorial-repo/slides/presentation.html">Slides</a></p>
 </div></div>
 </section>
 <section id="references-papers" class="slide level2 smaller">

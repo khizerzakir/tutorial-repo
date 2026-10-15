@@ -2,301 +2,301 @@
   {
     "objectID": "slides/presentation.html#section",
     "href": "slides/presentation.html#section",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "",
     "text": "One month · one region · one cube\n\n30 daily NetCDF files\n\n\n1 Zarr store, compressed and chunked\n\n\n1 line to open it and select by date and place\n\n\n\n\nPress F for full screen, S for speaker notes, T toggles light/dark, C opens the chalkboard, M the menu."
   },
   {
     "objectID": "slides/presentation.html#agenda",
     "href": "slides/presentation.html#agenda",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Agenda",
-    "text": "Agenda\n\n\n1 What is a climate cube?\n\n\n2 Why build one?\n\n\n3 Our approach\n\n\n4 Hands-on walkthrough — WSL → download → CDO → Zarr → notebooks\n\n\n5 Caveats & scaling\n\n\n6 Key message & links"
+    "text": "Agenda\n\n\n1 What is a climate cube?\n\n\n2 Why build one?\n\n\n3 Our approach\n\n\n4 Hands-on walkthrough - WSL → download → CDO → Zarr → notebooks\n\n\n5 Caveats & scaling\n\n\n6 Wrap-up & resources"
   },
   {
     "objectID": "slides/presentation.html#many-files",
     "href": "slides/presentation.html#many-files",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Many files…",
     "text": "Many files…\n\nNETCDF4_…20150601.nc NETCDF4_…20150602.nc NETCDF4_…20150603.nc NETCDF4_…20150604.nc NETCDF4_…20150605.nc NETCDF4_…20150606.nc\n\n\nEach file: one date, the full MSG disk (3201 × 3201), packed integers, its own metadata."
   },
   {
     "objectID": "slides/presentation.html#one-cube",
     "href": "slides/presentation.html#one-cube",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "… one cube",
     "text": "… one cube\n\n2015-06-01 2015-06-02 2015-06-03 2015-06-04 2015-06-05 2015-06-06 time → lon → lat ↑\n\n\nA data cube = one grid, one time axis, named variables: METREF(time, lat, lon), quality_flag(time, lat, lon)."
   },
   {
     "objectID": "slides/presentation.html#what-is-a-climate-data-cube",
     "href": "slides/presentation.html#what-is-a-climate-data-cube",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "What is a climate data cube?",
     "text": "What is a climate data cube?\n\n\nA data cube organises data along shared dimensions. For climate/EO variables, typically:\nvariable(time, latitude, longitude)\n\n\nHarmonised: one grid, one calendar, consistent units and metadata.\nAnalysis-ready: select by label (time=\"2015-06-15\"), not by file.\nNot a file format: the organisation is the cube; here NetCDF is the input and Zarr the storage.\n\n\n\n\n\n\nRaster data cube\n\n\nImage: tmap — geocompx"
   },
   {
     "objectID": "slides/presentation.html#from-a-disk-image-to-a-regional-cube",
     "href": "slides/presentation.html#from-a-disk-image-to-a-regional-cube",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "From a disk image to a regional cube",
-    "text": "From a disk image to a regional cube\n\n\n\n\n\nRaw METREF, one day, full MSG disk\n\n\n\n\n\n\nA Sahel cube (NDVI, 50 time steps) viewed in Lexcube\n\n\n\nLeft: what the provider delivers — one file per day. Right: what analysis wants — a region, stacked in time."
+    "text": "From a disk image to a regional cube\n\n\n\n\n\nRaw METREF, one day, full MSG disk\n\n\n\n\n\n\nA Sahel cube (NDVI, 50 time steps) viewed in Lexcube\n\n\n\nLeft: what the provider delivers — one file per day.\nRight: what analysis wants — a region, stacked in time."
   },
   {
     "objectID": "slides/presentation.html#cubes-in-practice",
     "href": "slides/presentation.html#cubes-in-practice",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Cubes in practice",
     "text": "Cubes in practice\n\n\n\n\n\nEarth System Data Lab\n\n\nHarmonised Earth-system variables on a common grid.\nOpen the viewer\n\n\n\n\n\nOpen Data Cube\n\n\nOpen-source software to manage and analyse EO data cubes.\nODC website\n\n\n\n\n\nPangeo\n\n\nCommunity stack for cloud-native geoscience: Xarray, Dask and Zarr.\nPangeo Ecosystem\n\n\n\n\n\nxcube\n\n\nPython toolkit to generate and serve analysis-ready cubes.\nxcube Viewer\n\n\n\nDifferent communities, same idea: a consistent, labelled, multidimensional structure."
   },
   {
     "objectID": "slides/presentation.html#why-are-we-here",
     "href": "slides/presentation.html#why-are-we-here",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Why are we here?",
-    "text": "Why are we here?\n\n\nClimate products are useful, but files arrive with different grids, time steps, packing, metadata and quality flags.\n\n\n\n\nToday we build one small, transparent path from EUMETSAT LSA SAF files to a regional data cube.\n\n\n\n\nEvery step leaves an output you can open and check — and every choice is written down."
-  },
-  {
-    "objectID": "slides/presentation.html#many-files-vs-one-cube",
-    "href": "slides/presentation.html#many-files-vs-one-cube",
-    "title": "Climate Data Cubes",
-    "section": "Many files vs one cube",
-    "text": "Many files vs one cube\n\n\n\n\n\n\n\nMany separate files\nOne cube\n\n\n\n\nDifferent grids, time steps and naming\nOne grid, one time axis, named variables\n\n\nOpen and loop over files\nOpen once, select by label (time, lat, lon)\n\n\nRead whole files\nRead only the chunks you need\n\n\nProcessing choices live in scripts and memory\nChoices stored with the data (zarr_cube_* attributes)"
+    "text": "Why are we here?\n\n\nClimate products are useful, but files arrive with different grids, time steps, packing, metadata and quality flags.\n\n\n\n\nToday we build one small, transparent path from EUMETSAT LSA SAF files to a regional data cube.\n\n\n\n\nEvery step leaves an output you can open and check\nand every choice is written down."
   },
   {
     "objectID": "slides/presentation.html#where-a-cube-fits-in-the-ecosystem",
     "href": "slides/presentation.html#where-a-cube-fits-in-the-ecosystem",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Where a cube fits in the ecosystem",
     "text": "Where a cube fits in the ecosystem\n\n\n\n\n\nSTAC\n\n\nDescribe Standardise metadata for discovering geospatial assets.\n\n\n\n\n\nMicrosoft Planetary Computer\n\n\nDiscover and process Access open datasets through STAC and use hosted compute.\n\n\n\n\n\nGoogle Earth Engine\n\n\nAnalyse Use a managed platform for large-scale geospatial analysis.\n\n\n\n\n\nZarr\n\n\nStore Save chunked, compressed multidimensional arrays.\n\n\n\n\n\nXarray\n\n\nWork with data Select, transform and analyse labelled arrays in Python.\n\n\n\nSTAC describes and helps discover assets; it is not a data cube format. Planetary Computer and Earth Engine are hosted platforms. Zarr is a storage format, Xarray a Python library."
   },
   {
     "objectID": "slides/presentation.html#where-does-our-data-come-from",
     "href": "slides/presentation.html#where-does-our-data-come-from",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Where does our data come from?",
     "text": "Where does our data come from?\n\n\n\n\n\nLSA SAF\n\n\n\n\n\nEUMETSAT\n\n\n\n\n\n\n\n\n\n\n\nProduct\nWhat it represents\nIn this tutorial\n\n\n\n\nMETREF\nReference evapotranspiration (mm/day)\nDefault sample\n\n\nMDFVC\nFractional vegetation cover\nSecond product: own URL, own folder\n\n\n\nAuthenticated LSA SAF Data Service. Versions, units, coverage and QA differ by product — read the product page first."
   },
   {
     "objectID": "slides/presentation.html#three-scripts-three-folders",
     "href": "slides/presentation.html#three-scripts-three-folders",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Three scripts, three folders",
     "text": "Three scripts, three folders\n\n\n☁️ LSA SAF\ncredentials in code/.env\n\n→\n\n① 01_download_sample.sh\ndata/raw/METREF/2015/06/\n\n→\n\n② 02_preprocess_cdo.sh\ndata/interim/METREF/…\n\n→\n\n③ 03_build_zarr_cube.py\ndata/zarr/metref_cube.zarr\n\n→\n\n④ notebooks + plot_utils\nmaps · time series · zones\n\n\n\nEach stage writes its own folder. If something looks wrong, open the previous folder and check there."
   },
   {
     "objectID": "slides/presentation.html#three-principles",
     "href": "slides/presentation.html#three-principles",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Three principles",
-    "text": "Three principles\n\n\n\nSmall first\nOne product, one month, one region.\n\n\n\nExplicit\nBounds, grid, resampling and chunking are written down.\n\n\n\nCheckable\nEvery stage leaves an output you can inspect.\n\n\n\nAPIs and hosted platforms (Planetary Computer, Earth Engine) are great for discovery and analysis. This workflow is the local, fully documented path for authenticated LSA SAF data — the two complement each other."
+    "text": "Three principles\n\n\n\nSmall first\nOne product, one month, one region.\n\n\n\nExplicit\nBounds, grid, resampling and chunking are written down.\n\n\n\nCheckable\nEvery stage leaves an output you can inspect.\n\n\n\nAPIs and hosted platforms (Planetary Computer, Earth Engine) are great for discovery and analysis. This workflow is the local, fully documented path for authenticated LSA SAF data — the two complement each other rather than competing."
   },
   {
     "objectID": "slides/presentation.html#step-0-open-a-linux-shell",
     "href": "slides/presentation.html#step-0-open-a-linux-shell",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 0 · Open a Linux shell",
     "text": "Step 0 · Open a Linux shell\n\n\nWindows → WSL2 (once, admin PowerShell)\nwsl --install -d Ubuntu\nEvery session\n\nStart menu → Ubuntu, or\nWindows Terminal → ⌄ → Ubuntu\n\nKeep the project in ~/, not /mnt/c/ — much faster.\n\n\nsudo apt update\nsudo apt install -y git wget cdo\ncurl -LsSf https://astral.sh/uv/install.sh | sh\nsource \"$HOME/.local/bin/env\"\nmkdir -p ~/projects && cd ~/projects\ngit clone https://github.com/khizerzakir/tutorial-repo.git\ncd tutorial-repo\nuv sync --locked --extra notebook"
   },
   {
     "objectID": "slides/presentation.html#step-0-credentials-stay-local",
     "href": "slides/presentation.html#step-0-credentials-stay-local",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 0 · Credentials stay local",
-    "text": "Step 0 · Credentials stay local\n\n\ncp code/.env.example code/.env\nnano code/.env\nLSASAF_USERNAME=\"your_username\"\nLSASAF_PASSWORD=\"your_password\"\nSAMPLE_YEAR=2015\nSAMPLE_MONTH=06\nVARIABLE_NAME=METREF\nURL=\"https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF\"\n\n\ncode/.env is in .gitignore.\nThe downloader writes the password to a temporary wgetrc that is deleted on exit — it never appears in the process list or shell history.\n\n\n✅ Checkpoint: uv run python -c \"import zarr; print(zarr.__version__)\" → 3.x"
+    "text": "Step 0 · Credentials stay local\n\n\ncp code/.env.example code/.env\nnano code/.env\nLSASAF_USERNAME=\"your_username\"\nLSASAF_PASSWORD=\"your_password\"\nSAMPLE_YEAR=2015\nSAMPLE_MONTH=06\nVARIABLE_NAME=METREF\nURL=\"https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF\"\n\n\ncode/.env is in .gitignore.\nThe downloader writes the password to a temporary wgetrc that is deleted on exit — it never appears in the process list or shell history.\n\n\nCheckpoint: uv run python -c \"import zarr; print(zarr.__version__)\" → 3.x"
   },
   {
     "objectID": "slides/presentation.html#step-1-download",
     "href": "slides/presentation.html#step-1-download",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 1 · Download",
     "text": "Step 1 · Download\nbash code/01_download_sample.sh\n\nUses month, product and URL from code/.env."
   },
   {
     "objectID": "slides/presentation.html#step-1-download-1",
     "href": "slides/presentation.html#step-1-download-1",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 1 · Download",
     "text": "Step 1 · Download\nbash code/01_download_sample.sh 2015 06\n\nArguments override .env: year and month first …"
   },
   {
     "objectID": "slides/presentation.html#step-1-download-2",
     "href": "slides/presentation.html#step-1-download-2",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 1 · Download",
     "text": "Step 1 · Download\nbash code/01_download_sample.sh 2015 06 MDFVC \\\n  \"https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/MDFVC/NETCDF\"\n\n… then folder name and product URL — a second product without editing .env."
   },
   {
     "objectID": "slides/presentation.html#step-1-download-3",
     "href": "slides/presentation.html#step-1-download-3",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 1 · Download",
     "text": "Step 1 · Download\nJOBS=8 bash code/01_download_sample.sh 2015 06 MDFVC \\\n  \"https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/MDFVC/NETCDF\"\n\n\n2015-06: 30 file(s) on server, 30 to download -&gt; data/raw/MDFVC/2015/06\n\n\nFirst file: ~6s. Estimated remaining: ~0m22s with 8 parallel jobs\n\n\nDone: 30 file(s) in 0m29s\n\n\n\nJOBS = parallel downloads. Re-run any time: existing files are skipped, failed ones retried."
   },
   {
     "objectID": "slides/presentation.html#download-inside-the-script",
     "href": "slides/presentation.html#download-inside-the-script",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Download · inside the script",
     "text": "Download · inside the script\nENV_FILE=\"${ENV_FILE:-$PWD/code/.env}\"\nset -a; . \"$ENV_FILE\"; set +a\nWGETRC=\"$(mktemp)\"; export WGETRC; trap 'rm -f \"$WGETRC\"' EXIT\nprintf 'http_user=%s\\nhttp_password=%s\\n' \"$LSASAF_USERNAME\" \"$LSASAF_PASSWORD\" &gt; \"$WGETRC\"\n\nfor d in $(seq -w 1 31); do                         # list every day folder of the month\n  list+=$(wget -q -O- \"$SRC/$YEAR/$MONTH/$d/\" | grep -E '\\.nc$' …)\ndone\n\nget() { wget -q -O \"$f.part\" \"$1\" && mv \"$f.part\" \"$f\"; }    # .part → rename when complete\nt0=$SECONDS; get \"$(head -n1 &lt;&lt;&lt; \"$pending\")\" \"$DEST\"        # time one file → estimate\ntail -n +2 &lt;&lt;&lt; \"$pending\" | xargs -P \"$JOBS\" -I{} bash -c 'get \"$1\" \"$2\"' _ {} \"$DEST\"\n\nSimplified excerpt; the real script adds retries, timeouts and reports failures. Walk through with the arrow keys: credentials → listing → safe download → parallel."
   },
   {
     "objectID": "slides/presentation.html#step-1b-look-before-you-remap",
     "href": "slides/presentation.html#step-1b-look-before-you-remap",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 1b · Look before you remap",
     "text": "Step 1b · Look before you remap\ncdo -s showname data/raw/METREF/2015/06/*0601*.nc   # METREF quality_flag\ncdo -s sinfo    data/raw/METREF/2015/06/*0601*.nc   # lonlat 3201x3201, -80…80 by 0.05\ncdo -s showtimestamp data/raw/METREF/2015/06/*0601*.nc\ncdo -s infon    data/raw/METREF/2015/06/*0601*.nc   # min / mean / max, missing count\n\n\n\nshowname gives you MAIN_VARIABLE and QA_VARIABLES for the next step.\n\n\n\nRaw values are packed (int16 × scale_factor, _FillValue). xarray and CDO decode them — check that they do."
   },
   {
     "objectID": "slides/presentation.html#step-2-snap-the-region-to-the-source-grid",
     "href": "slides/presentation.html#step-2-snap-the-region-to-the-source-grid",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 2 · Snap the region to the source grid",
     "text": "Step 2 · Snap the region to the source grid\n\n\n\n\n\n\nYour AOI comes from the YAML domain: or a vector file (.geojson, .gpkg, .shp, .parquet).\nIts bounds rarely fall on cell edges …"
   },
   {
     "objectID": "slides/presentation.html#step-2-snap-the-region-to-the-source-grid-1",
     "href": "slides/presentation.html#step-2-snap-the-region-to-the-source-grid-1",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 2 · Snap the region to the source grid",
     "text": "Step 2 · Snap the region to the source grid\n\n\n\n\n\n\n… so snap_aoi_to_netcdf_grid.py expands them outward to whole raw cells, writes grid.txt and updates the YAML.\n\n\nTarget cell size = raw cell size (0.05°): no invented detail.\nCrop = grid + buffer (0.2°) so bilinear has neighbours at the edge."
   },
   {
     "objectID": "slides/presentation.html#step-2-crop-and-remap",
     "href": "slides/presentation.html#step-2-crop-and-remap",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 2 · Crop and remap",
     "text": "Step 2 · Crop and remap\nMAIN_VARIABLE=METREF uv run bash code/02_preprocess_cdo.sh\n\nMAIN_VARIABLE is required and checked against cdo showname. uv run gives the script’s internal python3 the project packages."
   },
   {
     "objectID": "slides/presentation.html#step-2-crop-and-remap-1",
     "href": "slides/presentation.html#step-2-crop-and-remap-1",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 2 · Crop and remap",
     "text": "Step 2 · Crop and remap\nMAIN_VARIABLE=METREF QA_VARIABLES=quality_flag \\\n  uv run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF\n\nArguments: resolution label (log) · input folder · output folder per product."
   },
   {
     "objectID": "slides/presentation.html#step-2-crop-and-remap-2",
     "href": "slides/presentation.html#step-2-crop-and-remap-2",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 2 · Crop and remap",
-    "text": "Step 2 · Crop and remap\nMAIN_VARIABLE=METREF QA_VARIABLES=quality_flag \\\n  uv run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF \\\n  data/aoi/spatial_units.geosjon\n\n\n\n4th argument: a vector AOI instead of the YAML box. The snapped rectangle is saved as aoi_aligned.gpkg.\n\n\nprocessing:\n  parallel: 4            # files at once (not an env var)\n  remap_method: bilinear # or nearest\n  buffer: 0.2"
+    "text": "Step 2 · Crop and remap\nMAIN_VARIABLE=METREF QA_VARIABLES=quality_flag \\\n  uv run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF \\\n  data/aoi/spatial_units.geosjon\n\n\n\n4th argument: a vector AOI instead of the YAML box.\n\n\nprocessing:\n  parallel: 4            # files at once (not an env var)\n  remap_method: bilinear # or nearest\n  buffer: 0.2"
   },
   {
     "objectID": "slides/presentation.html#processing-one-files-journey",
     "href": "slides/presentation.html#processing-one-files-journey",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Processing · one file’s journey",
     "text": "Processing · one file’s journey\ncdo -sellonlatbox,$W,$E,$S,$N          in.nc    clip.nc        # crop (+ buffer)\ncdo -delname,$QA_CSV                   clip.nc  main.nc        # continuous variables\ncdo -selname,$QA_CSV                   clip.nc  qa.nc          # flags\ncdo -remapbil,grid.txt                 main.nc  main_r.nc      # smooth → bilinear\ncdo -remapnn,grid.txt                  qa.nc    qa_r.nc        # codes → nearest, never averaged\ncdo merge main_r.nc qa_r.nc merged.nc                          # back together\ncdo -s sinfo merged.nc && mv merged.nc out.part && mv out.part out_processed.nc  # only valid output lands\n\nprocessing.parallel files run at once through xargs -P; results and failures go to data/interim/METREF/cdo.log."
   },
   {
     "objectID": "slides/presentation.html#resampling-is-a-decision",
     "href": "slides/presentation.html#resampling-is-a-decision",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Resampling is a decision",
-    "text": "Resampling is a decision\n\n\n\n\n\n\n\n\nMethod\nTypical use\nMain trade-off\n\n\n\n\nBilinear\nContinuous fields (ETo, temperature, FVC)\nSmooths; can shrink extremes\n\n\nNearest neighbour\nCategories, QA flags\nPreserves classes; looks blocky\n\n\n\n\nNeither creates finer detail than the source. Choose per product, keep the QA flags, and record the choice.\n\n\n✅ Checkpoint: one *_processed.nc per raw file · no status=failed in cdo.log · cdo sinfo shows the grid.txt size"
+    "text": "Resampling is a decision\n\n\n\n\n\n\n\n\nMethod\nTypical use\nMain trade-off\n\n\n\n\nBilinear\nContinuous fields (ETo, temperature, FVC)\nSmooths; can shrink extremes\n\n\nNearest neighbour\nCategories, QA flags\nPreserves classes; looks blocky\n\n\n\n\nNeither creates finer detail than the source. Choose per product, keep the QA flags, and record the choice.\n\n\nCheckpoint: one *_processed.nc per raw file · no status=failed in cdo.log · cdo sinfo shows the grid.txt size"
   },
   {
     "objectID": "slides/presentation.html#step-3-build-the-cube",
     "href": "slides/presentation.html#step-3-build-the-cube",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 3 · Build the cube",
     "text": "Step 3 · Build the cube\nuv run python code/03_build_zarr_cube.py --input data/interim/METREF --dry-run\n\nProfile          : map\nFiles            : 30  (…201506010000_processed.nc … …201506300000_processed.nc)\nVariables        : METREF, quality_flag\nDimensions       : {'time': 30, 'lat': 91, 'lon': 121}\nInner chunk      : {'time': 1, 'lat': 91, 'lon': 121}  (~43.0 KB raw each)\nShard            : {'time': 10, 'lat': 91, 'lon': 121}\nPer variable     : 30 inner chunks in 3 shard object(s)\nDry run: nothing written."
   },
   {
     "objectID": "slides/presentation.html#step-3-build-the-cube-1",
     "href": "slides/presentation.html#step-3-build-the-cube-1",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 3 · Build the cube",
-    "text": "Step 3 · Build the cube\nuv run python code/03_build_zarr_cube.py --input data/interim/METREF\n\n\nValidation OK    : first/last time steps match the interim NetCDF\n\n\nValid fraction   : METREF=95.9%, quality_flag=100.0%\n\n\nStored size      : 841.8 KB in 15 files (compression ≈ 2.3× vs 1.9 MB in memory)\n\n\n\nWritten to metref_cube.zarr.tmp, validated, then swapped in — a failed run never destroys a working cube."
+    "text": "Step 3 · Build the cube\nuv run python code/03_build_zarr_cube.py --input data/interim/METREF\n\n\nValidation OK    : first/last time steps match the interim NetCDF\n\n\nValid fraction   : METREF=95.9%, quality_flag=100.0%\n\n\nStored size      : 841.8 KB in 15 files (compression ≈ 2.3× vs 1.9 MB in memory)"
   },
   {
     "objectID": "slides/presentation.html#step-3-flags-you-will-actually-use",
     "href": "slides/presentation.html#step-3-flags-you-will-actually-use",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 3 · Flags you will actually use",
     "text": "Step 3 · Flags you will actually use\nuv run python code/03_build_zarr_cube.py --input data/interim/METREF --profile timeseries\nuv run python code/03_build_zarr_cube.py --input data/interim/METREF --append\nuv run python code/03_build_zarr_cube.py --input data/interim/METREF --variables METREF --float32\nuv run python code/03_build_zarr_cube.py --input data/interim/METREF --chunks time=4,lat=64,lon=64\nuv run python code/03_build_zarr_cube.py --input data/interim/METREF --workers 2 --clevel 7\n\n1 layout for point time series · 2 add next month without rebuilding · 3 keep one variable, halve float64 · 4 custom chunks · 5 limit CPU, compress harder."
   },
   {
     "objectID": "slides/presentation.html#chunks-shards-compression",
     "href": "slides/presentation.html#chunks-shards-compression",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Chunks · shards · compression",
     "text": "Chunks · shards · compression\nPROFILES = {   # inner chunk                              shard\n  \"map\":        ({\"time\": 1,  \"lat\": 256, \"lon\": 256}, {\"time\": 10,  \"lat\": 512, \"lon\": 512}),\n  \"balanced\":   ({\"time\": 8,  \"lat\": 128, \"lon\": 128}, {\"time\": 32,  \"lat\": 512, \"lon\": 512}),\n  \"timeseries\": ({\"time\": 64, \"lat\": 32,  \"lon\": 32},  {\"time\": 256, \"lat\": 256, \"lon\": 256}),\n}\n\nc = min(inner[dim], size)                          # clamp chunk to the data\nk = min(round(shard[dim] / c), ceil(size / c))     # shard = whole number of chunks\ninner[dim], shard[dim] = c, c * k                  # (Zarr v3 sharding requires this)\n\nds = ds.chunk(shard)                               # one Dask task = one whole shard\nencoding[var] = {\"chunks\": inner, \"shards\": shard,\n                 \"compressors\": [BloscCodec(cname=\"zstd\", clevel=5, shuffle=\"shuffle\")]}\nds.to_zarr(tmp, zarr_format=3, encoding=encoding, consolidated=True)\n\nThe rounding fixes a real failure: a 300 × 400 AOI with 256-cell chunks and 512 shards would otherwise produce a shard that is not divisible by the chunk and Zarr refuses to write."
   },
   {
     "objectID": "slides/presentation.html#try-it-which-queries-are-cheap",
     "href": "slides/presentation.html#try-it-which-queries-are-cheap",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Try it · which queries are cheap?",
     "text": "Try it · which queries are cheap?\n\n\n  \n  \n    --profile\n    mapbalancedtimeseries\n  \n  \n    time steps: 365\n    lat cells: 300\n    lon cells: 400"
   },
   {
     "objectID": "slides/presentation.html#step-4-open-and-explore",
     "href": "slides/presentation.html#step-4-open-and-explore",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 4 · Open and explore",
     "text": "Step 4 · Open and explore\nimport xarray as xr\nds = xr.open_zarr(\"data/zarr/metref_cube.zarr\")      # consolidated: one metadata read\n\nday_map = ds.METREF.sel(time=\"2015-06-15\")                       # by label, not by file\nseries  = ds.METREF.sel(lon=-16.4, lat=14.5, method=\"nearest\")   # one pixel, all dates\nmonthly = ds.METREF.resample(time=\"1MS\").sum()                    # lazy until plotted\n\nimport sys; sys.path.insert(0, \"code/plot_utils\")\nfrom adaptive_cube_plot import plot_time_slices, plot_spatial_timeseries\nplot_time_slices(ds, var=\"METREF\", time_index=[0, 14, 29], boundaries=units, robust=True)\nplot_spatial_timeseries(ds, var=\"METREF\", points={\"Dakar\": (-17.19, 14.75)}, show_area_spread=True)"
   },
   {
     "objectID": "slides/presentation.html#step-4-three-notebooks",
     "href": "slides/presentation.html#step-4-three-notebooks",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Step 4 · Three notebooks",
-    "text": "Step 4 · Three notebooks\n\n\n\n1 · Validate\nPacked vs decoded raw · AOI coverage per date · interim == Zarr · remap effect — in one dask.compute.\n\n\n\n2 · Plot\nRaw disk (strided) with AOI · raw / interim / cube on one colour scale · missing-data footprint.\n\n\n\n3 · Application\nplot_utils maps & time series · half-month ETo · zonal stats · climate ↔︎ mobility · co-occurrence classes.\n\n\n\n17 million mobility rows → one half-month read with Parquet filters= (predicate push-down)."
+    "text": "Step 4 · Three notebooks\n\n\n\n1 · Validate\nQuick data validation at convenience.\n\n\n\n2 · Plot\nSome quick visualisations of the cube: maps, time series, zonal stats.\n\n\n\n3 · Application\nA specific use case, if time allows, we can explore this in detail.\n\n\n\n17 million mobility rows → one half-month read with Parquet filters= (predicate push-down)."
   },
   {
     "objectID": "slides/presentation.html#qa-what-should-we-check",
     "href": "slides/presentation.html#qa-what-should-we-check",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "QA · what should we check?",
     "text": "QA · what should we check?\n\nSource vs output: coordinates, timestamps, units, variable names.\nDecoded fill values and valid-cell fraction — per date, not just overall.\nMissing-data footprint vs the product mask and QA flags.\nA few known values and summary statistics, raw → interim → cube.\n\n\nA file that opens is not automatically fit for analysis."
   },
   {
     "objectID": "slides/presentation.html#caveats-and-uncertainty",
     "href": "slides/presentation.html#caveats-and-uncertainty",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Caveats and uncertainty",
-    "text": "Caveats and uncertainty\n\nMissing values may be real masks/QA exclusions — or configuration problems.\nA crop/grid mismatch, wrong variable or undecoded fill value can create extensive NaNs.\nBilinear smooths; nearest is blocky. Different choices change statistics.\nDegree grids have latitude-dependent ground size.\nProduct versions, temporal support, units and QA systems differ.\nThis is a teaching workflow, not a validated operational product."
+    "text": "Caveats and uncertainty\n\nMissing values may be real masks/QA exclusions — or configuration problems.\nA crop/grid mismatch, wrong variable or undecoded fill value can create extensive NaNs.\nBilinear smooths; nearest is blocky. Different choices change statistics.\nDegree grids have latitude-dependent ground size.\nProduct versions, temporal support, units and QA systems differ.\nThis is a training/small-scale workflow, not a validated operational product."
   },
   {
     "objectID": "slides/presentation.html#on-the-fly-processing-vs-a-pre-built-cube",
     "href": "slides/presentation.html#on-the-fly-processing-vs-a-pre-built-cube",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "On-the-fly processing vs a pre-built cube",
     "text": "On-the-fly processing vs a pre-built cube\n\n\n\n\n\n\n\n\n\nOn-the-fly (catalog + lazy loading)\nPre-built cube (this tutorial)\n\n\n\n\nRegridding\nAt read time; settings easy to overlook\nFixed once and documented\n\n\nCompute cost\nPaid at every query\nPaid once, up front\n\n\nStorage\nReuses the provider’s data\nCreates a derived copy\n\n\nChange area/grid/method\nChange the query\nRe-run the pipeline\n\n\nProvider updates\nAutomatic\n--append / rebuild\n\n\n\nNeither is better in general — choose by use case and always record the resampling choice."
   },
   {
     "objectID": "slides/presentation.html#scale-the-pilot-carefully",
     "href": "slides/presentation.html#scale-the-pilot-carefully",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "Scale the pilot carefully",
     "text": "Scale the pilot carefully\n\nBenchmark a representative subset: runtime, peak memory, size, valid coverage, read speed of your real queries.\nGrow in time batches with --append; split very large areas into grid-aligned tiles with a remap margin.\nParallelise within measured CPU, memory and disk limits (processing.parallel, JOBS, --workers).\nChoose the chunk profile for the dominant question; re-benchmark at scale.\n\n\nDo not scale only by adding workers — disk throughput, memory and object counts become the bottleneck."
   },
   {
     "objectID": "slides/presentation.html#what-we-learned",
     "href": "slides/presentation.html#what-we-learned",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "What we learned",
-    "text": "What we learned\n\nA useful climate cube starts with consistent, documented choices and honest checks on missing data and resolution."
+    "text": "What we learned\n\nA useful climate cube starts with consistent, documented choices and honest checks on missing data and resolution AND the resources."
   },
   {
-    "objectID": "slides/presentation.html#scan-and-explore",
-    "href": "slides/presentation.html#scan-and-explore",
-    "title": "Climate Data Cubes",
-    "section": "Scan and explore",
-    "text": "Scan and explore\n\n\n\n\n\nTutorial site\n\n\nTutorial\n\n\n\n\nCode\n\n\nCode\n\n\n\n\nSlides\n\n\nSlides"
+    "objectID": "slides/presentation.html#thank-you",
+    "href": "slides/presentation.html#thank-you",
+    "title": "Climate Data Cube",
+    "section": "Thank you",
+    "text": "Thank you\n\nI hope this tutorial has been helpful in understanding the process of creating a climate cube from raw data. You can find the code and slides on GitHub,\nand I encourage you to explore further and apply these techniques to your own data.\nAlso, if you have any questions or feedback, please feel free to reach out to me. Thank you for your attention!"
+  },
+  {
+    "objectID": "slides/presentation.html#scan-and-connect",
+    "href": "slides/presentation.html#scan-and-connect",
+    "title": "Climate Data Cube",
+    "section": "Scan and Connect",
+    "text": "Scan and Connect\n\n\n\n\n\nEmail\n\n\n\n\n\n\nLinkedin"
   },
   {
     "objectID": "slides/presentation.html#references-papers",
     "href": "slides/presentation.html#references-papers",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "References · papers",
     "text": "References · papers\n\nAbernathey, R. P., et al. (2021). Cloud-native repositories for big scientific data. Computing in Science & Engineering, 23(2), 26–35. https://doi.org/10.1109/MCSE.2021.3059437\nHoyer, S., & Hamman, J. (2017). xarray: N-D labeled arrays and datasets in Python. Journal of Open Research Software, 5(1), 10. https://doi.org/10.5334/jors.148\nLewis, A., et al. (2017). The Australian Geoscience Data Cube: Foundations and lessons learned. Remote Sensing of Environment, 202, 276–292. https://doi.org/10.1016/j.rse.2017.03.015\nMahecha, M. D., et al. (2020). Earth system data cubes unravel global multivariate dynamics. Earth System Dynamics, 11, 201–234. https://doi.org/10.5194/esd-11-201-2020"
   },
   {
     "objectID": "slides/presentation.html#references-data-and-software",
     "href": "slides/presentation.html#references-data-and-software",
-    "title": "Climate Data Cubes",
+    "title": "Climate Data Cube",
     "section": "References · data and software",
     "text": "References · data and software\n\nLSA SAF Data Service: https://datalsasaf.lsasvcs.ipma.pt/\nZarr: https://zarr.dev/ · Xarray: https://xarray.dev/ · Dask: https://dask.org/\nCDO: https://code.mpimet.mpg.de/projects/cdo\nuv: https://docs.astral.sh/uv/ · WSL: https://learn.microsoft.com/windows/wsl/\nLexcube: https://www.lexcube.org/ · STAC: https://stacspec.org/\nIf you use LSA SAF data in publications, follow the LSA SAF attribution guidance.\n\n\n\n\n\n\n\n\n \n\n\nIEEE GRSS School on EO and GeoAI for Climate-Resilient Urban Systems"
   },
@@ -413,7 +413,7 @@
     "href": "tutorial/02-run-code.html#region",
     "title": "B · Download and preprocess",
     "section": "3 · Define the region",
-    "text": "3 · Define the region\nThe region can come from the YAML bounds or from a vector file. Either way the script snaps it outward to whole raw-grid cells and writes the target grid to code/preprocess_utils/grid.txt.\n\nBounding box in YAMLVector AOI file\n\n\nEdit code/preprocess_utils/config_resolution.yaml:\n\n\ncode/preprocess_utils/config_resolution.yaml\n\n1domain:\n  lon_min: -17.275\n  lon_max: -11.225\n  lat_min: 12.225\n  lat_max: 16.775\nprocessing:\n2  parallel: 4\n3  remap_method: bilinear\n4  buffer: 0.2\n\n\n1\n\nDegrees (EPSG:4326). Snapped outward to raw cell edges on each run.\n\n2\n\nFiles processed at the same time. This is the only place to set parallelism for preprocessing — an environment variable PARALLEL= is ignored.\n\n3\n\nbilinear for continuous fields, nearest for categorical ones. Applies to all non-QA variables; QA variables always use nearest neighbour.\n\n4\n\nExtra degrees cropped around the grid, so bilinear interpolation has real neighbours at the AOI edge.\n\n\n\n\nPass any GeoPandas-readable file (.shp, .gpkg, .geojson, .parquet) as the 4th argument (or AOI_FILE=). Its total bounds become the domain:\nMAIN_VARIABLE=METREF uv run bash code/02_preprocess_cdo.sh \\\n  0.05 data/raw/METREF data/interim/METREF data/aoi/spatial_units.geosjon\nIf the file has no CRS, add AOI_CRS=EPSG:xxxx. The snapped rectangle is saved as data/interim/METREF/aoi_aligned.gpkg (change with AOI_OUTPUT=).\n\n\n\n\n\n\n\n\n\nImportantThe script updates the YAML in place\n\n\n\nEach run rewrites the domain: and grid: sections of config_resolution.yaml with the snapped bounds (and with the AOI bounds when you pass a vector file). Commit or copy the file if you want to keep the previous region; restore the repository default with git checkout code/preprocess_utils/config_resolution.yaml code/preprocess_utils/grid.txt.",
+    "text": "3 · Define the region\nThe region can come from the YAML bounds or from a vector file. Either way the script snaps it outward to whole raw-grid cells and writes the target grid to code/preprocess_utils/grid.txt.\n\nBounding box in YAMLVector AOI file\n\n\nEdit code/preprocess_utils/config_resolution.yaml:\n\n\ncode/preprocess_utils/config_resolution.yaml\n\n1domain:\n  lon_min: -17.275\n  lon_max: -11.225\n  lat_min: 12.225\n  lat_max: 16.775\nprocessing:\n2  parallel: 4\n3  remap_method: bilinear\n4  buffer: 0.2\n\n\n1\n\nDegrees (EPSG:4326). Snapped outward to raw cell edges on each run.\n\n2\n\nFiles processed at the same time. This is the only place to set parallelism for preprocessing — an environment variable PARALLEL= is ignored.\n\n3\n\nbilinear for continuous fields, nearest for categorical ones. Applies to all non-QA variables; QA variables always use nearest neighbour.\n\n4\n\nExtra degrees cropped around the grid, so bilinear interpolation has real neighbours at the AOI edge.\n\n\n\n\nPass any GeoPandas-readable file (.shp, .gpkg, .geojson, .parquet) as the 4th argument (or AOI_FILE=). Its total bounds become the domain:\nMAIN_VARIABLE=METREF uv run bash code/02_preprocess_cdo.sh \\\n  0.05 data/raw/METREF data/interim/METREF data/aoi/spatial_units.geosjon\n\n\n\n\n\n\n\n\n\nImportantThe script updates the YAML in place\n\n\n\nEach run rewrites the domain: and grid: sections of config_resolution.yaml with the snapped bounds (and with the AOI bounds when you pass a vector file). Commit or copy the file if you want to keep the previous region; restore the repository default with git checkout code/preprocess_utils/config_resolution.yaml code/preprocess_utils/grid.txt.",
     "crumbs": [
       "Home",
       "Walkthrough",
@@ -425,7 +425,7 @@
     "href": "tutorial/02-run-code.html#preprocess",
     "title": "B · Download and preprocess",
     "section": "4 · Crop and remap",
-    "text": "4 · Crop and remap\n\nRun it\n1export MAIN_VARIABLE=METREF\n2export QA_VARIABLES=quality_flag\n3uv run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF\n\n1\n\nRequired. Must match a name from cdo showname; the script stops and lists the available names otherwise.\n\n2\n\nComma-separated QA/flag variables, remapped with nearest neighbour so flag codes are never averaged. Default quality_flag; every name must exist in the file.\n\n3\n\nuv run makes python3 inside the script use the project environment (YAML + grid helper). Arguments: resolution label (written to the log — the target grid always follows the raw grid’s cell size, 0.05° for MSG, so no false detail is created), input folder (searched recursively for *.nc) and output folder (use one folder per product so the cube builder never mixes products).\n\n\nAll options\n\n\n\n\n\n\n\n\n\nSetting\nHow to set it\nDefault\n\n\n\n\nresolution label\n1st argument\nYAML processing.resolution\n\n\ninput folder\n2nd argument\ndata/raw\n\n\noutput folder\n3rd argument\ndata/interim\n\n\nAOI vector file\n4th argument or AOI_FILE=\nnone → YAML domain\n\n\nMAIN_VARIABLE\nenvironment variable\n— (required)\n\n\nQA_VARIABLES\nenvironment variable\nquality_flag\n\n\nAOI_CRS, AOI_OUTPUT\nenvironment variables\nfile CRS, &lt;output&gt;/aoi_aligned.gpkg\n\n\nCONFIG_FILE\nenvironment variable\ncode/preprocess_utils/config_resolution.yaml\n\n\nparallel files, remap method, buffer\nYAML processing:\n4, bilinear, 0.2\n\n\n\n\n\n\nExample output\nRaw resolution: dx=0.05°, dy=0.05°  (121 x 91 cells)\nAligned bounds: lon -17.275 to -11.225, lat 12.225 to 16.775\nSaved updated YAML: …/code/preprocess_utils/config_resolution.yaml\nSaved CDO target grid: …/code/preprocess_utils/grid.txt\ncdo    remapbil: Bilinear weights from lonlat (129x97) to lonlat (121x91) grid, with source mask (…)\ncdo    remapnn: Nearest neighbor weights from lonlat (129x97) to lonlat (121x91) grid\n…\nDone. Main variables: bilinear; QA variables (quality_flag): nearest-neighbour. Log: data/interim/METREF/cdo.log\n\n\n\n\n\n\nNoteWalk through one file’s journey (process_cdo)\n\n\n\n\n\n\n\ncode/02_preprocess_cdo.sh (per file)\n\n1cdo -sellonlatbox,$CLIP_WEST,$CLIP_EAST,$CLIP_SOUTH,$CLIP_NORTH  in.nc  clip.nc\n2cdo -delname,$QA_CSV  clip.nc  main.nc\ncdo -selname,$QA_CSV  clip.nc  qa.nc\n3cdo -remapbil,grid.txt  main.nc  main_remap.nc\n4cdo -remapnn,grid.txt   qa.nc    qa_remap.nc\n5cdo merge main_remap.nc qa_remap.nc merged.nc\n6cdo -s sinfo merged.nc && mv merged.nc out.nc.part && mv out.nc.part out_processed.nc\n\n\n1\n\nCrop to the target grid plus the buffer, so interpolation at the edge has neighbours.\n\n2\n\nSplit continuous variables from QA flags.\n\n3\n\nContinuous variables: bilinear (or nearest, from the YAML).\n\n4\n\nFlags: always nearest neighbour — a flag value is a code, not a number to average.\n\n5\n\nPut them back together.\n\n6\n\nOnly a readable result is renamed into place; temp files are removed on any failure. Existing valid outputs are skipped, so re-running resumes.",
+    "text": "4 · Crop and remap\n\nRun it\n1export MAIN_VARIABLE=METREF\n2export QA_VARIABLES=quality_flag\n3uv run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF\n\n1\n\nRequired. Must match a name from cdo showname; the script stops and lists the available names otherwise.\n\n2\n\nComma-separated QA/flag variables, remapped with nearest neighbour so flag codes are never averaged. Default quality_flag; every name must exist in the file.\n\n3\n\nuv run makes python3 inside the script use the project environment (YAML + grid helper). Arguments: resolution label (written to the log — the target grid always follows the raw grid’s cell size, 0.05° for MSG, so no false detail is created), input folder (searched recursively for *.nc) and output folder (use one folder per product so the cube builder never mixes products).\n\n\nAll options\n\n\n\n\n\n\n\n\n\nSetting\nHow to set it\nDefault\n\n\n\n\nresolution label\n1st argument\nYAML processing.resolution\n\n\ninput folder\n2nd argument\ndata/raw\n\n\noutput folder\n3rd argument\ndata/interim\n\n\nAOI vector file\n4th argument or AOI_FILE=\nnone → YAML domain\n\n\nMAIN_VARIABLE\nenvironment variable\n— (required)\n\n\nQA_VARIABLES\nenvironment variable\nquality_flag\n\n\nCONFIG_FILE\nenvironment variable\ncode/preprocess_utils/config_resolution.yaml\n\n\nparallel files, remap method, buffer\nYAML processing:\n4, bilinear, 0.2\n\n\n\n\n\n\nExample output\nRaw resolution: dx=0.05°, dy=0.05°  (121 x 91 cells)\nAligned bounds: lon -17.275 to -11.225, lat 12.225 to 16.775\nSaved updated YAML: …/code/preprocess_utils/config_resolution.yaml\nSaved CDO target grid: …/code/preprocess_utils/grid.txt\ncdo    remapbil: Bilinear weights from lonlat (129x97) to lonlat (121x91) grid, with source mask (…)\ncdo    remapnn: Nearest neighbor weights from lonlat (129x97) to lonlat (121x91) grid\n…\nDone. Main variables: bilinear; QA variables (quality_flag): nearest-neighbour. Log: data/interim/METREF/cdo.log\n\n\n\n\n\n\nNoteWalk through one file’s journey (process_cdo)\n\n\n\n\n\n\n\ncode/02_preprocess_cdo.sh (per file)\n\n1cdo -sellonlatbox,$CLIP_WEST,$CLIP_EAST,$CLIP_SOUTH,$CLIP_NORTH  in.nc  clip.nc\n2cdo -delname,$QA_CSV  clip.nc  main.nc\ncdo -selname,$QA_CSV  clip.nc  qa.nc\n3cdo -remapbil,grid.txt  main.nc  main_remap.nc\n4cdo -remapnn,grid.txt   qa.nc    qa_remap.nc\n5cdo merge main_remap.nc qa_remap.nc merged.nc\n6cdo -s sinfo merged.nc && mv merged.nc out.nc.part && mv out.nc.part out_processed.nc\n\n\n1\n\nCrop to the target grid plus the buffer, so interpolation at the edge has neighbours.\n\n2\n\nSplit continuous variables from QA flags.\n\n3\n\nContinuous variables: bilinear (or nearest, from the YAML).\n\n4\n\nFlags: always nearest neighbour — a flag value is a code, not a number to average.\n\n5\n\nPut them back together.\n\n6\n\nOnly a readable result is renamed into place; temp files are removed on any failure. Existing valid outputs are skipped, so re-running resumes.",
     "crumbs": [
       "Home",
       "Walkthrough",
@@ -577,8 +577,8 @@
     "objectID": "tutorial/01-setup.html#checklist",
     "href": "tutorial/01-setup.html#checklist",
     "title": "A · Setup",
-    "section": "✅ Setup checklist",
-    "text": "✅ Setup checklist\n\nA Linux shell is open (Ubuntu/WSL on Windows) and pwd ends in /tutorial-repo\ncdo -V, wget --version, git --version, uv --version all work\nuv run python -c \"import zarr; print(zarr.__version__)\" prints 3.x\ncode/.env exists with your username, password and product URL\n\nNext: B · Download and preprocess →",
+    "section": "Setup checklist",
+    "text": "Setup checklist\n\nA Linux shell is open (Ubuntu/WSL on Windows) and pwd ends in /tutorial-repo\ncdo -V, wget --version, git --version, uv --version all work\nuv run python -c \"import zarr; print(zarr.__version__)\" prints 3.x\ncode/.env exists with your username, password and product URL\n\nNext: B · Download and preprocess →",
     "crumbs": [
       "Home",
       "Walkthrough",
