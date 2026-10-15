@@ -25,6 +25,7 @@ dependencies = [
   "geopandas>=0.14",
   "pyarrow>=14",
   "pyproj>=3.6",
+  "xvec>=0.5.2",
 ]
 
 [project.optional-dependencies]

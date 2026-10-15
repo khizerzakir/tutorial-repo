@@ -1,24 +1,17 @@
-# CDO preprocessing configuration.
-# This is the single source of truth for the grid and preprocessing settings.
-
 domain:
-  lon_min: -17.180733
-  lon_max: 11.625335
-  lat_min: -10.944114
-  lat_max: 16.651981
-
+  lon_min: -17.275
+  lon_max: -11.225
+  lat_min: 12.225
+  lat_max: 16.775
 processing:
   resolution: 0.05
   parallel: 4
   remap_method: bilinear
   buffer: 0.2
-
 paths:
   input: data/raw
   output: data/interim
   grid: grid.txt
-
-# Optional dataset-specific resolutions for callers that need them.
 datasets:
   metref:
     resolution: 0.05
@@ -26,3 +19,11 @@ datasets:
     resolution: 0.1
   custom:
     resolution: 0.02
+grid:
+  xfirst: -17.25
+  yfirst: 16.75
+  xinc: 0.05
+  yinc: -0.05
+  xsize: 121
+  ysize: 91
+  alignment: raw NetCDF cell edges and centres

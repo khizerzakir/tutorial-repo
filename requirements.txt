@@ -15,6 +15,10 @@ certifi==2026.1.4
     #   netcdf4
     #   pyogrio
     #   pyproj
+cf-xarray==0.10.6 ; python_full_version < '3.11'
+    # via xvec
+cf-xarray==0.11.3 ; python_full_version >= '3.11'
+    # via xvec
 cffi==2.0.0 ; implementation_name == 'pypy'
     # via pyzmq
 cftime==1.6.5
@@ -201,16 +205,22 @@ pyproj==3.7.1 ; python_full_version < '3.11'
     #   cartopy
     #   geopandas
     #   lsasaf-zarr-cube
+    #   xproj
+    #   xvec
 pyproj==3.7.2 ; python_full_version == '3.11.*'
     # via
     #   cartopy
     #   geopandas
     #   lsasaf-zarr-cube
+    #   xproj
+    #   xvec
 pyproj==3.8.0 ; python_full_version >= '3.12'
     # via
     #   cartopy
     #   geopandas
     #   lsasaf-zarr-cube
+    #   xproj
+    #   xvec
 pyshp==3.1.6
     # via cartopy
 python-dateutil==2.9.0.post0
@@ -233,10 +243,12 @@ shapely==2.1.2 ; python_full_version < '3.11'
     # via
     #   cartopy
     #   geopandas
+    #   xvec
 shapely==2.2.0 ; python_full_version >= '3.11'
     # via
     #   cartopy
     #   geopandas
+    #   xvec
 six==1.17.0
     # via python-dateutil
 stack-data==0.6.3
@@ -267,8 +279,20 @@ tzdata==2025.3 ; python_full_version < '3.11' or sys_platform == 'emscripten' or
 wcwidth==0.6.0
     # via prompt-toolkit
 xarray==2025.6.1 ; python_full_version < '3.11'
-    # via lsasaf-zarr-cube
+    # via
+    #   cf-xarray
+    #   lsasaf-zarr-cube
+    #   xproj
+    #   xvec
 xarray==2026.2.0 ; python_full_version >= '3.11'
+    # via
+    #   cf-xarray
+    #   lsasaf-zarr-cube
+    #   xproj
+    #   xvec
+xproj==0.2.1
+    # via xvec
+xvec==0.5.2
     # via lsasaf-zarr-cube
 zarr==2.18.3 ; python_full_version < '3.11'
     # via lsasaf-zarr-cube

@@ -54,7 +54,7 @@ fig, axes = plot_time_slices(
 )
 ```
 
-The map extent is calculated from the selected coordinates. Set `extent=(xmin, xmax, ymin, ymax)` to crop all panels to a common area. `data_crs` describes the existing coordinate values; it does **not** reproject the data. Longitude/latitude coordinate names imply EPSG:4326. For projected `x/y`, pass the actual CRS (for example, `data_crs="EPSG:32628"`). The default display projection is Plate Carrée; supply a Cartopy CRS as `map_crs` for another projection.
+The map extent is calculated from the selected coordinates. Set `extent=(xmin, xmax, ymin, ymax)` to crop all panels to a common area. `data_crs` describes the existing coordinate values; it does **not** reproject the data. Longitude/latitude coordinate names imply EPSG:4326. For projected `x/y`, pass the actual CRS (for example, `data_crs="EPSG:32628"`). Regional geographic maps default to a local Lambert Conformal projection to avoid the visual x-axis stretch of plotting longitude and latitude as equal Cartesian units. Pass a Cartopy CRS as `map_crs` to override it.
 
 Overlay an AOI or administrative boundary:
 
@@ -114,6 +114,7 @@ Point coordinates and area bounds must use the cube coordinate system. For proje
 
 - Automatic extent assumes rectilinear 1-D x/y coordinates; curvilinear grids need preprocessing or a dedicated plotting path.
 - Coastline/border detail is cartographic context, not a replacement for authoritative local boundaries.
-- Plate Carrée is a practical default, but can distort area and shape at high latitudes or across wide extents.
+- For plain Matplotlib axes without Cartopy, a rough local aspect correction for lon/lat data is `ax.set_aspect(1 / np.cos(np.deg2rad(mean_lat)))`; for regional maps the module uses a local projection instead. Avoid applying this correction to already-projected axes.
+- The automatically selected Lambert Conformal projection is intended for regional maps; choose a suitable projection explicitly for broad or unusual extents.
 - Mobility IDs must match the spatial-unit IDs and be consistently typed. Unmatched units appear without a mobility value.
 - Mobility aggregates depend on filters, adjustment factors and period semantics; inspect those before interpreting the maps.

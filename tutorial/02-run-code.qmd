@@ -8,9 +8,8 @@ This page downloads one LSA SAF product sample, crops it to a configured study a
 
 The example defaults to **METREF**. The repository also lists FVC/MDFVC as an example product. Select a product from the [LSA SAF Data Service](https://datalsasaf.lsasvcs.ipma.pt/) and confirm its product URL, time coverage, variable names, units, coordinate system, no-data values and quality flags.
 
-The study area has two related settings:
+The bounds settings is in the following file:
 
-- code/preprocess_utils/config.txt controls the crop bounds (WEST, SOUTH, EAST, NORTH).
 - code/preprocess_utils/config_resolution.yaml defines the generated output-grid domain.
 
 Coordinates are longitude/latitude in degrees in this example. For a new AOI, record the bounds in this order: **west, south, east, north**. Include a suitable input buffer for the remapping method; verify edge coverage after processing.

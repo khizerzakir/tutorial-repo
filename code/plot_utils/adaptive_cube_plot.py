@@ -157,6 +157,26 @@ def _cartopy_crs(value, ccrs):
     return ccrs.epsg(epsg)
 
 
+def _default_map_crs(value, extent, source_crs, ccrs):
+    """Choose a local conformal projection for geographic regional maps."""
+    try:
+        from pyproj import CRS
+        geographic = CRS.from_user_input(value).is_geographic
+    except Exception:
+        geographic = False
+    xmin, xmax, ymin, ymax = extent
+    if geographic and xmax - xmin < 100 and ymax - ymin < 80 and max(abs(ymin), abs(ymax)) < 80:
+        mid_lat = (ymin + ymax) / 2
+        span = max(ymax - ymin, 2.0)
+        parallels = (mid_lat - span / 4, mid_lat + span / 4)
+        return ccrs.LambertConformal(
+            central_longitude=(xmin + xmax) / 2,
+            central_latitude=mid_lat,
+            standard_parallels=parallels,
+        )
+    return source_crs
+
+
 def _coord_extent(data: xr.DataArray, x_name: str, y_name: str):
     """Outer cell bounds from 1-D coordinate centers."""
     x, y = np.asarray(data[x_name]), np.asarray(data[y_name])
@@ -231,7 +251,8 @@ def plot_time_slices(
         coordinates require an explicit CRS. This labels coordinates; it does
         not reproject the data.
     map_crs : Cartopy CRS, optional
-        Display projection. Defaults to Plate Carrée.
+        Display projection. Defaults to a local Lambert Conformal projection
+        for regional lon/lat maps, avoiding the x-axis stretch of raw degrees.
     boundaries : GeoDataFrame, optional
         Optional study-area/admin boundaries to overlay. They must have a CRS,
         or provide boundary_crs if their CRS is missing.
@@ -332,8 +353,10 @@ def plot_time_slices(
     ccrs, cfeature = _map_dependencies()
     source_crs_value = _data_crs(data, x_name, y_name, data_crs)
     source_crs = _cartopy_crs(source_crs_value, ccrs)
-    display_crs = map_crs or ccrs.PlateCarree()
     map_extent = extent or _coord_extent(selected, x_name, y_name)
+    display_crs = map_crs if map_crs is not None else _default_map_crs(
+        source_crs_value, map_extent, source_crs, ccrs
+    )
     fig, axes = plt.subplots(nrows, ncols, figsize=figsize, squeeze=False,
                              subplot_kw={"projection": display_crs}, constrained_layout=True)
     norm = Normalize(vmin=vmin, vmax=vmax, clip=False)
@@ -607,7 +630,7 @@ def plot_climate_mobility_period(
     extent_union = (min(climate_extent[0], bx0), max(climate_extent[1], bx1),
                     min(climate_extent[2], by0), max(climate_extent[3], by1))
 
-    map_crs = ccrs.PlateCarree()
+    map_crs = _default_map_crs(source_value, extent_union, source_crs, ccrs)
     fig, axes = plt.subplots(1, 2, figsize=figsize, squeeze=False,
                              subplot_kw={"projection": map_crs}, constrained_layout=True)
     ax0, ax1 = axes[0]

@@ -3,6 +3,8 @@ docs/
 _site/
 /.quarto/
 code/output/
+code/preprocess_utils/__pycache__/
+code/preprocess_utils/generate_grid.py/
 __pycache__/
 
 **/*.quarto_ipynb
@@ -11,7 +13,9 @@ __pycache__/
 
 /slides/presentation.qmd
 # Data outputs
-/data/
+/data/interim/
+/data/raw/
+/data/zarr/
 /logs/
 
 # Python
