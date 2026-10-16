@@ -294,6 +294,13 @@
     "text": "References · papers\n\nAbernathey, R. P., et al. (2021). Cloud-native repositories for big scientific data. Computing in Science & Engineering, 23(2), 26–35. https://doi.org/10.1109/MCSE.2021.3059437\nHoyer, S., & Hamman, J. (2017). xarray: N-D labeled arrays and datasets in Python. Journal of Open Research Software, 5(1), 10. https://doi.org/10.5334/jors.148\nLewis, A., et al. (2017). The Australian Geoscience Data Cube: Foundations and lessons learned. Remote Sensing of Environment, 202, 276–292. https://doi.org/10.1016/j.rse.2017.03.015\nMahecha, M. D., et al. (2020). Earth system data cubes unravel global multivariate dynamics. Earth System Dynamics, 11, 201–234. https://doi.org/10.5194/esd-11-201-2020"
   },
   {
+    "objectID": "slides/presentation.html#references-tutorials",
+    "href": "slides/presentation.html#references-tutorials",
+    "title": "Climate Data Cube",
+    "section": "References · tutorials",
+    "text": "References · tutorials\n\nhttps://medium.com/@lubonjaariel/to-compress-or-not-to-compress-a-zarr-question-812160b3777d\nhttps://zarr.readthedocs.io/en/latest/user-guide/performance/#sharding\nhttps://eumetsat.github.io/firecube/latest/quickstart/"
+  },
+  {
     "objectID": "slides/presentation.html#references-data-and-software",
     "href": "slides/presentation.html#references-data-and-software",
     "title": "Climate Data Cube",
