@@ -449,7 +449,19 @@
     "href": "tutorial/02-run-code.html#method-notes",
     "title": "B · Download and preprocess",
     "section": "Method notes",
-    "text": "Method notes\n\nRegridding never adds detail: a finer target grid only interpolates the source.\nBilinear smooths continuous fields (extremes can shrink); nearest keeps categories but looks blocky.\nDegree cells shrink with latitude (0.05° ≈ 5.5 km at the equator, ≈ 5.3 km at 15° N in longitude).\nRecord product version, AOI, grid, remap method and software versions with your results.\n\nNext: C · Build the Zarr cube →",
+    "text": "Method notes\n\nRegridding never adds detail: a finer target grid only interpolates the source.\nBilinear smooths continuous fields (extremes can shrink); nearest keeps categories but looks blocky.\nDegree cells shrink with latitude (0.05° ≈ 5.5 km at the equator, ≈ 5.3 km at 15° N in longitude).\nRecord product version, AOI, grid, remap method and software versions with your results.",
+    "crumbs": [
+      "Home",
+      "Walkthrough",
+      "B · Download and preprocess"
+    ]
+  },
+  {
+    "objectID": "tutorial/02-run-code.html#practice",
+    "href": "tutorial/02-run-code.html#practice",
+    "title": "B · Download and preprocess",
+    "section": "Practice",
+    "text": "Practice\n\nAfter you familiarize yourself with the setup, you are welcome to scale it and play around with the parameters to scale the download and processing.\nI have done it for whole of Sahel Region - across 10+ variables.\n\nNext: C · Build the Zarr cube →",
     "crumbs": [
       "Home",
       "Walkthrough",
@@ -674,7 +686,19 @@
     "href": "tutorial/03-zarr-cubes.html#scaling-beyond-the-sample",
     "title": "C · Build the Zarr cube",
     "section": "7 · Scaling beyond the sample",
-    "text": "7 · Scaling beyond the sample\nFor a larger region or many years: benchmark a representative subset (runtime, peak memory, stored size, read speed of your real queries), then process in time batches and grow the cube with --append. For very large areas split into grid-aligned tiles with a remapping margin, write each to its own store or to non-overlapping Zarr regions, and keep a manifest so only failed batches are re-run.\nNext: D · Explore the cube →",
+    "text": "7 · Scaling beyond the sample\nFor a larger region or many years: benchmark a representative subset (runtime, peak memory, stored size, read speed of your real queries), then process in time batches and grow the cube with --append. For very large areas split into grid-aligned tiles with a remapping margin, write each to its own store or to non-overlapping Zarr regions, and keep a manifest so only failed batches are re-run.",
+    "crumbs": [
+      "Home",
+      "Walkthrough",
+      "C · Build the Zarr cube"
+    ]
+  },
+  {
+    "objectID": "tutorial/03-zarr-cubes.html#practice",
+    "href": "tutorial/03-zarr-cubes.html#practice",
+    "title": "C · Build the Zarr cube",
+    "section": "8. Practice",
+    "text": "8. Practice\n\nAfter the session, you are welcome to develop a prototype notebook to compare different chunking, sharding and compression.\nCompare performances, benchmark on smaller data and then scale it.\n\nNext: D · Explore the cube →",
     "crumbs": [
       "Home",
       "Walkthrough",
