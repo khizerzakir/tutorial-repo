@@ -275,4 +275,9 @@ cdo -s infon "$f"                                # compare min/mean/max with the
 - Degree cells shrink with latitude (0.05° ≈ 5.5 km at the equator, ≈ 5.3 km at 15° N in longitude).
 - Record product version, AOI, grid, remap method and software versions with your results.
 
+## Practice
+
+- After you familiarize yourself with the setup, you are welcome to scale it and play around with the parameters to scale the download and processing. 
+- I have done it for whole of Sahel Region - across 10+ variables. 
+
 **Next:** [C · Build the Zarr cube →](03-zarr-cubes.qmd)

@@ -153,4 +153,9 @@ read speed of your real queries), then process in **time batches** and grow the 
 For very large areas split into grid-aligned tiles with a remapping margin, write each to its own store
 or to non-overlapping Zarr regions, and keep a manifest so only failed batches are re-run.
 
+## 8. Practice
+
+- After the session, you are welcome to develop a prototype notebook to compare different chunking, sharding and compression. 
+- Compare performances, benchmark on smaller data and then scale it. 
+
 **Next:** [D · Explore the cube →](04-explore.qmd)
