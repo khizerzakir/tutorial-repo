@@ -891,6 +891,12 @@ You can find the code and slides on GitHub,
 - Lewis, A., et al. (2017). The Australian Geoscience Data Cube: Foundations and lessons learned. *Remote Sensing of Environment*, 202, 276–292. <https://doi.org/10.1016/j.rse.2017.03.015>
 - Mahecha, M. D., et al. (2020). Earth system data cubes unravel global multivariate dynamics. *Earth System Dynamics*, 11, 201–234. <https://doi.org/10.5194/esd-11-201-2020>
 
+## References · tutorials {.smaller}
+
+- https://medium.com/@lubonjaariel/to-compress-or-not-to-compress-a-zarr-question-812160b3777d
+- https://zarr.readthedocs.io/en/latest/user-guide/performance/#sharding
+- https://eumetsat.github.io/firecube/latest/quickstart/
+
 ## References · data and software {.smaller}
 
 - LSA SAF Data Service: <https://datalsasaf.lsasvcs.ipma.pt/>
