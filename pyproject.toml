@@ -26,6 +26,7 @@ dependencies = [
   "pyarrow>=14",
   "pyproj>=3.6",
   "xvec>=0.5.2",
+  "rioxarray>=0.23.0",
 ]
 
 [project.optional-dependencies]

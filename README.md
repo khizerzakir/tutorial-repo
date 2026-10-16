@@ -117,4 +117,5 @@ After product-specific validation, a regional cube supports seasonal maps, regio
 
 - Never commit `code/.env` (it is in `.gitignore`); don't pass passwords on the command line or show them in screenshots.
 - LSA SAF data are CC BY 4.0 — follow the LSA SAF attribution guidance when publishing.
+- I would like to acknowledge [OpenAI](https://chatgpt.com/) & [Claude](https://claude.ai/) that helped me refine my code and build effects in the repository. 
 - To cite this repository, see [`CITATION.cff`](CITATION.cff).

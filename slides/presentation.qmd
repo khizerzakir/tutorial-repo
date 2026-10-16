@@ -45,6 +45,8 @@ filters:
 ::: {.cube-3d}
 ::: {.cube-3d-inner}
 []{.f .front} []{.f .back} []{.f .right} []{.f .left} []{.f .top} []{.f .bottom}
+
+Source: [Claude](claude.ai) and [Khizer Zakir](https://khizerzakir.github.io)
 :::
 :::
 
@@ -896,4 +898,5 @@ You can find the code and slides on GitHub,
 - CDO: <https://code.mpimet.mpg.de/projects/cdo>
 - uv: <https://docs.astral.sh/uv/> · WSL: <https://learn.microsoft.com/windows/wsl/>
 - Lexcube: <https://www.lexcube.org/> · STAC: <https://stacspec.org/>
+- ChatGPT: <https://chat.openai.com/> . Claude: <https://www.anthropic.com/> · GitHub Copilot: <https://github.com/features/copilot>
 - If you use LSA SAF data in publications, follow the LSA SAF attribution guidance.
