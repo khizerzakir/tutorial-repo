@@ -4,7 +4,7 @@
     "href": "slides/presentation.html#section",
     "title": "Climate Data Cube",
     "section": "",
-    "text": "One month · one region · one cube\n\n30 daily NetCDF files\n\n\n1 Zarr store, compressed and chunked\n\n\n1 line to open it and select by date and place\n\n\n\n\nPress F for full screen, S for speaker notes, T toggles light/dark, C opens the chalkboard, M the menu."
+    "text": "Source: Claude and Khizer Zakir\n\n\n\nOne month · one region · one cube\n\n30 daily NetCDF files\n\n\n1 Zarr store, compressed and chunked\n\n\n1 line to open it and select by date and place\n\n\n\n\nPress F for full screen, S for speaker notes, T toggles light/dark, C opens the chalkboard, M the menu."
   },
   {
     "objectID": "slides/presentation.html#agenda",
@@ -298,7 +298,7 @@
     "href": "slides/presentation.html#references-data-and-software",
     "title": "Climate Data Cube",
     "section": "References · data and software",
-    "text": "References · data and software\n\nLSA SAF Data Service: https://datalsasaf.lsasvcs.ipma.pt/\nZarr: https://zarr.dev/ · Xarray: https://xarray.dev/ · Dask: https://dask.org/\nCDO: https://code.mpimet.mpg.de/projects/cdo\nuv: https://docs.astral.sh/uv/ · WSL: https://learn.microsoft.com/windows/wsl/\nLexcube: https://www.lexcube.org/ · STAC: https://stacspec.org/\nIf you use LSA SAF data in publications, follow the LSA SAF attribution guidance.\n\n\n\n\n\n\n\n\n \n\n\nIEEE GRSS School on EO and GeoAI for Climate-Resilient Urban Systems"
+    "text": "References · data and software\n\nLSA SAF Data Service: https://datalsasaf.lsasvcs.ipma.pt/\nZarr: https://zarr.dev/ · Xarray: https://xarray.dev/ · Dask: https://dask.org/\nCDO: https://code.mpimet.mpg.de/projects/cdo\nuv: https://docs.astral.sh/uv/ · WSL: https://learn.microsoft.com/windows/wsl/\nLexcube: https://www.lexcube.org/ · STAC: https://stacspec.org/\nChatGPT: https://chat.openai.com/ . Claude: https://www.anthropic.com/ · GitHub Copilot: https://github.com/features/copilot\nIf you use LSA SAF data in publications, follow the LSA SAF attribution guidance.\n\n\n\n\n\n\n\n\n \n\n\nIEEE GRSS School on EO and GeoAI for Climate-Resilient Urban Systems"
   },
   {
     "objectID": "tutorial/04-explore.html",
