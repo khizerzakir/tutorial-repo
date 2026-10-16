@@ -255,5 +255,3 @@ Browse the product folders to confirm the URL and that your month exists:
 - [ ] `cdo -V`, `wget --version`, `git --version`, `uv --version` all work
 - [ ] `uv run python -c "import zarr; print(zarr.__version__)"` prints 3.x
 - [ ] `code/.env` exists with your username, password and product `URL`
-
-**Next:** [B · Download and preprocess →](02-run-code.qmd)

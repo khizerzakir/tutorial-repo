@@ -49,7 +49,7 @@ unexplained gaps.
 
 ## 2 · `2_plot_data.ipynb` — what changed at each stage? {#plot}
 
-- The full raw disk, strided to ≈ 800 px wide, with the AOI drawn in red.
+- The full raw disk, with the AOI drawn in red.
 - Raw-AOI, interim and cube for the **same day on one colour scale**, plus an *interim − raw* panel showing
   what remapping did.
 - A missing-data footprint: the fraction of days with data for every cell.

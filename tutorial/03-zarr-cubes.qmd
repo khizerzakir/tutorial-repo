@@ -158,4 +158,3 @@ or to non-overlapping Zarr regions, and keep a manifest so only failed batches a
 - After the session, you are welcome to develop a prototype notebook to compare different chunking, sharding and compression. 
 - Compare performances, benchmark on smaller data and then scale it. 
 
-**Next:** [D · Explore the cube →](04-explore.qmd)

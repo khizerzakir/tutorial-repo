@@ -84,6 +84,5 @@ for your product, month, AOI and machine.
 :::
 
 ::: {.callout-note appearance="simple"}
-This is a **teaching pipeline**, not an operational climate service. Start with one product, one month and
-a small area, validate the result, then scale.
+This is a **practice pipeline**, not an operational climate service.
 :::

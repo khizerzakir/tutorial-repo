@@ -44,9 +44,11 @@ MAIN_VARIABLE=<name> [QA_VARIABLES=a,b] uv run bash code/02_preprocess_cdo.sh [R
 | resolution label (log only) | argument 1 | YAML `processing.resolution` |
 | input / output folders | arguments 2–3 | `data/raw`, `data/interim` |
 | AOI vector file | argument 4 or `AOI_FILE=` | YAML `domain` |
-| AOI CRS / snapped AOI output | `AOI_CRS=`, `AOI_OUTPUT=` | file CRS, `<output>/aoi_aligned.gpkg` |
 | settings file | `CONFIG_FILE=` | `code/preprocess_utils/config_resolution.yaml` |
 | parallel files, remap method, crop buffer | YAML `processing.parallel`, `.remap_method`, `.buffer` | `4`, `bilinear`, `0.2` |
+
+<!-- | AOI CRS / snapped AOI output | `AOI_CRS=`, `AOI_OUTPUT=` | file CRS, `<output>/aoi_aligned.gpkg` | -->
+
 
 ### `code/03_build_zarr_cube.py`
 

@@ -280,4 +280,3 @@ cdo -s infon "$f"                                # compare min/mean/max with the
 - After you familiarize yourself with the setup, you are welcome to scale it and play around with the parameters to scale the download and processing. 
 - I have done it for whole of Sahel Region - across 10+ variables. 
 
-**Next:** [C · Build the Zarr cube →](03-zarr-cubes.qmd)
