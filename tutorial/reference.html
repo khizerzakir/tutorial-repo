@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.19">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -78,14 +78,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b626d73c4c936ccc3cb08be7d45d1df6.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-482e8ff703e164d7371dd0a028094024.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-d90499ef6ee6d792734ee735fd68a163.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-482e8ff703e164d7371dd0a028094024.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-62a012297dcbdfd982d2712aa1289b1f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-942dbf059f93ce3f838e6c02cd01178b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-62a012297dcbdfd982d2712aa1289b1f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -689,22 +689,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>YAML <code>domain</code></td>
 </tr>
 <tr class="even">
-<td>AOI CRS / snapped AOI output</td>
-<td><code>AOI_CRS=</code>, <code>AOI_OUTPUT=</code></td>
-<td>file CRS, <code>&lt;output&gt;/aoi_aligned.gpkg</code></td>
-</tr>
-<tr class="odd">
 <td>settings file</td>
 <td><code>CONFIG_FILE=</code></td>
 <td><code>code/preprocess_utils/config_resolution.yaml</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>parallel files, remap method, crop buffer</td>
 <td>YAML <code>processing.parallel</code>, <code>.remap_method</code>, <code>.buffer</code></td>
 <td><code>4</code>, <code>bilinear</code>, <code>0.2</code></td>
 </tr>
 </tbody>
 </table>
+<!-- | AOI CRS / snapped AOI output | `AOI_CRS=`, `AOI_OUTPUT=` | file CRS, `<output>/aoi_aligned.gpkg` | -->
 </section>
 <section id="code03_build_zarr_cube.py" class="level3">
 <h3 class="anchored" data-anchor-id="code03_build_zarr_cube.py"><code>code/03_build_zarr_cube.py</code></h3>

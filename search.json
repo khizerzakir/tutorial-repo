@@ -341,7 +341,7 @@
     "href": "tutorial/04-explore.html#plot",
     "title": "D · Explore the cube",
     "section": "2 · 2_plot_data.ipynb — what changed at each stage?",
-    "text": "2 · 2_plot_data.ipynb — what changed at each stage?\n\nThe full raw disk, strided to ≈ 800 px wide, with the AOI drawn in red.\nRaw-AOI, interim and cube for the same day on one colour scale, plus an interim − raw panel showing what remapping did.\nA missing-data footprint: the fraction of days with data for every cell.\n\n\n\n\nRaw METREF disk (EPSG:4326) — the starting point before cropping",
+    "text": "2 · 2_plot_data.ipynb — what changed at each stage?\n\nThe full raw disk, with the AOI drawn in red.\nRaw-AOI, interim and cube for the same day on one colour scale, plus an interim − raw panel showing what remapping did.\nA missing-data footprint: the fraction of days with data for every cell.\n\n\n\n\nRaw METREF disk (EPSG:4326) — the starting point before cropping",
     "crumbs": [
       "Home",
       "Walkthrough",
@@ -461,7 +461,7 @@
     "href": "tutorial/02-run-code.html#practice",
     "title": "B · Download and preprocess",
     "section": "Practice",
-    "text": "Practice\n\nAfter you familiarize yourself with the setup, you are welcome to scale it and play around with the parameters to scale the download and processing.\nI have done it for whole of Sahel Region - across 10+ variables.\n\nNext: C · Build the Zarr cube →",
+    "text": "Practice\n\nAfter you familiarize yourself with the setup, you are welcome to scale it and play around with the parameters to scale the download and processing.\nI have done it for whole of Sahel Region - across 10+ variables.",
     "crumbs": [
       "Home",
       "Walkthrough",
@@ -495,7 +495,7 @@
     "href": "index.html#already-set-up-the-whole-pipeline-in-five-commands",
     "title": "Climate Data Cube Workshop",
     "section": "Already set up? The whole pipeline in five commands",
-    "text": "Already set up? The whole pipeline in five commands\n\n# 1. repository root (inside the Ubuntu / WSL window on Windows)\ncd ~/projects/tutorial-repo\n# 2. one month of raw NetCDF\nbash code/01_download_sample.sh 2015 06 METREF\n# 3. crop + remap to the AOI\nMAIN_VARIABLE=METREF uv run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF\n# 4. build the Zarr v3 cube\nuv run python code/03_build_zarr_cube.py --input data/interim/METREF\n# 5. explore (or open code/notebooks in VS Code)\nuv run --extra notebook jupyter lab code/notebooks\n\nNot sure about a flag? The command builder generates these commands for your product, month, AOI and machine.\n\n\n\n\n\n\nTipWorkshop materials\n\n\n\n\n🎤 Slides: open the presentation (press F for full screen, S for speaker view, T for light/dark)\n💻 Code: code/ on GitHub\n📓 Notebooks: code/notebooks/1_read_validate_data.ipynb, 2_plot_data.ipynb, 3_application.ipynb\n\n\n\n\n\n\n\n\n\nThis is a teaching pipeline, not an operational climate service. Start with one product, one month and a small area, validate the result, then scale.",
+    "text": "Already set up? The whole pipeline in five commands\n\n# 1. repository root (inside the Ubuntu / WSL window on Windows)\ncd ~/projects/tutorial-repo\n# 2. one month of raw NetCDF\nbash code/01_download_sample.sh 2015 06 METREF\n# 3. crop + remap to the AOI\nMAIN_VARIABLE=METREF uv run bash code/02_preprocess_cdo.sh 0.05 data/raw/METREF data/interim/METREF\n# 4. build the Zarr v3 cube\nuv run python code/03_build_zarr_cube.py --input data/interim/METREF\n# 5. explore (or open code/notebooks in VS Code)\nuv run --extra notebook jupyter lab code/notebooks\n\nNot sure about a flag? The command builder generates these commands for your product, month, AOI and machine.\n\n\n\n\n\n\nTipWorkshop materials\n\n\n\n\n🎤 Slides: open the presentation (press F for full screen, S for speaker view, T for light/dark)\n💻 Code: code/ on GitHub\n📓 Notebooks: code/notebooks/1_read_validate_data.ipynb, 2_plot_data.ipynb, 3_application.ipynb\n\n\n\n\n\n\n\n\n\nThis is a practice pipeline, not an operational climate service.",
     "crumbs": [
       "Home",
       "Climate Data Cube Workshop"
@@ -590,7 +590,7 @@
     "href": "tutorial/01-setup.html#checklist",
     "title": "A · Setup",
     "section": "Setup checklist",
-    "text": "Setup checklist\n\nA Linux shell is open (Ubuntu/WSL on Windows) and pwd ends in /tutorial-repo\ncdo -V, wget --version, git --version, uv --version all work\nuv run python -c \"import zarr; print(zarr.__version__)\" prints 3.x\ncode/.env exists with your username, password and product URL\n\nNext: B · Download and preprocess →",
+    "text": "Setup checklist\n\nA Linux shell is open (Ubuntu/WSL on Windows) and pwd ends in /tutorial-repo\ncdo -V, wget --version, git --version, uv --version all work\nuv run python -c \"import zarr; print(zarr.__version__)\" prints 3.x\ncode/.env exists with your username, password and product URL",
     "crumbs": [
       "Home",
       "Walkthrough",
@@ -698,7 +698,7 @@
     "href": "tutorial/03-zarr-cubes.html#practice",
     "title": "C · Build the Zarr cube",
     "section": "8. Practice",
-    "text": "8. Practice\n\nAfter the session, you are welcome to develop a prototype notebook to compare different chunking, sharding and compression.\nCompare performances, benchmark on smaller data and then scale it.\n\nNext: D · Explore the cube →",
+    "text": "8. Practice\n\nAfter the session, you are welcome to develop a prototype notebook to compare different chunking, sharding and compression.\nCompare performances, benchmark on smaller data and then scale it.",
     "crumbs": [
       "Home",
       "Walkthrough",
@@ -732,7 +732,7 @@
     "href": "tutorial/reference.html#all-script-options",
     "title": "Command builder & reference",
     "section": "All script options",
-    "text": "All script options\n\ncode/01_download_sample.sh\nbash code/01_download_sample.sh [YYYY] [MM] [PRODUCT] [URL]\n\n\n\n\n\n\n\n\nOption\nSet via\nDefault\n\n\n\n\nyear, month\narguments 1–2\nSAMPLE_YEAR, SAMPLE_MONTH in .env\n\n\nproduct folder name\nargument 3\nVARIABLE_NAME in .env → METREF\n\n\nproduct URL\nargument 4\nURL in .env\n\n\nparallel downloads\nJOBS=\n4\n\n\nraw folder\nRAW_DIR=\ndata/raw\n\n\nsettings file\nENV_FILE=\n./code/.env\n\n\n\n\n\ncode/02_preprocess_cdo.sh\nMAIN_VARIABLE=&lt;name&gt; [QA_VARIABLES=a,b] uv run bash code/02_preprocess_cdo.sh [RES] [INPUT] [OUTPUT] [AOI_FILE]\n\n\n\n\n\n\n\n\nOption\nSet via\nDefault\n\n\n\n\nmain variable (validated)\nMAIN_VARIABLE=\nrequired\n\n\nQA variables (nearest neighbour)\nQA_VARIABLES=\nquality_flag (each must exist)\n\n\nresolution label (log only)\nargument 1\nYAML processing.resolution\n\n\ninput / output folders\narguments 2–3\ndata/raw, data/interim\n\n\nAOI vector file\nargument 4 or AOI_FILE=\nYAML domain\n\n\nAOI CRS / snapped AOI output\nAOI_CRS=, AOI_OUTPUT=\nfile CRS, &lt;output&gt;/aoi_aligned.gpkg\n\n\nsettings file\nCONFIG_FILE=\ncode/preprocess_utils/config_resolution.yaml\n\n\nparallel files, remap method, crop buffer\nYAML processing.parallel, .remap_method, .buffer\n4, bilinear, 0.2\n\n\n\n\n\ncode/03_build_zarr_cube.py\nuv run python code/03_build_zarr_cube.py --help\n\n\n\nFlag\nDefault\n\n\n\n\n--input DIR / --pattern GLOB\ndata/interim / *_processed.nc\n\n\n--output PATH\ndata/zarr/&lt;variable&gt;_cube.zarr\n\n\n--variables V …\nall data variables\n\n\n--profile map\\|balanced\\|timeseries\nmap\n\n\n--chunks time=…,lat=…,lon=… / --shards …\nfrom profile\n\n\n--clevel 1-9\n5\n\n\n--float32, --append, --no-consolidate, --dry-run\noff\n\n\n--workers N\nall cores",
+    "text": "All script options\n\ncode/01_download_sample.sh\nbash code/01_download_sample.sh [YYYY] [MM] [PRODUCT] [URL]\n\n\n\n\n\n\n\n\nOption\nSet via\nDefault\n\n\n\n\nyear, month\narguments 1–2\nSAMPLE_YEAR, SAMPLE_MONTH in .env\n\n\nproduct folder name\nargument 3\nVARIABLE_NAME in .env → METREF\n\n\nproduct URL\nargument 4\nURL in .env\n\n\nparallel downloads\nJOBS=\n4\n\n\nraw folder\nRAW_DIR=\ndata/raw\n\n\nsettings file\nENV_FILE=\n./code/.env\n\n\n\n\n\ncode/02_preprocess_cdo.sh\nMAIN_VARIABLE=&lt;name&gt; [QA_VARIABLES=a,b] uv run bash code/02_preprocess_cdo.sh [RES] [INPUT] [OUTPUT] [AOI_FILE]\n\n\n\n\n\n\n\n\nOption\nSet via\nDefault\n\n\n\n\nmain variable (validated)\nMAIN_VARIABLE=\nrequired\n\n\nQA variables (nearest neighbour)\nQA_VARIABLES=\nquality_flag (each must exist)\n\n\nresolution label (log only)\nargument 1\nYAML processing.resolution\n\n\ninput / output folders\narguments 2–3\ndata/raw, data/interim\n\n\nAOI vector file\nargument 4 or AOI_FILE=\nYAML domain\n\n\nsettings file\nCONFIG_FILE=\ncode/preprocess_utils/config_resolution.yaml\n\n\nparallel files, remap method, crop buffer\nYAML processing.parallel, .remap_method, .buffer\n4, bilinear, 0.2\n\n\n\n\n\n\ncode/03_build_zarr_cube.py\nuv run python code/03_build_zarr_cube.py --help\n\n\n\nFlag\nDefault\n\n\n\n\n--input DIR / --pattern GLOB\ndata/interim / *_processed.nc\n\n\n--output PATH\ndata/zarr/&lt;variable&gt;_cube.zarr\n\n\n--variables V …\nall data variables\n\n\n--profile map\\|balanced\\|timeseries\nmap\n\n\n--chunks time=…,lat=…,lon=… / --shards …\nfrom profile\n\n\n--clevel 1-9\n5\n\n\n--float32, --append, --no-consolidate, --dry-run\noff\n\n\n--workers N\nall cores",
     "crumbs": [
       "Home",
       "Command builder & reference"
