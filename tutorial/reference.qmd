@@ -20,11 +20,15 @@ Credentials are **not** part of these commands — they stay in `code/.env` (see
 
 ```text
 bash code/01_download_sample.sh [YYYY] [MM] [PRODUCT] [URL]
+bash code/01_download_sample.sh [YYYY] [MM] [DD_FROM] [DD_TO] [PRODUCT] [URL]
+bash code/01_download_sample.sh [YYYY] [MM] [DD_FROM] [YYYY] [MM] [DD_TO] [PRODUCT] [URL]
 ```
 
 | Option | Set via | Default |
 |---|---|---|
 | year, month | arguments 1–2 | `SAMPLE_YEAR`, `SAMPLE_MONTH` in `.env` |
+| day range within one month | arguments 3–4 | all days in the month |
+| start/end date across months | arguments 3–8 | same month, full month |
 | product folder name | argument 3 | `VARIABLE_NAME` in `.env` → `METREF` |
 | product URL | argument 4 | `URL` in `.env` |
 | parallel downloads | `JOBS=` | `4` |
