@@ -598,7 +598,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="all-script-options">All script options</h2>
 <section id="code01_download_sample.sh" class="level3">
 <h3 class="anchored" data-anchor-id="code01_download_sample.sh"><code>code/01_download_sample.sh</code></h3>
-<pre class="text"><code>bash code/01_download_sample.sh [YYYY] [MM] [PRODUCT] [URL]</code></pre>
+<pre class="text"><code>bash code/01_download_sample.sh [YYYY] [MM] [PRODUCT] [URL]
+bash code/01_download_sample.sh [YYYY] [MM] [DD_FROM] [DD_TO] [PRODUCT] [URL]
+bash code/01_download_sample.sh [YYYY] [MM] [DD_FROM] [YYYY] [MM] [DD_TO] [PRODUCT] [URL]</code></pre>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -617,6 +619,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>year, month</td>
 <td>arguments 1–2</td>
 <td><code>SAMPLE_YEAR</code>, <code>SAMPLE_MONTH</code> in <code>.env</code></td>
+</tr>
+<tr class="even">
+<td>day range within one month</td>
+<td>arguments 3–4</td>
+<td>all days in the month</td>
+</tr>
+<tr class="odd">
+<td>start/end date across months</td>
+<td>arguments 3–8</td>
+<td>same month, full month</td>
 </tr>
 <tr class="even">
 <td>product folder name</td>
