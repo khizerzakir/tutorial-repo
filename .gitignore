@@ -7,6 +7,8 @@ code/preprocess_utils/__pycache__/
 code/preprocess_utils/generate_grid.py/
 __pycache__/
 
+event_pictures/
+
 **/*.quarto_ipynb
 # Secrets
 .env

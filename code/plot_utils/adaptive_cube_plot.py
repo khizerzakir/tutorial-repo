@@ -283,6 +283,20 @@ def _add_zones(ax, paths, owner, source_crs, *, values=None, cmap=None, norm=Non
     return coll
 
 
+def _draw_zonal_values(ax, paths, owner, source_crs, vals, cmap, norm, *,
+                       missing_color="#d8dde3", edgecolor="#f3f6fa", linewidth=0.35):
+    """Colour zones by ``vals``; zones without a value stay hatched grey. Returns True if any value is finite."""
+    _add_zones(ax, paths, owner, source_crs, color=missing_color, edgecolor="#8a94a3",
+               linewidth=linewidth, zorder=2, hatch="////")
+    finite = np.isfinite(vals)
+    keep = finite[owner]
+    if keep.any():
+        _add_zones(ax, [p for p, k in zip(paths, keep) if k], owner[keep], source_crs,
+                   values=np.where(finite, vals, np.nan), cmap=cmap, norm=norm,
+                   edgecolor=edgecolor, linewidth=linewidth, zorder=3)
+    return bool(finite.any())
+
+
 def plot_time_slices(
     ds: xr.Dataset | xr.DataArray,
     var: str | None = None,
@@ -597,6 +611,34 @@ def _read_mobility_parquet(path, *, columns, filters):
                            filters=usable or None)
 
 
+def _select_zones(data, rank_data, zones, id_coord, zone_dim, time_coord, select, n_zones):
+    """Zone positions and text IDs: explicit ``zones``, the first ones, or evenly spaced ranks of the period mean."""
+    if select not in {"extremes", "first"}:
+        raise ValueError("select must be 'extremes' or 'first'.")
+    n_total = data.sizes[zone_dim]
+    ids = (np.asarray(data[id_coord].values).astype(str) if id_coord in data.coords
+           else np.arange(n_total).astype(str))
+    if zones is not None:
+        wanted = [str(z) for z in zones]
+        missing = [z for z in wanted if z not in ids]
+        if missing:
+            raise KeyError(f"Zone IDs not found in {id_coord!r}: {missing[:5]}. Example IDs: {[str(i) for i in ids[:5]]}")
+        positions = [int(np.flatnonzero(ids == z)[0]) for z in wanted]
+    elif select == "first":
+        positions = list(range(min(n_zones, n_total)))
+    else:
+        period_mean = np.asarray(rank_data.mean(time_coord, skipna=True).transpose(zone_dim).values, dtype=float)
+        order = np.flatnonzero(np.isfinite(period_mean))
+        if not order.size:
+            raise ValueError("All zones are empty; nothing to plot.")
+        order = order[np.argsort(period_mean[order])]
+        ranks = np.unique(np.linspace(0, order.size - 1, min(n_zones, order.size)).round().astype(int))
+        positions = [int(order[r]) for r in ranks]
+    if not positions:
+        raise ValueError("Select at least one zone.")
+    return positions, ids
+
+
 def plot_zonal_maps(
     zonal: xr.Dataset | xr.DataArray,
     var: str | None = None,
@@ -714,13 +756,8 @@ def plot_zonal_maps(
     norm = Normalize(vmin=vmin, vmax=vmax, clip=False)
     for i, (vals, label) in enumerate(zip(values, labels)):
         ax = axes.flat[i]
-        _add_zones(ax, paths, owner, source_crs, color=missing_color, edgecolor="#8a94a3",
-                   linewidth=linewidth, zorder=2, hatch="////")              # base layer: zones without a value stay hatched grey
-        ok = np.isfinite(vals)[owner]
-        if ok.any():
-            _add_zones(ax, [p for p, keep in zip(paths, ok) if keep], owner[ok], source_crs,
-                       values=np.where(np.isfinite(vals), vals, np.nan), cmap=cmap, norm=norm,
-                       edgecolor=edgecolor, linewidth=linewidth, zorder=3)
+        _draw_zonal_values(ax, paths, owner, source_crs, vals, cmap, norm, missing_color=missing_color,
+                           edgecolor=edgecolor, linewidth=linewidth)
         ax.set_title(f"{var_name} \u2014 {label}")
         ax.set_extent(map_extent, crs=source_crs)
         _add_map_context(ax, cfeature, add_coastlines=add_coastlines,
@@ -805,30 +842,7 @@ def plot_zonal_timeseries(
         data = data.sel({time_coord: slice(*time_range)})
         if data.sizes.get(time_coord, 0) == 0:
             raise ValueError("time_range selects no time steps.")
-    if select not in {"extremes", "first"}:
-        raise ValueError("select must be 'extremes' or 'first'.")
-
-    n_total = data.sizes[zone_dim]
-    ids = (np.asarray(data[id_coord].values).astype(str) if id_coord in data.coords
-           else np.arange(n_total).astype(str))
-    if zones is not None:
-        wanted = [str(z) for z in zones]
-        missing = [z for z in wanted if z not in ids]
-        if missing:
-            raise KeyError(f"Zone IDs not found in {id_coord!r}: {missing[:5]}. Example IDs: {[str(i) for i in ids[:5]]}")
-        positions = [int(np.flatnonzero(ids == z)[0]) for z in wanted]
-    elif select == "first":
-        positions = list(range(min(n_zones, n_total)))
-    else:
-        period_mean = np.asarray(data.mean(time_coord, skipna=True).values, dtype=float)
-        order = np.flatnonzero(np.isfinite(period_mean))
-        if not order.size:
-            raise ValueError("All zones are empty; nothing to plot.")
-        order = order[np.argsort(period_mean[order])]
-        ranks = np.unique(np.linspace(0, order.size - 1, min(n_zones, order.size)).round().astype(int))
-        positions = [int(order[r]) for r in ranks]
-    if not positions:
-        raise ValueError("Select at least one zone.")
+    positions, ids = _select_zones(data, data, zones, id_coord, zone_dim, time_coord, select, n_zones)
 
     palette = plt.cm.tab10.colors
     colors = {p: palette[k % len(palette)] for k, p in enumerate(positions)}
@@ -875,6 +889,476 @@ def plot_zonal_timeseries(
     if show:
         plt.show()
     return fig, {"timeseries": ax_ts, "map": ax_map, "zones": [str(ids[p]) for p in positions]}
+
+
+def _half_month_start(dates) -> pd.DatetimeIndex:
+    """Map dates to the start of their half-month: day 1 (days 1-15) or day 16 (days 16-end)."""
+    d = pd.DatetimeIndex(pd.to_datetime(dates)).normalize()
+    return d - pd.to_timedelta(np.where(d.day <= 15, d.day - 1, d.day - 16), unit="D")
+
+
+def _half_month_of_year(dates) -> np.ndarray:
+    """Half-month number 0-23 within the year (two per month)."""
+    d = pd.DatetimeIndex(pd.to_datetime(dates))
+    return ((d.month - 1) * 2 + (d.day > 15)).to_numpy()
+
+
+def build_zonal_mobility(
+    mobility: pd.DataFrame | str | Path,
+    like: xr.DataArray,
+    *,
+    metric: str,
+    id_col: str = "norm_spatial_id_origin",
+    date_col: str = "date",
+    filters: dict | None = None,
+    agg: str = "sum",
+    zone_dim: str = "zone",
+    time_coord: str = "time",
+    id_coord: str = "norm_id",
+    name: str | None = None,
+    units: str | None = None,
+) -> xr.DataArray:
+    """Aggregate a mobility table to half-months and return it as a zone x time cube.
+
+    The result has exactly the zones and time axis of ``like`` (an xvec climate
+    zonal cube), so it can be plotted, standardized and compared with the same
+    functions. Climate time steps without mobility records, for example before
+    the mobility record starts, are NaN, and so are zones without records.
+
+    Parameters
+    ----------
+    mobility : DataFrame or Parquet path
+        Needs ``id_col``, ``date_col`` and ``metric``. A Parquet path is read
+        with column and row-filter pushdown.
+    like : xarray.DataArray
+        Climate zonal cube with a ``zone`` dimension, a ``time`` dimension with
+        one step per half-month, and a zone ID coordinate ``id_coord``.
+    metric : str
+        Mobility column to aggregate (for example ``"rate_depart"``).
+    filters : dict, optional
+        ``{column: value}`` equality filters (``subset_type``, ``weight_type``, ``days_span``...).
+    agg : {"sum", "mean"}
+        How rows in the same zone and half-month are combined.
+    """
+    if agg not in {"sum", "mean"}:
+        raise ValueError("agg must be 'sum' or 'mean'.")
+    like = like.transpose(zone_dim, time_coord)
+    if id_coord not in like.coords:
+        raise ValueError(f"The climate cube needs a zone ID coordinate {id_coord!r}.")
+    filters = dict(filters or {})
+    if isinstance(mobility, (str, Path)):
+        mobility = _read_mobility_parquet(mobility, columns=[id_col, date_col, metric, *filters], filters=filters)
+    frame = mobility
+    for col, value in filters.items():
+        if col not in frame:
+            raise KeyError(f"Filter column {col!r} not found in the mobility data.")
+        frame = frame[frame[col] == value]
+    for col in (id_col, date_col, metric):
+        if col not in frame:
+            raise KeyError(f"Column {col!r} not found in the mobility data; found {list(frame.columns)}")
+    dates = pd.to_datetime(frame[date_col], errors="coerce")
+    ok = dates.notna().to_numpy()
+    if not ok.any():
+        raise ValueError("No mobility rows with a valid date remain after filtering.")
+    tidy = pd.DataFrame({
+        "id": frame[id_col].astype(str).to_numpy()[ok],
+        "period": _half_month_start(dates[ok]),
+        "value": pd.to_numeric(frame[metric], errors="coerce").to_numpy()[ok],
+    })
+    keys = _half_month_start(like[time_coord].values)
+    if keys.has_duplicates:
+        raise ValueError("Several climate time steps fall in the same half-month; "
+                         "the cube must have one time step per half-month.")
+    table = tidy.groupby(["id", "period"])["value"].agg(agg).unstack("period")
+    zone_ids = np.asarray(like[id_coord].values).astype(str)
+    if not np.isin(table.index.to_numpy(), zone_ids).any():
+        raise ValueError(f"None of the mobility IDs match the zone IDs ({id_coord!r}). "
+                         f"Mobility examples: {list(table.index[:3])}; zone examples: {list(zone_ids[:3])}")
+    table = table.reindex(index=zone_ids, columns=keys)
+    out = like.copy(data=table.to_numpy(dtype=float))
+    out.name = name or metric
+    out.attrs = {"units": units or metric, "source": "mobility", "aggregation": f"{agg} per half-month"}
+    return out
+
+
+def common_period(*cubes: xr.DataArray, time_coord: str = "time") -> tuple[pd.Timestamp, pd.Timestamp]:
+    """First and last time step at which every cube has at least one valid value (their overlap)."""
+    spans = []
+    for cube in cubes:
+        other = [d for d in cube.dims if d != time_coord]
+        valid = np.asarray(cube.notnull().any(other).values if other else cube.notnull().values)
+        stamps = cube[time_coord].values[valid]
+        if not stamps.size:
+            raise ValueError("A cube has no valid values; cannot find a common period.")
+        spans.append((pd.Timestamp(stamps.min()), pd.Timestamp(stamps.max())))
+    start, end = max(s[0] for s in spans), min(s[1] for s in spans)
+    if start > end:
+        raise ValueError("The cubes do not overlap in time.")
+    return start, end
+
+
+def standardize_zonal(
+    cube: xr.DataArray,
+    *,
+    mode: str = "time",
+    baseline: tuple[object, object] | None = None,
+    zone_dim: str = "zone",
+    time_coord: str = "time",
+    ddof: int = 1,
+) -> xr.DataArray:
+    """Convert a zonal cube to z-scores so different variables share one unit.
+
+    ``mode="time"``: each zone is centred and scaled with its own mean and
+    standard deviation over ``baseline`` (default: the whole record). The
+    baseline is applied to the full series, so the same z-scale can be drawn
+    before and after it. Use the period where all variables exist
+    (:func:`common_period`) to make climate and mobility comparable.
+
+    ``mode="seasonal"``: as ``"time"``, but separately for each half-month of
+    the year, which removes the seasonal cycle (an anomaly). Needs several
+    years in the baseline.
+
+    ``mode="space"``: each time step is standardized across zones, which shows
+    relative differences between zones at that date, not change through time.
+
+    Zones with zero spread are NaN. Zone geometries and CRS are kept.
+    """
+    if mode not in {"time", "seasonal", "space"}:
+        raise ValueError("mode must be 'time', 'seasonal' or 'space'.")
+    if mode == "space":
+        mean = cube.mean(zone_dim, skipna=True)
+        std = cube.std(zone_dim, skipna=True, ddof=ddof)
+        z = (cube - mean) / std.where(std > 0)
+    else:
+        base = cube if baseline is None else cube.sel({time_coord: slice(*baseline)})
+        if base.sizes.get(time_coord, 0) < 2:
+            raise ValueError("The baseline needs at least two time steps.")
+        if mode == "time":
+            mean = base.mean(time_coord, skipna=True)
+            std = base.std(time_coord, skipna=True, ddof=ddof)
+            z = (cube - mean) / std.where(std > 0)
+        else:
+            hm_all = xr.DataArray(_half_month_of_year(cube[time_coord].values), dims=time_coord,
+                                  coords={time_coord: cube[time_coord].values}, name="halfmonth")
+            hm_base = hm_all.sel({time_coord: base[time_coord].values})
+            halves = np.arange(24)
+            mean = base.groupby(hm_base).mean(time_coord, skipna=True).reindex(halfmonth=halves)
+            std = base.groupby(hm_base).std(time_coord, skipna=True, ddof=ddof).reindex(halfmonth=halves)
+            mean_t = mean.sel(halfmonth=hm_all).drop_vars("halfmonth", errors="ignore")
+            std_t = std.sel(halfmonth=hm_all).drop_vars("halfmonth", errors="ignore")
+            z = (cube - mean_t) / std_t.where(std_t > 0)
+    z = z.transpose(*cube.dims)
+    z.name = f"{cube.name}_z" if cube.name else "z"
+    z.attrs = {"units": "z-score", "standardization": mode,
+               "baseline": "full record" if baseline is None or mode == "space" else f"{baseline[0]} to {baseline[1]}",
+               "source_units": str(cube.attrs.get("units", ""))}
+    return z
+
+
+def _align_pair(climate, mobility, zone_dim, time_coord, id_coord):
+    """Both cubes as (zone, time) on the climate time axis; zone IDs must agree."""
+    climate = climate.transpose(zone_dim, time_coord)
+    mobility = mobility.transpose(zone_dim, time_coord)
+    if mobility.sizes[zone_dim] != climate.sizes[zone_dim]:
+        raise ValueError("Climate and mobility cubes have different numbers of zones; build mobility with build_zonal_mobility(like=climate).")
+    if id_coord in climate.coords and id_coord in mobility.coords and not np.array_equal(
+            np.asarray(climate[id_coord].values).astype(str), np.asarray(mobility[id_coord].values).astype(str)):
+        raise ValueError("Zone IDs differ between the climate and mobility cubes.")
+    if not np.array_equal(mobility[time_coord].values, climate[time_coord].values):
+        mobility = mobility.reindex({time_coord: climate[time_coord].values})
+    return climate, mobility
+
+
+def _is_zscore(*cubes) -> bool:
+    return all(c.attrs.get("units") == "z-score" for c in cubes)
+
+
+def plot_climate_mobility_maps(
+    climate: xr.DataArray,
+    mobility: xr.DataArray,
+    *,
+    climate_label: str | None = None,
+    mobility_label: str | None = None,
+    time_index: int | Sequence[int] | None = None,
+    times: object | Sequence[object] | None = None,
+    zone_dim: str = "zone",
+    time_coord: str = "time",
+    id_coord: str = "norm_id",
+    shared_scale: bool | str = "auto",
+    zlim: float | None = None,
+    climate_cmap=VAR_CMAP,
+    mobility_cmap="viridis",
+    diverging_cmap="RdBu_r",
+    zone_crs: str | object | None = None,
+    extent: tuple[float, float, float, float] | None = None,
+    map_crs: object | None = None,
+    boundaries=None,
+    boundary_crs: str | None = None,
+    add_coastlines: bool = True,
+    add_borders: bool = True,
+    coastline_resolution: str = "50m",
+    figsize: tuple[float, float] | None = None,
+    edgecolor: str = "#f3f6fa",
+    linewidth: float = 0.35,
+    missing_color: str = "#d8dde3",
+    title: str | None = None,
+    output_path: str | Path | None = None,
+    dpi: int = 180,
+    show: bool = True,
+):
+    """Zonal climate (top row) and mobility (bottom row) maps for the same dates, in one panel.
+
+    Each column is one time step. With z-scored inputs (``standardize_zonal``)
+    both rows use one diverging colour scale centred on 0 and one colorbar, so
+    colours mean the same thing in both rows. With raw values each row keeps
+    its own scale and colorbar. Dates without data (for example before the
+    mobility record starts) show hatched grey zones and a "no data" note.
+
+    Parameters
+    ----------
+    climate, mobility : xarray.DataArray
+        Zone x time cubes on the same zones, e.g. from ``build_zonal_mobility(like=climate)``.
+    time_index, times
+        Selection on the climate time axis (positional indices or exact timestamps).
+    shared_scale : bool or "auto"
+        "auto" shares the scale when both cubes carry ``units == "z-score"``.
+    zlim : float, optional
+        Half-range of the shared z-score scale. Default: the 98th percentile of
+        |z| over the selected dates, rounded up to a half unit (at least 1).
+    """
+    climate, mobility = _align_pair(climate, mobility, zone_dim, time_coord, id_coord)
+    c_label = climate_label or climate.name or "climate"
+    m_label = mobility_label or mobility.name or "mobility"
+    indices = _indices_for_selection(climate, time_coord, time_index, times)
+    geoms, crs_value = _zone_geometries(climate, zone_dim, zone_crs)
+    shared = _is_zscore(climate, mobility) if shared_scale == "auto" else bool(shared_scale)
+
+    c_vals = [np.asarray(climate.isel({time_coord: i}).values, dtype=float) for i in indices]
+    m_vals = [np.asarray(mobility.isel({time_coord: i}).values, dtype=float) for i in indices]
+    labels = [pd.Timestamp(climate[time_coord].values[i]).strftime("%d %b %Y") for i in indices]
+
+    def finite_of(parts):
+        arr = np.concatenate([p[np.isfinite(p)] for p in parts])
+        return arr
+    c_fin, m_fin = finite_of(c_vals), finite_of(m_vals)
+    if not c_fin.size:
+        raise ValueError("The selected climate values contain no finite values to plot.")
+
+    def limits(arr):
+        if not arr.size:
+            return 0.0, 1.0
+        lo, hi = float(arr.min()), float(arr.max())
+        return (lo, hi) if hi > lo else (lo - 0.5, hi + 0.5)
+
+    if shared:
+        if zlim is None:
+            both = np.concatenate([c_fin, m_fin])
+            zlim = max(1.0, float(np.ceil(np.nanpercentile(np.abs(both), 98) * 2) / 2))
+        norms = (Normalize(-zlim, zlim), Normalize(-zlim, zlim))
+        cmaps = (diverging_cmap, diverging_cmap)
+    else:
+        norms = (Normalize(*limits(c_fin)), Normalize(*limits(m_fin)))
+        cmaps = (climate_cmap, mobility_cmap)
+
+    ccrs, cfeature = _map_dependencies()
+    source_crs = _cartopy_crs(crs_value, ccrs)
+    map_extent = extent or _zone_extent(geoms)
+    display_crs = map_crs if map_crs is not None else _default_map_crs(crs_value, map_extent, source_crs, ccrs)
+    paths, owner = _zone_paths(geoms)
+
+    n = len(indices)
+    if figsize is None:
+        figsize = (4.6 * n + 1.0, 9.4)
+    fig, axes = plt.subplots(2, n, figsize=figsize, squeeze=False,
+                             subplot_kw={"projection": display_crs}, constrained_layout=True)
+    for row, (vals_list, label) in enumerate(((c_vals, c_label), (m_vals, m_label))):
+        for col in range(n):
+            ax = axes[row, col]
+            has_data = _draw_zonal_values(ax, paths, owner, source_crs, vals_list[col], cmaps[row], norms[row],
+                                          missing_color=missing_color, edgecolor=edgecolor, linewidth=linewidth)
+            if not has_data:
+                ax.text(0.5, 0.5, "no data", transform=ax.transAxes, ha="center", va="center",
+                        fontsize=12, color="#333b47", zorder=10,
+                        bbox={"boxstyle": "round,pad=0.3", "facecolor": "white", "alpha": 0.8, "edgecolor": "none"})
+            ax.set_extent(map_extent, crs=source_crs)
+            _add_map_context(ax, cfeature, add_coastlines=add_coastlines,
+                             add_borders=add_borders, resolution=coastline_resolution)
+            if boundaries is not None:
+                _overlay_boundaries(ax, boundaries, boundary_crs, crs_value, source_crs)
+            if row == 0:
+                ax.set_title(labels[col])
+            if col == 0:
+                ax.set_ylabel(label, fontsize=12, labelpad=8)
+                ax.yaxis.set_visible(True)
+                ax.tick_params(left=False, labelleft=False)   # keep the row label, hide projected coordinates
+
+    if shared:
+        mappable = ScalarMappable(norm=norms[0], cmap=cmaps[0])
+        mappable.set_array([])
+        cbar = fig.colorbar(mappable, ax=list(axes.flat), orientation="horizontal", location="bottom",
+                            shrink=0.6, pad=0.04, fraction=0.04, extend="both")
+        cbar.set_label("z-score (standard deviations from the zone mean)")
+    else:
+        for row, (cube, label) in enumerate(((climate, c_label), (mobility, m_label))):
+            mappable = ScalarMappable(norm=norms[row], cmap=cmaps[row])
+            mappable.set_array([])
+            cbar = fig.colorbar(mappable, ax=list(axes[row]), location="right", shrink=0.85, pad=0.02)
+            cbar.set_label(str(cube.attrs.get("units", label)))
+    fig.suptitle(title or f"{c_label} and {m_label}", fontsize=14)
+
+    if output_path is not None:
+        output_path = Path(output_path)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        fig.savefig(output_path, dpi=dpi, bbox_inches="tight")
+    if show:
+        plt.show()
+    return fig, axes
+
+
+def plot_climate_mobility_timeseries(
+    climate: xr.DataArray,
+    mobility: xr.DataArray,
+    *,
+    zones: Sequence[object] | None = None,
+    id_coord: str = "norm_id",
+    zone_dim: str = "zone",
+    time_coord: str = "time",
+    select: str = "extremes",
+    n_zones: int = 3,
+    time_range: tuple[object, object] | None = None,
+    baseline: tuple[object, object] | None = None,
+    climate_label: str | None = None,
+    mobility_label: str | None = None,
+    shared_scale: bool | str = "auto",
+    show_locator: bool = True,
+    zone_crs: str | object | None = None,
+    extent: tuple[float, float, float, float] | None = None,
+    map_crs: object | None = None,
+    add_coastlines: bool = True,
+    add_borders: bool = True,
+    coastline_resolution: str = "50m",
+    title: str | None = None,
+    output_path: str | Path | None = None,
+    dpi: int = 180,
+    show: bool = True,
+):
+    """One time-series row per selected zone, climate and mobility together, plus a locator map.
+
+    The time axis follows the climate record, so a series that starts later
+    (mobility often does) simply begins later. With z-scored inputs both
+    series share one y axis (z-score, zero line, same limits for all zones);
+    with raw values each row gets a second y axis for mobility.
+
+    Parameters
+    ----------
+    zones : sequence, optional
+        Zone IDs (text-matched against ``id_coord``). Otherwise ``select`` chooses
+        ``n_zones``: ``"extremes"`` (lowest/median/highest climate period mean),
+        ``"mobility_extremes"`` (same, ranked by mobility) or ``"first"``.
+    baseline : (start, end), optional
+        Shade the period used for standardization (``common_period``).
+    shared_scale : bool or "auto"
+        "auto" uses one z-score axis when both cubes carry ``units == "z-score"``.
+
+    Returns
+    -------
+    fig, axes
+        Figure and a dict with ``"timeseries"`` (list of Axes), ``"map"`` and ``"zones"``.
+    """
+    from matplotlib.lines import Line2D
+    from matplotlib.patches import Patch
+
+    if select not in {"extremes", "mobility_extremes", "first"}:
+        raise ValueError("select must be 'extremes', 'mobility_extremes' or 'first'.")
+    climate, mobility = _align_pair(climate, mobility, zone_dim, time_coord, id_coord)
+    if time_range is not None:
+        climate = climate.sel({time_coord: slice(*time_range)})
+        mobility = mobility.sel({time_coord: slice(*time_range)})
+        if climate.sizes.get(time_coord, 0) == 0:
+            raise ValueError("time_range selects no time steps.")
+    c_label = climate_label or climate.name or "climate"
+    m_label = mobility_label or mobility.name or "mobility"
+    shared = _is_zscore(climate, mobility) if shared_scale == "auto" else bool(shared_scale)
+
+    rank = mobility if select == "mobility_extremes" else climate
+    positions, ids = _select_zones(climate, rank, zones, id_coord, zone_dim, time_coord,
+                                   "first" if select == "first" else "extremes", n_zones)
+    palette = plt.cm.tab10.colors
+    zone_colors = {p: palette[k % len(palette)] for k, p in enumerate(positions)}
+    c_color, m_color = "#1b7f5c", "#c2410c"
+    time_values = climate[time_coord].values
+    n = len(positions)
+
+    fig = plt.figure(figsize=(14, max(4.8, 2.0 * n + 1.8)), constrained_layout=True)
+    grid = fig.add_gridspec(n, 2 if show_locator else 1, **({"width_ratios": [1, 2.4]} if show_locator else {}))
+    ax_map = None
+    if show_locator:
+        geoms, crs_value = _zone_geometries(climate, zone_dim, zone_crs)
+        ccrs, cfeature = _map_dependencies()
+        source_crs = _cartopy_crs(crs_value, ccrs)
+        map_extent = extent or _zone_extent(geoms)
+        display_crs = map_crs if map_crs is not None else _default_map_crs(crs_value, map_extent, source_crs, ccrs)
+        ax_map = fig.add_subplot(grid[:, 0], projection=display_crs)
+        paths, owner = _zone_paths(geoms)
+        _add_zones(ax_map, paths, owner, source_crs, color="#eef0f3", edgecolor="#b8c0cc", linewidth=0.3, zorder=2)
+        chosen = np.isin(owner, positions)
+        _add_zones(ax_map, [p for p, keep in zip(paths, chosen) if keep], owner[chosen], source_crs,
+                   colors=zone_colors, edgecolor="#17283d", linewidth=0.8, zorder=3)
+        ax_map.set_extent(map_extent, crs=source_crs)
+        _add_map_context(ax_map, cfeature, add_coastlines=add_coastlines,
+                         add_borders=add_borders, resolution=coastline_resolution)
+        ax_map.set_title("Selected zones")
+
+    axes_ts = []
+    ylim = None
+    if shared:
+        both = np.concatenate([np.asarray(climate.values, dtype=float).ravel(), np.asarray(mobility.values, dtype=float).ravel()])
+        both = both[np.isfinite(both)]
+        lim = max(1.0, float(np.ceil(np.nanpercentile(np.abs(both), 99.5) * 2) / 2)) if both.size else 1.0
+        ylim = (-lim, lim)
+    for k, p in enumerate(positions):
+        ax = fig.add_subplot(grid[k, -1], sharex=axes_ts[0] if axes_ts else None)
+        c_series = np.asarray(climate.isel({zone_dim: p}).values, dtype=float)
+        m_series = np.asarray(mobility.isel({zone_dim: p}).values, dtype=float)
+        if baseline is not None:
+            ax.axvspan(pd.Timestamp(baseline[0]), pd.Timestamp(baseline[1]), color="#e6e9ee", alpha=0.7, zorder=0, linewidth=0)
+        ax.plot(time_values, c_series, color=c_color, linewidth=1.5, zorder=3)
+        if shared:
+            ax.plot(time_values, m_series, color=m_color, linewidth=1.5, marker="o", markersize=2, zorder=4)
+            ax.axhline(0, color="#4a5568", linewidth=0.7, zorder=2)
+            ax.set_ylim(*ylim)
+            ax.set_ylabel("z-score")
+        else:
+            ax.set_ylabel(str(climate.attrs.get("units", c_label)), color=c_color)
+            ax.tick_params(axis="y", colors=c_color)
+            twin = ax.twinx()
+            twin.plot(time_values, m_series, color=m_color, linewidth=1.5, marker="o", markersize=2, zorder=4)
+            twin.set_ylabel(str(mobility.attrs.get("units", m_label)), color=m_color)
+            twin.tick_params(axis="y", colors=m_color)
+        ax.set_title(f"Zone {ids[p]}", loc="left", fontsize=10, fontweight="bold", color=zone_colors[p])
+        ax.grid(True, linestyle=":", linewidth=0.6, alpha=0.5)
+        axes_ts.append(ax)
+    for ax in axes_ts[:-1]:
+        ax.tick_params(labelbottom=False)
+    axes_ts[-1].set_xlabel("Time")
+    axes_ts[-1].xaxis.set_major_formatter(mdates.ConciseDateFormatter(axes_ts[-1].xaxis.get_major_locator()))
+    axes_ts[0].set_xlim(time_values.min(), time_values.max())
+
+    handles = [Line2D([], [], color=c_color, linewidth=2, label=c_label),
+               Line2D([], [], color=m_color, linewidth=2, marker="o", markersize=3, label=m_label)]
+    if baseline is not None:
+        handles.append(Patch(facecolor="#e6e9ee", label="standardization baseline"))
+    fig.legend(handles=handles, loc="outside lower center", ncol=len(handles), frameon=False)
+    if title:
+        fig.suptitle(title, fontsize=14)
+
+    if output_path is not None:
+        output_path = Path(output_path)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        fig.savefig(output_path, dpi=dpi, bbox_inches="tight")
+    if show:
+        plt.show()
+    return fig, {"timeseries": axes_ts, "map": ax_map, "zones": [str(ids[p]) for p in positions]}
 
 
 def plot_climate_mobility_period(
@@ -1052,4 +1536,5 @@ def plot_climate_mobility_period(
 
 
 __all__ = ["VAR_CMAP", "plot_time_slices", "plot_spatial_timeseries", "plot_zonal_maps",
-           "plot_zonal_timeseries", "plot_climate_mobility_period"]
+           "plot_zonal_timeseries", "build_zonal_mobility", "common_period", "standardize_zonal",
+           "plot_climate_mobility_maps", "plot_climate_mobility_timeseries", "plot_climate_mobility_period"]

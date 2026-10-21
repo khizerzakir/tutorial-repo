@@ -6,6 +6,9 @@
 - `plot_spatial_timeseries`: time series at selected points and area summaries.
 - `plot_zonal_maps`: the same panel maps for **zonal** data (one value per polygon) from an xvec zonal cube.
 - `plot_zonal_timeseries`: time series of selected zones, with an optional locator map.
+- `build_zonal_mobility`, `common_period`, `standardize_zonal`: put mobility on the same zones and half-month time axis as a climate zonal cube, find the period where both exist, and convert to z-scores.
+- `plot_climate_mobility_maps`: climate row and mobility row for the same dates in one panel, on one shared z-score scale.
+- `plot_climate_mobility_timeseries`: one row per selected zone with both series, over the full climate record, plus a locator map.
 - `plot_climate_mobility_period`: side-by-side climate and aggregated origin/destination mobility maps for a selected half-month.
 
 ## Install
@@ -28,6 +31,11 @@ from code.plot_utils.adaptive_cube_plot import (
     plot_spatial_timeseries,
     plot_zonal_maps,
     plot_zonal_timeseries,
+    build_zonal_mobility,
+    common_period,
+    standardize_zonal,
+    plot_climate_mobility_maps,
+    plot_climate_mobility_timeseries,
     plot_climate_mobility_period,
 )
 ```
@@ -100,7 +108,39 @@ chosen = axes["zones"]
 - `add_coastlines=False, add_borders=False` skip the Natural Earth layers (useful offline; they download on first use).
 - A zonal mean is a summary of the cells assigned to each polygon, not a higher-resolution raster. Zones smaller than a pixel can be empty with `method="rasterize"`; check the grey zones.
 
-## Climate and mobility comparison
+## Climate and mobility by zone (standardized)
+
+Use this when climate (for example half-month FAPAR from 2011) and mobility (which may start later) should be compared per spatial unit.
+
+```python
+from adaptive_cube_plot import (build_zonal_mobility, common_period, standardize_zonal,
+                                plot_climate_mobility_maps, plot_climate_mobility_timeseries)
+
+# zonal: xvec zonal cube (zone x time, one step per half-month, with a "norm_id" coordinate)
+mobility_zonal = build_zonal_mobility(
+    "data/mobility/flows.parquet", like=zonal, metric="rate_depart",
+    id_col="norm_spatial_id_origin", date_col="date",
+    filters={"subset_type": "A", "weight_type": "unweighted", "days_span": "30days"},
+    agg="sum", id_coord="norm_id", name="Mobility rate_depart",
+)
+baseline = common_period(zonal, mobility_zonal)          # years where both have data
+climate_z = standardize_zonal(zonal, mode="time", baseline=baseline)
+mobility_z = standardize_zonal(mobility_zonal, mode="time", baseline=baseline)
+
+fig, axes = plot_climate_mobility_maps(climate_z, mobility_z, time_index=[60, 80, 100],
+                                       climate_label="FAPAR", mobility_label="Mobility rate_depart")
+fig, axes = plot_climate_mobility_timeseries(climate_z, mobility_z, select="mobility_extremes",
+                                             baseline=baseline, climate_label="FAPAR",
+                                             mobility_label="Mobility rate_depart")
+```
+
+- `build_zonal_mobility` returns a zone x time cube with exactly the zones and time axis of `like`. Dates are mapped to the half-month that contains them (days 1-15 and 16-end); `like` must have one time step per half-month. Half-months before the mobility record starts, and zones without records, are **NaN, not zero**. Parquet files are read with column and row-filter pushdown. `agg` is `"sum"` or `"mean"` for rows in the same zone and half-month.
+- `standardize_zonal` converts to z-scores (`units == "z-score"` in `attrs`). `mode="time"` scales each zone by its own mean and standard deviation over `baseline` and applies that to the whole record. `mode="seasonal"` does the same per half-month of the year (an anomaly; needs several baseline years). `mode="space"` standardizes across zones for each date. Using the `common_period` as baseline puts both variables on the same years.
+- `plot_climate_mobility_maps` draws climate in the top row and mobility in the bottom row, one column per date. With z-scored inputs both rows share one diverging scale centered on 0 and one colorbar (`zlim` sets the half-range). Raw inputs get one colorbar per row. Dates without data show hatched zones and a "no data" note.
+- `plot_climate_mobility_timeseries` shows one row per zone with both series on a shared z-score axis (or, with raw inputs, mobility on a second y-axis). The time axis follows the climate record, so a later mobility start is visible. `select` is `"extremes"` (by climate), `"mobility_extremes"` or `"first"`; or pass `zones=[...]`. `baseline` shades the standardization period. `show_locator=False` removes the Cartopy map.
+- A z-score keeps the shape of a series but not its unit. With `mode="time"` the seasonal cycle stays in both series, so two seasonal variables look similar even if unrelated; use `"seasonal"` to compare anomalies.
+
+## Climate and mobility comparison (raster climate)
 
 The mobility table is expected to contain an origin or destination ID, a date/period column, and a numeric metric. Defaults match the normalized OD schema (`norm_spatial_id_origin`, `norm_spatial_id_destination`, `date`, `N_depart`). Spatial units must have a matching ID column and geometry.
 
