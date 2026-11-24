@@ -1,0 +1,20 @@
+{
+  "product": "METREF",
+  "url": "https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF",
+  "main": "METREF",
+  "qa": "quality_flag",
+  "years": [
+    2015
+  ],
+  "months": [
+    6
+  ],
+  "bbox": null,
+  "aoi": "C:\\Users\\b1113715\\Downloads\\tutorial-repo\\data\\aoi\\uploads\\spatial_units_with_lat_lon.parquet",
+  "remap": false,
+  "target_res": null,
+  "method": "bilinear",
+  "buffer_deg": 0.0,
+  "jobs": 4,
+  "out": "data/interim/METREF"
+}

@@ -1,0 +1,9 @@
+[2015-06] 2015-06: 30 file(s) on server, 30 to download + clip -> /mnt/c/Users/b1113715/Downloads/tutorial-repo/data/interim/METREF
+[2015-06] Traceback (most recent call last):
+[2015-06]   File "<stdin>", line 6, in <module>
+[2015-06]   File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+[2015-06]     return io.open(self, mode, buffering, encoding, errors, newline)
+[2015-06]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[2015-06] FileNotFoundError: [Errno 2] No such file or directory: '/mnt/c/Users/b1113715/Downloads/tutorial-repo/app_try/preprocess_utils/config_resolution.yaml'
+[2015-06] Could not read YAML configuration: /mnt/c/Users/b1113715/Downloads/tutorial-repo/app_try/preprocess_utils/config_resolution.yaml
+[2015-06] FAILED processing: NETCDF4_LSASAF_MSG_METREF_MSG-Disk_201506010000.nc (see /mnt/c/Users/b1113715/Downloads/tutorial-repo/data/interim/METREF/cdo.log)

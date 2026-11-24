@@ -6,8 +6,14 @@ set -euo pipefail
 # all remaining variables use REMAP_METHOD from the YAML configuration.
 #
 # Usage:
-#   bash code/02_preprocess_cdo.sh [resolution] [input_folder] [output_folder]
+#   bash code/02_preprocess_cdo.sh [resolution] [input_folder_or_file] [output_folder] [aoi_file]
 #   MAIN_VARIABLE=METREF QA_VARIABLES=quality_flag bash code/02_preprocess_cdo.sh
+#
+# Optional switches (environment variables):
+#   DELETE_RAW=1   delete each raw file after it was processed successfully (keep only the clipped output)
+#   REMAP=0        keep the clipped data on the native grid only (no remapping, no buffer)
+#   SKIP_GRID=1    reuse the existing grid.txt instead of re-deriving it (used for file-by-file processing)
+#   QUIET=1        no summary line on stdout (errors still go to the log)
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -69,7 +75,8 @@ command -v cdo >/dev/null 2>&1 || {
     echo "CDO was not found on PATH. Install with conda install -c conda-forge cdo." >&2
     exit 1
 }
-[[ -d "$IN" ]] || { echo "Input folder not found: $IN" >&2; exit 1; }
+[[ -e "$IN" ]] || { echo "Input file or folder not found: $IN" >&2; exit 1; }
+DELETE_RAW="${DELETE_RAW:-0}"; REMAP="${REMAP:-1}"; SKIP_GRID="${SKIP_GRID:-0}"; QUIET="${QUIET:-0}"
 [[ "$PARALLEL" =~ ^[1-9][0-9]*$ ]] || { echo "PARALLEL must be a positive integer." >&2; exit 1; }
 [[ -f "$GRID_HELPER" ]] || { echo "Grid helper not found: $GRID_HELPER" >&2; exit 1; }
 
@@ -99,7 +106,11 @@ if [[ -n "$AOI_FILE" ]]; then
     GRID_ARGS+=(--aoi "$AOI_FILE" --output-gpkg "${AOI_OUTPUT:-$OUT/aoi_aligned.gpkg}")
     [[ -n "$AOI_CRS" ]] && GRID_ARGS+=(--aoi-crs "$AOI_CRS")
 fi
-python3 "$GRID_HELPER" "${GRID_ARGS[@]}" || { echo "Error creating grid/YAML from raw grid and selected bounds" >&2; exit 1; }
+if [[ "$SKIP_GRID" == 1 && -s "$GRID" ]]; then
+    :   # grid.txt already derived from the raw grid (file-by-file mode)
+else
+    python3 "$GRID_HELPER" "${GRID_ARGS[@]}" || { echo "Error creating grid/YAML from raw grid and selected bounds" >&2; exit 1; }
+fi
 [[ -s "$GRID" ]] || { echo "Grid file was not generated: $GRID" >&2; exit 1; }
 
 grid_value() { awk -F= -v k="$1" '$1 ~ "^[[:space:]]*" k "[[:space:]]*$" {gsub(/[[:space:]]/, "", $2); print $2}' "$GRID"; }
@@ -107,7 +118,11 @@ XF="$(grid_value xfirst)"; XI="$(grid_value xinc)"; NX="$(grid_value xsize)"
 YF="$(grid_value yfirst)"; YI="$(grid_value yinc)"; NY="$(grid_value ysize)"
 read -r GRID_WEST GRID_EAST GRID_SOUTH GRID_NORTH < <(awk \
     -v x="$XF" -v dx="$XI" -v nx="$NX" -v y="$YF" -v dy="$YI" -v ny="$NY" \
-    'BEGIN {xe=x+(nx-1)*dx; ye=y+(ny-1)*dy; print (x<xe?x:xe)-dx/2, (x>xe?x:xe)+dx/2, (y<ye?y:ye)-dy/2, (y>ye?y:ye)+dy/2}')
+    'BEGIN {xe=x+(nx-1)*dx; ye=y+(ny-1)*dy; hx=(dx<0?-dx:dx)/2; hy=(dy<0?-dy:dy)/2;
+           print (x<xe?x:xe)-hx, (x>xe?x:xe)+hx, (y<ye?y:ye)-hy, (y>ye?y:ye)+hy}')   # cell edges; works for negative yinc
+# Clip-only box (REMAP=0): snapped study area padded by a quarter cell so edge cells are not lost to float rounding
+read -r NAT_WEST NAT_EAST NAT_SOUTH NAT_NORTH < <(awk -v w="$GRID_WEST" -v e="$GRID_EAST" -v s="$GRID_SOUTH" -v n="$GRID_NORTH" \
+    -v dx="$XI" -v dy="$YI" 'BEGIN {px=(dx<0?-dx:dx)/4; py=(dy<0?-dy:dy)/4; print w-px, e+px, s-py, n+py}')
 CLIP_WEST="$(awk -v x="$GRID_WEST" -v b="$BUFFER" 'BEGIN {print x-b}')"
 CLIP_EAST="$(awk -v x="$GRID_EAST" -v b="$BUFFER" 'BEGIN {print x+b}')"
 CLIP_SOUTH="$(awk -v x="$GRID_SOUTH" -v b="$BUFFER" 'BEGIN {print x-b}')"
@@ -143,6 +158,20 @@ process_cdo() {
     trap 'rm -f "${tmp_clip:-}" "${tmp_main:-}" "${tmp_qa:-}" "${tmp_main_remap:-}" "${tmp_qa_remap:-}" "${tmp_merge:-}" "$part_file"' RETURN
     start="$(date +%s)"
 
+    if [[ "$REMAP" == 0 ]]; then
+        # Clip only: native cells whose centres fall inside the snapped study area (no buffer, no remapping).
+        if ! cdo -L -f nc4 -O -sellonlatbox,"$NAT_WEST","$NAT_EAST","$NAT_SOUTH","$NAT_NORTH" \
+            "$file" "$tmp_merge" 2>>"$LOG" || ! cdo -s sinfo "$tmp_merge" >/dev/null 2>&1; then
+            printf '[%s] file=%s date=%s status=failed stage=clip-only\n' "$(date -Is)" "$base" "$file_date" >> "$LOG"
+            return 1
+        fi
+        mv -f "$tmp_merge" "$part_file" && mv -f "$part_file" "$outfile"
+        [[ "$DELETE_RAW" == 1 ]] && rm -f "$file"
+        printf '[%s] file=%s date=%s status=clipped duration=%ss raw_deleted=%s\n' \
+            "$(date -Is)" "$base" "$file_date" "$(( $(date +%s) - start ))" "$DELETE_RAW" >> "$LOG"
+        return 0
+    fi
+
     if ! cdo -L -f nc4 -O \
         -sellonlatbox,"$CLIP_WEST","$CLIP_EAST","$CLIP_SOUTH","$CLIP_NORTH" \
         "$file" "$tmp_clip" 2>>"$LOG"; then
@@ -170,16 +199,21 @@ process_cdo() {
         printf '%s: merged output is empty or unreadable\n' "$base" >> "$LOG"; return 1
     fi
     mv -f "$tmp_merge" "$part_file" && mv -f "$part_file" "$outfile"
+    [[ "$DELETE_RAW" == 1 ]] && rm -f "$file"     # only reached after a validated output exists
     duration=$(( $(date +%s) - start ))
-    printf '[%s] file=%s date=%s status=processed duration=%ss QA=nearest\n' \
-        "$(date -Is)" "$base" "$file_date" "$duration" >> "$LOG"
+    printf '[%s] file=%s date=%s status=processed duration=%ss QA=nearest raw_deleted=%s\n' \
+        "$(date -Is)" "$base" "$file_date" "$duration" "$DELETE_RAW" >> "$LOG"
 }
 
 export -f process_cdo
-export OUT LOG GRID MAIN_VARIABLE QA_CSV remap_op
-export CLIP_WEST CLIP_EAST CLIP_SOUTH CLIP_NORTH
+export OUT LOG GRID MAIN_VARIABLE QA_CSV remap_op DELETE_RAW REMAP
+export CLIP_WEST CLIP_EAST CLIP_SOUTH CLIP_NORTH NAT_WEST NAT_EAST NAT_SOUTH NAT_NORTH
 find "$IN" -type f -name '*.nc' -print0 |
     xargs -0 -r -P "$PARALLEL" -I '{}' bash -c 'process_cdo "$1"' _ '{}'
 
 echo "Finished $(date -Is); elapsed=$(( $(date +%s) - START_TIME ))s" >> "$LOG"
-echo "Done. Main variables: $REMAP_METHOD; QA variables ($QA_CSV): nearest-neighbour. Log: $LOG"
+[[ "$QUIET" == 1 ]] || if [[ "$REMAP" == 0 ]]; then
+    echo "Done. Clipped on the native grid (no remapping). Raw files deleted: $DELETE_RAW. Log: $LOG"
+else
+    echo "Done. Main variables: $REMAP_METHOD; QA variables ($QA_CSV): nearest-neighbour. Raw files deleted: $DELETE_RAW. Log: $LOG"
+fi

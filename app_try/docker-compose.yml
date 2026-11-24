@@ -1,0 +1,12 @@
+# Start:  docker compose -f code/app/docker-compose.yml up --build   → open http://localhost:2718
+services:
+  cube-builder:
+    build:
+      context: ../..
+      dockerfile: code/app/Dockerfile
+    ports:
+      - "127.0.0.1:2718:2718"        # only reachable from this computer
+    volumes:
+      - ../../data:/app/data          # results stay in the repository's data/ folder
+      # optional: reuse saved credentials instead of typing them in the app
+      # - ../.env:/app/code/.env:ro

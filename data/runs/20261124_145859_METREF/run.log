@@ -1,0 +1,7 @@
+[2015-07] 2015-07: 31 file(s) on server, 31 to download + clip -> /mnt/c/Users/b1113715/Downloads/tutorial-repo/data/interim/METREF
+[2015-07] Raw resolution: dx=0.05°, dy=0.05°  (121 x 91 cells)
+[2015-07] Aligned bounds: lon -17.275 to -11.225, lat 12.225 to 16.775
+[2015-07] Saved updated YAML: /mnt/c/Users/b1113715/Downloads/tutorial-repo/code/preprocess_utils/config_resolution.yaml
+[2015-07] Saved CDO target grid: /mnt/c/Users/b1113715/Downloads/tutorial-repo/code/preprocess_utils/grid.txt
+[2015-07] First file: ~3s (download + clip). Estimated remaining: ~0m22s with 4 parallel jobs
+[2015-07] Done: 31 file(s) in 0m32s. Kept only the clipped files (3.8M in /mnt/c/Users/b1113715/Downloads/tutorial-repo/data/interim/METREF/2015/07); no raw files left.

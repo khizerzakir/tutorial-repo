@@ -1,0 +1,25 @@
+{
+  "product": "METREF",
+  "url": "https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/METREF/NETCDF",
+  "main": "METREF",
+  "qa": "quality_flag",
+  "years": [
+    2015
+  ],
+  "months": [
+    6
+  ],
+  "bbox": {
+    "lon_min": -17.275,
+    "lon_max": -11.225,
+    "lat_min": 12.225,
+    "lat_max": 16.775
+  },
+  "aoi": null,
+  "remap": false,
+  "target_res": null,
+  "method": "bilinear",
+  "buffer_deg": 0.0,
+  "jobs": 4,
+  "out": "data/interim/METREF"
+}
